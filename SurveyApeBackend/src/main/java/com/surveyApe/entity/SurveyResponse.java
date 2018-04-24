@@ -4,6 +4,8 @@ import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 
 public class SurveyResponse {
 
@@ -12,7 +14,10 @@ public class SurveyResponse {
     @GenericGenerator(name = "system-uuid",
             strategy = "uuid")
     private String surveyResponseId;
-    private String surveyId;
+
+    @ManyToOne
+    @JoinColumn(name = "SURVEY_ID")
+    private Survey surveyId;
     private String userEmail; //not a foreign key as per case 3
     private String surveyURI;
     private boolean completeInd;
@@ -26,11 +31,11 @@ public class SurveyResponse {
         this.surveyResponseId = surveyResponseId;
     }
 
-    public String getSurveyId() {
+    public Survey getSurveyId() {
         return surveyId;
     }
 
-    public void setSurveyId(String surveyId) {
+    public void setSurveyId(Survey surveyId) {
         this.surveyId = surveyId;
     }
 

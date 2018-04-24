@@ -2,9 +2,8 @@ package com.surveyApe.entity;
 
 import org.hibernate.annotations.GenericGenerator;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
+import java.util.List;
 
 @Entity
 public class SurveyQuestion {
@@ -14,10 +13,23 @@ public class SurveyQuestion {
     @GenericGenerator(name = "system-uuid",
             strategy = "uuid")
     private String surveyQuestionId;
-    private String surveyId;
     private String questionText;
     private int questionType; //numbers would be better to play around with...
     private int questionOrderNumber;
+    @ManyToOne
+    @JoinColumn(name = "SURVEY_ID")
+    private Survey surveyId;
+
+    @OneToMany(mappedBy = "questionId")
+    private List<QuestionOption> questionOptionList;
+
+    public List<QuestionOption> getQuestionOptionList() {
+        return questionOptionList;
+    }
+
+    public void setQuestionOptionList(List<QuestionOption> questionOptionList) {
+        this.questionOptionList = questionOptionList;
+    }
 
     public String getSurveyQuestionId() {
         return surveyQuestionId;
@@ -27,11 +39,11 @@ public class SurveyQuestion {
         this.surveyQuestionId = surveyQuestionId;
     }
 
-    public String getSurveyId() {
+    public Survey getSurveyId() {
         return surveyId;
     }
 
-    public void setSurveyId(String surveyId) {
+    public void setSurveyId(Survey surveyId) {
         this.surveyId = surveyId;
     }
 

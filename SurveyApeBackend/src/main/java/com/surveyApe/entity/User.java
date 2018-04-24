@@ -1,6 +1,7 @@
 package com.surveyApe.entity;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 public class User {
@@ -12,6 +13,9 @@ public class User {
     private String userType;
     private String verificationInd;
     private String uniqueVerificationCode;
+
+    // we will see about bidirectionality
+    // private List<Survey> survey;
 
     public String getPassword() {
         return password;

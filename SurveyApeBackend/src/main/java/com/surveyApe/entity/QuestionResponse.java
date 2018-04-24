@@ -14,8 +14,10 @@ public class QuestionResponse {
         @GenericGenerator(name = "system-uuid",
                 strategy = "uuid")
         private String questionResponseId;
+
+        //TODO: yet to decide cardinality for this
         private String questionId;
-        private String optionId;
+        private String optionId;        //  can be used to store option id or answer text in case of text box
         private String surveyResponseId;
 
         public String getQuestionResponseId() {

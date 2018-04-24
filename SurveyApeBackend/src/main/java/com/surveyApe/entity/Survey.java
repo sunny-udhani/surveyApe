@@ -2,11 +2,9 @@ package com.surveyApe.entity;
 
 import org.hibernate.annotations.GenericGenerator;
 
-import javax.annotation.Generated;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 public class Survey {
@@ -15,13 +13,38 @@ public class Survey {
     @GenericGenerator(name = "system-uuid",
             strategy = "uuid")
     private String surveyId;
-    private String surveyorEmail;
+
+    @ManyToOne
+    @JoinColumn(name = "EMAIL_ID")
+    private User surveyorEmail;
     private int surveyType; //numbers would be better to play around with...
     private String surveyURI;
     private double surveyQRNumber;
     private Date startDate;
     private Date endDate;
     private boolean publishedInd;
+
+    @OneToMany(mappedBy = "surveyId")
+    private List<SurveyQuestion> questionList;
+
+    @OneToMany(mappedBy = "surveyId")
+    private List<SurveyResponse> responseList;
+
+    public List<SurveyQuestion> getQuestionList() {
+        return questionList;
+    }
+
+    public void setQuestionList(List<SurveyQuestion> questionList) {
+        this.questionList = questionList;
+    }
+
+    public List<SurveyResponse> getResponseList() {
+        return responseList;
+    }
+
+    public void setResponseList(List<SurveyResponse> responseList) {
+        this.responseList = responseList;
+    }
 
     public String getSurveyId() {
         return surveyId;
@@ -31,11 +54,11 @@ public class Survey {
         this.surveyId = surveyId;
     }
 
-    public String getSurveyorEmail() {
+    public User getSurveyorEmail() {
         return surveyorEmail;
     }
 
-    public void setSurveyorEmail(String surveyorEmail) {
+    public void setSurveyorEmail(User surveyorEmail) {
         this.surveyorEmail = surveyorEmail;
     }
 

@@ -2,9 +2,7 @@ package com.surveyApe.entity;
 
 import org.hibernate.annotations.GenericGenerator;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Entity
 public class QuestionOption {
@@ -14,7 +12,11 @@ public class QuestionOption {
     @GenericGenerator(name = "system-uuid",
                       strategy = "uuid")
     private String questionOptionId;
-    private String questionId;
+
+    @ManyToOne
+    @JoinColumn(name = "QUESTION_ID")
+    private SurveyQuestion questionId;
+
     private String optionText;
     private int optionType; //numbers would be better to play around with...
     private int optionOrderNumber;
@@ -27,11 +29,11 @@ public class QuestionOption {
         this.questionOptionId = questionOptionId;
     }
 
-    public String getQuestionId() {
+    public SurveyQuestion getQuestionId() {
         return questionId;
     }
 
-    public void setQuestionId(String questionId) {
+    public void setQuestionId(SurveyQuestion questionId) {
         this.questionId = questionId;
     }
 
