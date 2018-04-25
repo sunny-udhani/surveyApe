@@ -2,9 +2,7 @@ package com.surveyApe.entity;
 
 import org.hibernate.annotations.GenericGenerator;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Entity
 public class QuestionResponse {
@@ -16,9 +14,14 @@ public class QuestionResponse {
         private String questionResponseId;
 
         //TODO: yet to decide cardinality for this
-        private String questionId;
-        private String optionId;        //  can be used to store option id or answer text in case of text box
-        private String surveyResponseId;
+
+        @ManyToOne
+        @JoinColumn(name = "QUESTION_ID")
+        private SurveyQuestion questionId;
+        private String response;        //  can be used to store option id or answer text in case of text box
+        @ManyToOne
+        @JoinColumn(name = "SURVEY_RESPONSE_ID")
+        private SurveyResponse surveyResponseId;
 
         public String getQuestionResponseId() {
                 return questionResponseId;
@@ -28,27 +31,27 @@ public class QuestionResponse {
                 this.questionResponseId = questionResponseId;
         }
 
-        public String getQuestionId() {
+        public SurveyQuestion getQuestionId() {
                 return questionId;
         }
 
-        public void setQuestionId(String questionId) {
+        public void setQuestionId(SurveyQuestion questionId) {
                 this.questionId = questionId;
         }
 
-        public String getOptionId() {
-                return optionId;
+        public String getResponse() {
+                return response;
         }
 
-        public void setOptionId(String optionId) {
-                this.optionId = optionId;
+        public void setResponse(String response) {
+                this.response = response;
         }
 
-        public String getSurveyResponseId() {
+        public SurveyResponse getSurveyResponseId() {
                 return surveyResponseId;
         }
 
-        public void setSurveyResponseId(String surveyResponseId) {
+        public void setSurveyResponseId(SurveyResponse surveyResponseId) {
                 this.surveyResponseId = surveyResponseId;
         }
 }
