@@ -1,0 +1,13 @@
+.inputBox {
+  width: 60%;
+  min-height: 35px;
+  border: 1px solid;
+  margin-top: 10px;
+  border-radius: 4px;
+  padding-left: 5px;
+  padding-top: 0px;
+}
+
+.labels {
+  padding-top: 13px;
+}
