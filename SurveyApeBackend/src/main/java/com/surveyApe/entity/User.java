@@ -1,7 +1,6 @@
 package com.surveyApe.entity;
 
 import javax.persistence.*;
-import java.util.List;
 
 @Entity
 public class User {
@@ -10,8 +9,8 @@ public class User {
     private String firstname;
     private String lastname;
     private String password;
-    private String userType;
-    private String verificationInd;
+    private int userType;
+    private boolean verificationInd;
     private String uniqueVerificationCode;
 
     // we will see about bidirectionality
@@ -25,19 +24,19 @@ public class User {
         this.password = password;
     }
 
-    public String getUserType() {
+    public int getUserType() {
         return userType;
     }
 
-    public void setUserType(String userType) {
+    public void setUserType(int userType) {
         this.userType = userType;
     }
 
-    public String getVerificationInd() {
+    public boolean getVerificationInd() {
         return verificationInd;
     }
 
-    public void setVerificationInd(String verificationInd) {
+    public void setVerificationInd(boolean verificationInd) {
         this.verificationInd = verificationInd;
     }
 
