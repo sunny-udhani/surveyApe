@@ -23,12 +23,23 @@ public class SurveyQuestion {
     @OneToMany(mappedBy = "questionId")
     private List<QuestionOption> questionOptionList;
 
+    @OneToMany(mappedBy = "questionId", fetch = FetchType.LAZY)
+    private List<QuestionResponse> questionResponseList;
+
     public List<QuestionOption> getQuestionOptionList() {
         return questionOptionList;
     }
 
     public void setQuestionOptionList(List<QuestionOption> questionOptionList) {
         this.questionOptionList = questionOptionList;
+    }
+
+    public List<QuestionResponse> getQuestionResponseList() {
+        return questionResponseList;
+    }
+
+    public void setQuestionResponseList(List<QuestionResponse> questionResponseList) {
+        this.questionResponseList = questionResponseList;
     }
 
     public String getSurveyQuestionId() {

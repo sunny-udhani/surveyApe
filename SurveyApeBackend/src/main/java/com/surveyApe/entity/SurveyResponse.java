@@ -2,10 +2,8 @@ package com.surveyApe.entity;
 
 import org.hibernate.annotations.GenericGenerator;
 
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
+import java.util.List;
 
 public class SurveyResponse {
 
@@ -22,6 +20,17 @@ public class SurveyResponse {
     private String surveyURI;
     private boolean completeInd;
     private boolean surveyURIValidInd; //case 3
+
+    @OneToMany(mappedBy = "surveyResponseId")
+    private List<QuestionResponse> questionResponseList;
+
+    public List<QuestionResponse> getQuestionResponseList() {
+        return questionResponseList;
+    }
+
+    public void setQuestionResponseList(List<QuestionResponse> questionResponseList) {
+        this.questionResponseList = questionResponseList;
+    }
 
     public String getSurveyResponseId() {
         return surveyResponseId;
