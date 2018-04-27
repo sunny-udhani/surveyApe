@@ -81,4 +81,17 @@ public class SurveyQuestion {
     public void setQuestionOrderNumber(int questionOrderNumber) {
         this.questionOrderNumber = questionOrderNumber;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof SurveyQuestion )) return false;
+        return surveyQuestionId != null && surveyQuestionId.equals(((SurveyQuestion) o).surveyQuestionId);
+    }
+
+    public SurveyQuestion(String qTx, int qTy){
+        this.setQuestionText(qTx);
+        this.setQuestionType(qTy);
+    }
+
 }
