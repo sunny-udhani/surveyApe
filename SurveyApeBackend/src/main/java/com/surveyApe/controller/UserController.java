@@ -28,10 +28,10 @@ public class UserController {
     public @ResponseBody
     ResponseEntity<?> getPassenger(@PathVariable("id") String id) throws JSONException {
 
-        String p = userService.getUserById(id);
+//        String p = userService.getUserById(id);
 //        System.out.println(passengerService.getUserById(id) + "adhjbnsdjhbashj");
 
-        return new ResponseEntity<Object>(p, HttpStatus.OK);
+        return new ResponseEntity<Object>("", HttpStatus.OK);
 
     }
 
@@ -41,15 +41,14 @@ public class UserController {
     public @ResponseBody
     ResponseEntity<?> getUserXML(@PathVariable("id") String id, @RequestParam Map<String, String> params) throws JSONException {
         // This returns a XML/JSON based on contentconfig.
-        String resp = userService.getUserById(id, MediaType.APPLICATION_XML);
-        return new ResponseEntity<Object>(resp, HttpStatus.OK);
+//        String resp = userService.getUserById(id, MediaType.APPLICATION_XML);
+        return new ResponseEntity<Object>("", HttpStatus.OK);
     }
 
     @PostMapping(path = "", produces = MediaType.APPLICATION_JSON_VALUE)
     public @ResponseBody
     ResponseEntity<?> create(@RequestParam Map<String, String> params) throws JSONException {
-        Message errorMessage = null;
-        boolean errorFlag = false;
+
         String fname = params.get("firstname");
         String lname = params.get("lastname");
         String age = params.get("age");
@@ -57,7 +56,7 @@ public class UserController {
         String phone = params.get("phone");
         String resp = null;
 
-        return new ResponseEntity<Object>(resp, HttpStatus.OK);
+        return new ResponseEntity<Object>("", HttpStatus.OK);
     }
 
     @PutMapping(path = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
