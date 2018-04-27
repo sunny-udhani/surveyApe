@@ -48,8 +48,7 @@ public class UserController {
     @PostMapping(path = "", produces = MediaType.APPLICATION_JSON_VALUE)
     public @ResponseBody
     ResponseEntity<?> create(@RequestParam Map<String, String> params) throws JSONException {
-        Message errorMessage = null;
-        boolean errorFlag = false;
+
         String fname = params.get("firstname");
         String lname = params.get("lastname");
         String age = params.get("age");
@@ -57,7 +56,7 @@ public class UserController {
         String phone = params.get("phone");
         String resp = null;
 
-        return new ResponseEntity<Object>(resp, HttpStatus.OK);
+        return new ResponseEntity<Object>("", HttpStatus.OK);
     }
 
     @PutMapping(path = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
