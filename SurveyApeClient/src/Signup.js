@@ -5,8 +5,8 @@ import './Signup.css';
 class Signup extends Component {
 
 state={
-  firstname:'',
-  lastname:'',
+  firstName:'',
+  lastName:'',
   email:'',
   password:''
 }
@@ -38,9 +38,9 @@ render() {
               </div>
 
               <div className="col-lg-6">
-                <input placeholder="First name" type="text" className="inputBox" value={this.state.firstname} onChange={(event) => {
+                <input name="firstName" placeholder="First name" type="text" className="inputBox" value={this.state.firstname} onChange={(event) => {
                   this.setState({
-                    firstname: event.target.value
+                    firstName: event.target.value
                   });}}/>
               </div>
 
@@ -54,9 +54,9 @@ render() {
               </div>
 
               <div className="col-lg-6">
-                  <input placeholder="Last name" type="text" className="inputBox" value={this.state.lastname} onChange={(event) => {
+                  <input name="lastName" placeholder="Last name" type="text" className="inputBox" value={this.state.lastname} onChange={(event) => {
                 this.setState({
-                    lastname: event.target.value
+                    lastName: event.target.value
                 });}}/>
               </div>
 
@@ -71,7 +71,7 @@ render() {
               </div>
 
               <div className="col-lg-6">
-                  <input placeholder="Email address" type="text" className="inputBox" value={this.state.email} onChange={(event) => {
+                  <input name="email" placeholder="Email address" type="text" className="inputBox" value={this.state.email} onChange={(event) => {
                 this.setState({
                     email: event.target.value
                 });}}/>
@@ -85,7 +85,7 @@ render() {
               </div>
 
               <div className="col-lg-6">
-                    <input placeholder="Password" type="password" className="inputBox" value={this.state.password} onChange={(event) => {
+                    <input name="password" placeholder="Password" type="password" className="inputBox" value={this.state.password} onChange={(event) => {
                   this.setState({
                       password: event.target.value
                   });}}/>
@@ -94,19 +94,9 @@ render() {
           </div>
 
 
-          <div className="row">
-              <div className="col-lg-2 labels">
-                <label>Confirm Password</label>
-              </div>
-
-              <div className="col-lg-6">
-                <input placeholder="Confirm Password" type="password" className="inputBox" />
-              </div>
-
-          </div>
 
             <div style={{marginTop: "2%",float: "left"}}>
-              <button className="btm btn-primary" onClick={()=>{this.props.registerUser({firstname:this.state.firstname,lastname:this.state.lastname,email:this.state.email,password:this.state.password})}}>Sign Up</button>
+              <button className="btm btn-primary" onClick={()=>{this.props.registerUser({firstName:this.state.firstName, lastName:this.state.lastName, email: this.state.email, password: this.state.password, phone: "234133333"})}}>Sign Up</button>
             </div>
 
             <div style={{marginTop: "4%", float: "left", marginLeft: "24%"}}>

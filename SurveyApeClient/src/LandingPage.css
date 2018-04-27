@@ -1,0 +1,16 @@
+.main {
+  min-height: 700px;
+  background-color: black;
+  color: white;
+  padding-top: 18%;
+}
+
+.mainButtons {
+  text-align: center;
+  margin-left: 1%;
+
+}
+
+.leftButt {
+  margin-right: 10%;
+}
