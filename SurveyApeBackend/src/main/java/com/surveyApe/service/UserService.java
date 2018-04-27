@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 public class UserService {
 
@@ -16,8 +18,8 @@ public class UserService {
 return "";
     }
 
-    public String getUserById(String id) {
-       return "";
+    public Optional<User> getUserById(String email) {
+        return userRepository.findByEmailEquals(email);
     }
 
 //    @Transactional

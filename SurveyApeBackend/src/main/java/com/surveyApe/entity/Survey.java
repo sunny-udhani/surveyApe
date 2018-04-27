@@ -19,6 +19,7 @@ public class Survey {
     private User surveyorEmail;
     private int surveyType; //numbers would be better to play around with...
     private String surveyURI;
+    private String surveyTitle;
     private double surveyQRNumber;
     private Date startDate;
     private Date endDate;
@@ -108,5 +109,13 @@ public class Survey {
 
     public void setPublishedInd(boolean publishedInd) {
         this.publishedInd = publishedInd;
+    }
+
+    public String getSurveyTitle() {
+        return surveyTitle;
+    }
+
+    public void setSurveyTitle(String surveyTitle) {
+        this.surveyTitle = surveyTitle;
     }
 }
