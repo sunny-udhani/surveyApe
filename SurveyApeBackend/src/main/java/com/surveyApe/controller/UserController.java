@@ -28,10 +28,10 @@ public class UserController {
     public @ResponseBody
     ResponseEntity<?> getPassenger(@PathVariable("id") String id) throws JSONException {
 
-        String p = userService.getUserById(id);
+//        String p = userService.getUserById(id);
 //        System.out.println(passengerService.getUserById(id) + "adhjbnsdjhbashj");
 
-        return new ResponseEntity<Object>(p, HttpStatus.OK);
+        return new ResponseEntity<Object>("", HttpStatus.OK);
 
     }
 
