@@ -41,8 +41,8 @@ public class UserController {
     public @ResponseBody
     ResponseEntity<?> getUserXML(@PathVariable("id") String id, @RequestParam Map<String, String> params) throws JSONException {
         // This returns a XML/JSON based on contentconfig.
-        String resp = userService.getUserById(id, MediaType.APPLICATION_XML);
-        return new ResponseEntity<Object>(resp, HttpStatus.OK);
+//        String resp = userService.getUserById(id, MediaType.APPLICATION_XML);
+        return new ResponseEntity<Object>("", HttpStatus.OK);
     }
 
     @PostMapping(path = "", produces = MediaType.APPLICATION_JSON_VALUE)
