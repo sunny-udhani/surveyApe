@@ -2,10 +2,13 @@ package com.surveyApe.service;
 
 import com.surveyApe.config.SurveyTypeEnum;
 import com.surveyApe.entity.Survey;
+import com.surveyApe.entity.User;
 import com.surveyApe.repository.SurveyRepository;
 import com.surveyApe.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.Optional;
 
 @Service
 public class SurveyService {
@@ -18,13 +21,16 @@ public class SurveyService {
         return true;
     }
 
+    public Optional<Survey> editSurvey(String survey_id, User surveyor){
+        return surveyRepository.findBySurveyIdEqualsAndSurveyorEmailEquals(survey_id, surveyor);
+    }
+
     public boolean validSurveyType(int surveyType){
 
         for(SurveyTypeEnum e : SurveyTypeEnum.values()){
             if(e.getEnumCode() == surveyType)
                 return true;
         }
-
         return false;
     }
 
