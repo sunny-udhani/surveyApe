@@ -20,10 +20,10 @@ public class SurveyQuestion {
     @JoinColumn(name = "SURVEY_ID")
     private Survey surveyId;
 
-    @OneToMany(mappedBy = "questionId")
+    @OneToMany(mappedBy = "questionId", cascade = CascadeType.REMOVE, fetch = FetchType.EAGER)
     private List<QuestionOption> questionOptionList;
 
-    @OneToMany(mappedBy = "questionId", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "questionId", cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
     private List<QuestionResponse> questionResponseList;
 
     public List<QuestionOption> getQuestionOptionList() {
@@ -85,11 +85,11 @@ public class SurveyQuestion {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof SurveyQuestion )) return false;
+        if (!(o instanceof SurveyQuestion)) return false;
         return surveyQuestionId != null && surveyQuestionId.equals(((SurveyQuestion) o).surveyQuestionId);
     }
 
-    public SurveyQuestion(String qTx, int qTy){
+    public SurveyQuestion(String qTx, int qTy) {
         this.setQuestionText(qTx);
         this.setQuestionType(qTy);
     }

@@ -25,10 +25,10 @@ public class Survey {
     private Date endDate;
     private boolean publishedInd;
 
-    @OneToMany(mappedBy = "surveyId")
+    @OneToMany(mappedBy = "surveyId", cascade = CascadeType.REMOVE, fetch = FetchType.EAGER)
     private List<SurveyQuestion> questionList;
 
-    @OneToMany(mappedBy = "surveyId")
+    @OneToMany(mappedBy = "surveyId", cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
     private List<SurveyResponse> responseList;
 
     public List<SurveyQuestion> getQuestionList() {

@@ -16,23 +16,33 @@ public class SurveyService {
     @Autowired
     private SurveyRepository surveyRepository;
 
-    public boolean createSurvey(Survey survey){
+    public boolean createSurvey(Survey survey) {
         surveyRepository.save(survey);
         return true;
     }
 
-    public Optional<Survey> editSurvey(String survey_id, User surveyor){
-        return surveyRepository.findBySurveyIdEqualsAndSurveyorEmailEquals(survey_id, surveyor);
+    public Survey findBySurveyIdAndSurveyorEmail(String survey_id, User surveyor) {
+        return surveyRepository.findBySurveyIdEqualsAndSurveyorEmailEquals(survey_id, surveyor).orElse(null);
     }
 
-    public boolean validSurveyType(int surveyType){
+    public boolean validSurveyType(int surveyType) {
 
-        for(SurveyTypeEnum e : SurveyTypeEnum.values()){
-            if(e.getEnumCode() == surveyType)
+        for (SurveyTypeEnum e : SurveyTypeEnum.values()) {
+            if (e.getEnumCode() == surveyType)
                 return true;
         }
         return false;
     }
 
+    public Survey findBySurveyId(String surveyId) {
+
+        return surveyRepository.findBySurveyIdEquals(surveyId).orElse(null);
+
+    }
+
+    public void saveSurvey(Survey survey) {
+        surveyRepository.save(survey);
+//        return true;
+    }
 
 }

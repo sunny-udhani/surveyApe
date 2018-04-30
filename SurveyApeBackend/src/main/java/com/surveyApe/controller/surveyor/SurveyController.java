@@ -1,11 +1,13 @@
 package com.surveyApe.controller.surveyor;
 
-import com.surveyApe.entity.Message;
-import com.surveyApe.entity.Survey;
-import com.surveyApe.entity.User;
+import com.surveyApe.config.QuestionTypeEnum;
+import com.surveyApe.entity.*;
+import com.surveyApe.service.QuestionOptionService;
+import com.surveyApe.service.QuestionService;
 import com.surveyApe.service.SurveyService;
 import com.surveyApe.service.UserService;
 import netscape.javascript.JSObject;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,19 +30,27 @@ public class SurveyController {
     private SurveyService surveyService;
     @Autowired
     private UserService userService;
+    @Autowired
+    private QuestionService questionService;
+    @Autowired
+    private QuestionOptionService questionOptionService;
 
     @PostMapping(path = "/create", produces = MediaType.APPLICATION_JSON_VALUE)
     public @ResponseBody
-    ResponseEntity<?> createSurvey(@RequestParam Map<String, String> params, HttpSession session) {
+    ResponseEntity<?> createSurvey(@RequestBody String req, @RequestParam Map<String, String> params, HttpSession session) {
 
-        int surveyType = Integer.parseInt(params.get("surveyType"));
+        JSONObject reqObj = new JSONObject(req);
+        System.out.println(reqObj);
+        System.out.println(params);
+
+        int surveyType = Integer.parseInt(reqObj.getString("surveyType"));
+        String surveyTitle = reqObj.getString("surveyTitle");
+        String surveyorEmail = session.getAttribute("surveyorEmail").toString();
+
         if (!surveyService.validSurveyType(surveyType)) {
             return new ResponseEntity<Object>("Invalid Survey Type", HttpStatus.BAD_REQUEST);
         }
 
-        String surveyTitle = params.get("surveyTitle");
-
-        String surveyorEmail = session.getAttribute("surveyorEmail").toString();
 
         Survey surveyVO = new Survey();
         User userVO = userService.getUserById(surveyorEmail).orElse(null);
@@ -52,6 +62,31 @@ public class SurveyController {
         surveyVO.setSurveyType(surveyType);
         surveyService.createSurvey(surveyVO);
 
+        JSONArray questionArray = reqObj.getJSONArray("questions");
+        System.out.println(reqObj);
+        System.out.println(params);
+
+        for (int i = 0; i < questionArray.length(); i++) {
+            JSONObject questionOnj = questionArray.getJSONObject(i);
+
+            String questionText = questionOnj.getString("questionText");
+            String questionType = questionOnj.getString("questionType");
+            int questionTypeInt = Integer.parseInt(questionType);
+            if (!validQuestionType(Integer.parseInt(questionType))) {
+                return new ResponseEntity<Object>("Invalid Question Type", HttpStatus.BAD_REQUEST);
+            }
+
+            String optionList = reqObj.getString("optionList");
+
+            SurveyQuestion surveyQuestion = createNewQuestionWithOptions(surveyVO.getSurveyId(), questionText, questionTypeInt, optionList);
+
+            if (surveyQuestion == null) {
+                return new ResponseEntity<Object>("question not created", HttpStatus.BAD_REQUEST);
+            }
+
+        }
+
+
         JSONObject resp = new JSONObject();
         resp.append("survey_id", surveyVO.getSurveyId());
 
@@ -60,8 +95,14 @@ public class SurveyController {
 
     @PostMapping(path = "/edit/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public @ResponseBody
-    ResponseEntity<?> editSurvey(@PathVariable String survey_id ,@RequestParam Map<String, String> params, HttpSession session) {
+    ResponseEntity<?> editSurvey(@RequestBody String req, @PathVariable String survey_id, @RequestParam Map<String, String> params, HttpSession session) {
 
+        JSONObject reqObj = new JSONObject(req);
+        System.out.println(reqObj);
+        System.out.println(params);
+
+        int surveyType = Integer.parseInt(reqObj.getString("surveyType"));
+        String surveyTitle = reqObj.getString("surveyTitle");
         String surveyorEmail = session.getAttribute("surveyorEmail").toString();
         String surveyId = params.get("survey_id");
         User userVO = userService.getUserById(surveyorEmail).orElse(null);
@@ -69,9 +110,94 @@ public class SurveyController {
             return new ResponseEntity<Object>("Invalid user / user id", HttpStatus.BAD_REQUEST);
         }
 
-        Survey survey = surveyService.editSurvey(survey_id,userVO).orElse(null);
+        Survey survey = surveyService.findBySurveyIdAndSurveyorEmail(survey_id, userVO);
+
+        survey.setSurveyTitle(surveyTitle);
+        survey.setSurveyType(surveyType);
+        surveyService.saveSurvey(survey);
+
+        survey.getQuestionList().clear();
+        surveyService.saveSurvey(survey);
+
+        JSONArray questionArray = reqObj.getJSONArray("questions");
+        System.out.println(reqObj);
+        System.out.println(params);
+
+        for (int i = 0; i < questionArray.length(); i++) {
+            JSONObject questionOnj = questionArray.getJSONObject(i);
+
+            String questionText = questionOnj.getString("questionText");
+            String questionType = questionOnj.getString("questionType");
+            int questionTypeInt = Integer.parseInt(questionType);
+            if (!validQuestionType(Integer.parseInt(questionType))) {
+                return new ResponseEntity<Object>("Invalid Question Type", HttpStatus.BAD_REQUEST);
+            }
+
+            String optionList = reqObj.getString("optionList");
+
+            SurveyQuestion surveyQuestion = createNewQuestionWithOptions(survey.getSurveyId(), questionText, questionTypeInt, optionList);
+
+            if (surveyQuestion == null) {
+                return new ResponseEntity<Object>("question not created", HttpStatus.BAD_REQUEST);
+            }
+
+        }
+
+
 
         return new ResponseEntity<Object>(survey, HttpStatus.OK);
+    }
+
+    public SurveyQuestion createNewQuestionWithOptions(String surveyId, String questionText, int questionType, String optionList) {
+        Survey survey = surveyService.findBySurveyId(surveyId);
+        if (survey == null) {
+            return null;
+        }
+
+        SurveyQuestion question = new SurveyQuestion(questionText, questionType);
+
+        boolean successFlag = createOptions(optionList, question);
+
+        addQuestionToSurveyEntity(question, survey);
+
+        questionService.addQuestion(question);
+        surveyService.saveSurvey(survey);
+        return question;
+    }
+
+    public void addQuestionToSurveyEntity(SurveyQuestion question, Survey survey) {
+        survey.getQuestionList().add(question);
+        question.setSurveyId(survey);
+    }
+
+    public void addOptionToQuestionEntity(QuestionOption option, SurveyQuestion question) {
+        question.getQuestionOptionList().add(option);
+        option.setQuestionId(question);
+    }
+
+    public void removeQuestionFromSurveyEntity(SurveyQuestion question, Survey survey) {
+        survey.getQuestionList().remove(question);
+        question.setSurveyId(null);
+    }
+
+    public boolean createOptions(String optionList, SurveyQuestion question) {
+
+        for (String options : optionList.split(",")) {
+            QuestionOption option = new QuestionOption(options);
+            addOptionToQuestionEntity(option, question);
+            questionOptionService.saveOption(option);
+        }
+
+        return true;
+    }
+
+    public boolean validQuestionType(int questionType) {
+
+        for (QuestionTypeEnum e : QuestionTypeEnum.values()) {
+            if (e.getEnumCode() == questionType)
+                return true;
+        }
+        return false;
     }
 
 }
