@@ -8,6 +8,7 @@ import com.surveyApe.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -23,6 +24,10 @@ public class SurveyService {
 
     public Survey findBySurveyIdAndSurveyorEmail(String survey_id, User surveyor) {
         return surveyRepository.findBySurveyIdEqualsAndSurveyorEmailEquals(survey_id, surveyor).orElse(null);
+    }
+
+    public List<Survey> findBySurveyorEmail(User surveyor) {
+        return surveyRepository.findAllBySurveyorEmailEquals(surveyor);
     }
 
     public boolean validSurveyType(int surveyType) {
