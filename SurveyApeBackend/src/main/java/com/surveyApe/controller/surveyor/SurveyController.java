@@ -18,6 +18,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
+import java.util.List;
 import java.util.Map;
 
 @Controller
@@ -111,7 +112,9 @@ public class SurveyController {
         }
 
         Survey survey = surveyService.findBySurveyIdAndSurveyorEmail(survey_id, userVO);
-
+        if (survey == null) {
+            return new ResponseEntity<Object>("No such survey", HttpStatus.BAD_REQUEST);
+        }
         survey.setSurveyTitle(surveyTitle);
         survey.setSurveyType(surveyType);
         surveyService.saveSurvey(survey);
@@ -144,7 +147,43 @@ public class SurveyController {
         }
 
 
+        return new ResponseEntity<Object>(survey, HttpStatus.OK);
+    }
 
+
+    /**
+     * Get all surveys for a surveyor
+     */
+    @GetMapping(path = "surveyor/getAll", produces = MediaType.APPLICATION_JSON_VALUE)
+    public @ResponseBody
+    ResponseEntity<?> retrieveAllSurveys(@RequestParam Map<String, String> params, HttpSession session) {
+
+//        JSONObject reqObj = new JSONObject(req);
+//        System.out.println(reqObj);
+        System.out.println(params);
+//        String surveyorEmail = session.getAttribute("surveyorEmail").toString();
+        String surveyorEmail = params.get("surveyorEmail");
+        User userVO = userService.getUserById(surveyorEmail).orElse(null);
+        if (userVO == null) {
+            return new ResponseEntity<Object>("Invalid user / user id", HttpStatus.BAD_REQUEST);
+        }
+
+        List<Survey> surveyList = surveyService.findBySurveyorEmail(userVO);
+        if (surveyList.size() == 0) {
+            return new ResponseEntity<Object>("No survey", HttpStatus.OK);
+        }
+
+        return new ResponseEntity<Object>(surveyList, HttpStatus.OK);
+    }
+
+    @GetMapping(path = "surveyor/getSurvey/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public @ResponseBody
+    ResponseEntity<?> retrieveASurvey(@PathVariable String id,@RequestParam Map<String, String> params, HttpSession session) {
+
+        Survey survey = surveyService.findBySurveyId(id);
+        if (survey == null) {
+            return new ResponseEntity<Object>("No such survey", HttpStatus.BAD_REQUEST);
+        }
         return new ResponseEntity<Object>(survey, HttpStatus.OK);
     }
 

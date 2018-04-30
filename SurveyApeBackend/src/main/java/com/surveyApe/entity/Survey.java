@@ -17,12 +17,15 @@ public class Survey {
     @ManyToOne
     @JoinColumn(name = "EMAIL_ID")
     private User surveyorEmail;
+    @Column(nullable = true)
     private int surveyType; //numbers would be better to play around with...
     private String surveyURI;
     private String surveyTitle;
+    @Column(nullable = true)
     private double surveyQRNumber;
     private Date startDate;
     private Date endDate;
+    @Column(nullable = true)
     private boolean publishedInd;
 
     @OneToMany(mappedBy = "surveyId", cascade = CascadeType.REMOVE, fetch = FetchType.EAGER)

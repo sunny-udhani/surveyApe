@@ -1,5 +1,6 @@
 package com.surveyApe.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
@@ -15,7 +16,9 @@ public class SurveyQuestion {
     private String surveyQuestionId;
     private String questionText;
     private int questionType; //numbers would be better to play around with...
+    @Column(nullable = true)
     private int questionOrderNumber;
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "SURVEY_ID")
     private Survey surveyId;
@@ -92,6 +95,10 @@ public class SurveyQuestion {
     public SurveyQuestion(String qTx, int qTy) {
         this.setQuestionText(qTx);
         this.setQuestionType(qTy);
+    }
+
+    public SurveyQuestion() {
+
     }
 
 }
