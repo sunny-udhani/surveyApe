@@ -2,10 +2,13 @@ package com.surveyApe.service;
 
 import com.surveyApe.config.SurveyTypeEnum;
 import com.surveyApe.entity.Survey;
+import com.surveyApe.entity.User;
 import com.surveyApe.repository.SurveyRepository;
 import com.surveyApe.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.Optional;
 
 @Service
 public class SurveyService {
@@ -13,20 +16,33 @@ public class SurveyService {
     @Autowired
     private SurveyRepository surveyRepository;
 
-    public boolean createSurvey(Survey survey){
+    public boolean createSurvey(Survey survey) {
         surveyRepository.save(survey);
         return true;
     }
 
-    public boolean validSurveyType(int surveyType){
+    public Survey findBySurveyIdAndSurveyorEmail(String survey_id, User surveyor) {
+        return surveyRepository.findBySurveyIdEqualsAndSurveyorEmailEquals(survey_id, surveyor).orElse(null);
+    }
 
-        for(SurveyTypeEnum e : SurveyTypeEnum.values()){
-            if(e.getEnumCode() == surveyType)
+    public boolean validSurveyType(int surveyType) {
+
+        for (SurveyTypeEnum e : SurveyTypeEnum.values()) {
+            if (e.getEnumCode() == surveyType)
                 return true;
         }
-
         return false;
     }
 
+    public Survey findBySurveyId(String surveyId) {
+
+        return surveyRepository.findBySurveyIdEquals(surveyId).orElse(null);
+
+    }
+
+    public void saveSurvey(Survey survey) {
+        surveyRepository.save(survey);
+//        return true;
+    }
 
 }

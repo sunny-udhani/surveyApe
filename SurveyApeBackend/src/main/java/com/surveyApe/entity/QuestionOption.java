@@ -60,4 +60,8 @@ public class QuestionOption {
     public void setOptionOrderNumber(int optionOrderNumber) {
         this.optionOrderNumber = optionOrderNumber;
     }
+
+    public QuestionOption(String optionText){
+        this.setOptionText(optionText);
+    }
 }
