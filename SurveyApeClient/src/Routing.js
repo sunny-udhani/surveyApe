@@ -5,7 +5,7 @@ import Signup from './Signup';
 import Signin from './Signin';
 import Confirmation from './Confirmation';
 import LandingPage from './LandingPage';
-
+import CreateSurvey from './CreateSurvey';
 import * as API from './api/API';
 
 
@@ -13,6 +13,18 @@ class Routing extends Component {
 
   state={
 
+  }
+
+  createSurvey=(survey,closedSurveyList)=>{
+    //API CALL
+    if(closedSurveyList.length===0){
+      //API FOR closedSurveyList
+    }
+    else{
+      //API for other surveys
+    }
+    this.props.history.push('/signin');
+    this.props.history.push('/createSurvey');
   }
 
   gotoSignin = () => {
@@ -80,6 +92,12 @@ class Routing extends Component {
                 <Route exact path="/confirmation" render={() => (
                     <div>
                         <Confirmation gotoSignin={this.gotoSignin}/>
+                    </div>
+                )}/>
+
+              <Route exact path="/createSurvey" render={() => (
+                    <div>
+                        <CreateSurvey createSurvey={this.createSurvey}/>
                     </div>
                 )}/>
 
