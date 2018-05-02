@@ -7,21 +7,73 @@ import Confirmation from './Confirmation';
 import LandingPage from './LandingPage';
 import CreateSurvey from './CreateSurvey';
 import * as API from './api/API';
-
+const headers = {
+    'Accept': 'application/json'
+};
 
 class Routing extends Component {
-
   state={
 
   }
 
   createSurvey=(survey,closedSurveyList)=>{
-    //API CALL
-    if(closedSurveyList.length===0){
-      //API FOR closedSurveyList
+    /*
+    {surveyType:"",surveyTitle,questions:[{questionText:"ques",questionType:"",optionList:"optionStr"}],publish:t/f,url:"url"}
+
+    url-> 1 way hash
+    */
+    var surveyType=survey.type;
+    if(surveyType==="General"){
+      surveyType="1";
+    }
+    else if(surveyType==="Open"){
+      surveyType="2";
+    }
+    else if(surveyType==="Closed"){
+      surveyType="3";
+    }
+    else if(surveyType==="Anonymous"){
+      surveyType="4";
     }
     else{
-      //API for other surveys
+
+    }
+    for(var i=0;i<survey.questions.length;i++){
+      survey.questions[i].optionList=survey.questions[i].optionList.join(',');
+    }
+    console.log(survey.questions);
+    var payload={surveyType:surveyType,surveyorEmail:"chandan.paranjape@gmail.com",surveyTitle:survey.name,questions:survey.questions,url:null,publish:false};
+    if(closedSurveyList.length===0){
+      //API FOR others
+      fetch('http://localhost:8080/survey/create', {
+        method: 'POST',
+        headers: {
+            ...headers,
+            'Content-Type': 'application/json'
+        },
+        credentials:'include',
+        body: JSON.stringify(payload)
+    }).then(res => {
+        console.log(res);
+        return res.status;
+    })
+        .catch(error => {
+            console.log("This is error");
+            return error;
+        });
+    }
+    else{
+      //create unique id
+      var uniqueUrl=[];
+      for(var i=0;i<closedSurveyList.length;i++){
+        uniqueUrl[i]=survey.name+closedSurveyList[i];
+      }
+      uniqueUrl.map(function(item){
+        console.log(item);
+      });
+
+      //API for closedSurveyList
+
     }
     this.props.history.push('/signin');
     this.props.history.push('/createSurvey');

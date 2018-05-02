@@ -46,7 +46,9 @@ public class SurveyController {
 
         int surveyType = Integer.parseInt(reqObj.getString("surveyType"));
         String surveyTitle = reqObj.getString("surveyTitle");
-        String surveyorEmail = session.getAttribute("surveyorEmail").toString();
+        //String surveyorEmail = reqObj.getString("surveyorEmail");
+        String surveyorEmail="aaj@aaj.com";
+        //String surveyorEmail = session.getAttribute("surveyorEmail").toString();
 
         if (!surveyService.validSurveyType(surveyType)) {
             return new ResponseEntity<Object>("Invalid Survey Type", HttpStatus.BAD_REQUEST);
@@ -56,8 +58,10 @@ public class SurveyController {
         Survey surveyVO = new Survey();
         User userVO = userService.getUserById(surveyorEmail).orElse(null);
         if (userVO == null) {
-            return new ResponseEntity<Object>("Invalid user / user id", HttpStatus.BAD_REQUEST);
+
+            return new ResponseEntity<Object>("Invalid user / user id", HttpStatus.FORBIDDEN);
         }
+
         surveyVO.setSurveyorEmail(userVO);
         surveyVO.setSurveyTitle(surveyTitle);
         surveyVO.setSurveyType(surveyType);
@@ -77,7 +81,8 @@ public class SurveyController {
                 return new ResponseEntity<Object>("Invalid Question Type", HttpStatus.BAD_REQUEST);
             }
 
-            String optionList = reqObj.getString("optionList");
+            String optionList = questionOnj.getString("optionList");
+
 
             SurveyQuestion surveyQuestion = createNewQuestionWithOptions(surveyVO.getSurveyId(), questionText, questionTypeInt, optionList);
 
@@ -189,14 +194,17 @@ public class SurveyController {
 
     public SurveyQuestion createNewQuestionWithOptions(String surveyId, String questionText, int questionType, String optionList) {
         Survey survey = surveyService.findBySurveyId(surveyId);
+
         if (survey == null) {
+            System.out.println("lagli ithe");
             return null;
         }
+
 
         SurveyQuestion question = new SurveyQuestion(questionText, questionType);
 
         boolean successFlag = createOptions(optionList, question);
-
+        System.out.println("SUCCESSFLAGGGGGGG:"+successFlag);
         addQuestionToSurveyEntity(question, survey);
 
         questionService.addQuestion(question);
@@ -210,7 +218,9 @@ public class SurveyController {
     }
 
     public void addOptionToQuestionEntity(QuestionOption option, SurveyQuestion question) {
+        System.out.println("ZZZZZZZ:"+question.getQuestionOptionList());
         question.getQuestionOptionList().add(option);
+
         option.setQuestionId(question);
     }
 
@@ -220,9 +230,10 @@ public class SurveyController {
     }
 
     public boolean createOptions(String optionList, SurveyQuestion question) {
-
         for (String options : optionList.split(",")) {
+            System.out.println("OOOOOOOOO:"+options);
             QuestionOption option = new QuestionOption(options);
+            System.out.println("XXXXXXXX"+option);
             addOptionToQuestionEntity(option, question);
             questionOptionService.saveOption(option);
         }

@@ -47,7 +47,7 @@ class CreateSurvey extends Component{
     <br/>
     End Time: <input type="date" onChange={(event)=>this.setState({endTime:event.target.value})}/>
 </div>):(<div>
-      {this.state.formType==="Closed" && !this.state.closedSurveyList.length?(<div>
+      {this.state.formType==="Closed" && !this.state.closedSurveyList.length && this.state.endTime?(<div>
         Select Recipients:<input type="text" value={this.state.closedSurveyStr} onChange={(event)=>this.setState({closedSurveyStr:event.target.value})}/>
       <input type="button" value="Add recipients" onClick={()=>this.addRecipients()}/>
       </div>):(<div>

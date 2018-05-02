@@ -22,6 +22,7 @@ class GeneralForm extends Component{
       var choice=this.state.choice;
       var style=this.state.style;
       var ans=this.state.ans;
+      var formType=this.props.formType;
       if(ans===""){
         ans="SINGLE";
       }
@@ -31,13 +32,40 @@ class GeneralForm extends Component{
       if(choice===""){
         choice="TEXT";
       }
+
+    //yn date short
+    if(style==="DROP"){
+      type="1";
+    }
+    else if(style==="RADIO"){
+      type="2";
+    }
+    else if(style==="CHECK"){
+      type="3";
+    }
+    else if(type==="YN"){
+      type="4";
+    }
+    else if(type==="DATE"){
+      type="6";
+    }
+    else if(type==="SHORT"){
+      type="5";
+    }
+    else if(type==="STAR"){
+      type="7";
+    }
+    else{
+
+    }
+
     if(!options){
-      temp.push({id:id,question:ques,questionType:type,options:[]});
+      temp.push({id:id,questionText:ques,questionType:type,optionList:[]});
 
     }
     else{
     var optionArr=options.split(',');
-    temp.push({id:id,question:ques,options:optionArr,questionType:type,choice:choice,style:style,answerType:ans});
+    temp.push({id:id,questionText:ques,optionList:optionArr,questionType:type,choice:choice,style:style,answerType:ans});
     }
     id++;
     this.setState({
@@ -51,15 +79,18 @@ class GeneralForm extends Component{
     });
   }
 
-  deleteQuestion(id){
+  deleteQuestion(id1){
+    console.log(id1);
     var temp=this.state.questions;
     var index=null;
     for(var i=0;i<temp.length;i++){
-      if(temp[i][id]==id){
+      console.log(temp[i]);
+      if(temp[i].id==id1){
         index=i;
         break;
       }
     }
+    console.log(index);
     temp.splice(index, 1);
     this.setState({
       questions:temp
@@ -181,9 +212,9 @@ class GeneralForm extends Component{
           <div>
             <ul>
               {this.state.questions.map((item)=>{
-                return <div><li key={item.id}>{item.question}
+                return <div><li key={item.id}>{item.questionText}
                         <ul>
-                      {item.options.map((option)=>{
+                      {item.optionList.map((option)=>{
                         return <li key={option}>{option}</li>
                       })}
                     </ul>
@@ -193,7 +224,6 @@ class GeneralForm extends Component{
               })}
             </ul>
             <input type="button" value="Create Survey" onClick={()=>{
-                console.log("Kaitri tari hotay");
                 this.props.createSurvey({type:this.props.formType,questions:this.state.questions,name:this.props.surveyName});
                 this.setState({
                   questions:[],
