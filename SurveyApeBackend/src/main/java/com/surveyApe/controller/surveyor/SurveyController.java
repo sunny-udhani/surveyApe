@@ -96,8 +96,10 @@ public class SurveyController {
 
 
         JSONObject resp = new JSONObject();
-        resp.append("survey_id", surveyVO.getSurveyId());
-
+        resp.append("survey_id", surveyVO.getSurveyId().toString());
+        System.out.println("RESPONSE: "+resp);
+        //JSONObject fake=new JSONObject();
+        //fake.append("1","1");
         return new ResponseEntity<Object>(resp, HttpStatus.OK);
     }
 
@@ -198,15 +200,13 @@ public class SurveyController {
         Survey survey = surveyService.findBySurveyId(surveyId);
 
         if (survey == null) {
-            System.out.println("lagli ithe");
             return null;
         }
 
-
+        System.out.println("TEXT,TYPE:"+questionText+","+questionType);
         SurveyQuestion question = new SurveyQuestion(questionText, questionType);
 
         boolean successFlag = createOptions(optionList, question);
-        System.out.println("SUCCESSFLAGGGGGGG:"+successFlag);
         addQuestionToSurveyEntity(question, survey);
 
         questionService.addQuestion(question);
