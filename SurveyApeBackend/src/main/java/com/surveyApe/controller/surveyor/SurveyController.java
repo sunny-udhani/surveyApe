@@ -18,15 +18,16 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+
 
 @Controller
 @CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
 //requires you to run react server on port 3000
 @RequestMapping(path = "/survey")
 public class SurveyController {
-
     @Autowired
     private SurveyService surveyService;
     @Autowired
@@ -35,6 +36,7 @@ public class SurveyController {
     private QuestionService questionService;
     @Autowired
     private QuestionOptionService questionOptionService;
+
 
     @PostMapping(path = "/create", produces = MediaType.APPLICATION_JSON_VALUE)
     public @ResponseBody
@@ -213,12 +215,12 @@ public class SurveyController {
     }
 
     public void addQuestionToSurveyEntity(SurveyQuestion question, Survey survey) {
+
         survey.getQuestionList().add(question);
         question.setSurveyId(survey);
     }
 
     public void addOptionToQuestionEntity(QuestionOption option, SurveyQuestion question) {
-        System.out.println("ZZZZZZZ:"+question.getQuestionOptionList());
         question.getQuestionOptionList().add(option);
 
         option.setQuestionId(question);
