@@ -3,6 +3,7 @@ package com.surveyApe.entity;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -29,7 +30,7 @@ public class Survey {
     private boolean publishedInd;
 
     @OneToMany(mappedBy = "surveyId", cascade = CascadeType.REMOVE, fetch = FetchType.EAGER)
-    private List<SurveyQuestion> questionList;
+    private List<SurveyQuestion> questionList=new ArrayList<SurveyQuestion>();
 
     @OneToMany(mappedBy = "surveyId", cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
     private List<SurveyResponse> responseList;

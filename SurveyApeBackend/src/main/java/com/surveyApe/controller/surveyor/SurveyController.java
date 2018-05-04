@@ -15,8 +15,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+
 
 @Controller
 @CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
@@ -109,8 +111,10 @@ public class SurveyController {
 
 
         JSONObject resp = new JSONObject();
-        resp.append("survey_id", surveyVO.getSurveyId());
-
+        resp.append("survey_id", surveyVO.getSurveyId().toString());
+        System.out.println("RESPONSE: "+resp);
+        //JSONObject fake=new JSONObject();
+        //fake.append("1","1");
         return new ResponseEntity<Object>(resp, HttpStatus.OK);
     }
 
@@ -170,6 +174,7 @@ public class SurveyController {
         return new ResponseEntity<Object>(survey, HttpStatus.OK);
     }
 
+
     /**
      * Get all surveys for a surveyor
      */
@@ -210,15 +215,13 @@ public class SurveyController {
         Survey survey = surveyService.findBySurveyId(surveyId);
 
         if (survey == null) {
-            System.out.println("lagli ithe");
             return null;
         }
 
-
+        System.out.println("TEXT,TYPE:"+questionText+","+questionType);
         SurveyQuestion question = new SurveyQuestion(questionText, questionType);
 
         boolean successFlag = createOptions(optionList, question);
-        System.out.println("SUCCESSFLAGGGGGGG:" + successFlag);
         addQuestionToSurveyEntity(question, survey);
 
         questionService.addQuestion(question);

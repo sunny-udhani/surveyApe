@@ -8,7 +8,7 @@ import LandingPage from './LandingPage';
 import CreateSurvey from './CreateSurvey';
 import * as API from './api/API';
 const headers = {
-    'Accept': 'application/json'
+
 };
 
 class Routing extends Component {
@@ -42,22 +42,29 @@ class Routing extends Component {
       survey.questions[i].optionList=survey.questions[i].optionList.join(',');
     }
     console.log(survey.questions);
+    var self=this;
     var payload={surveyType:surveyType,surveyorEmail:"chandan.paranjape@gmail.com",surveyTitle:survey.name,questions:survey.questions,url:null,publish:false};
     if(closedSurveyList.length===0){
       //API FOR others
       fetch('http://localhost:8080/survey/create', {
         method: 'POST',
-        headers: {
-            ...headers,
-            'Content-Type': 'application/json'
+        headers:{
+          ContentType: 'application/json'
         },
         credentials:'include',
         body: JSON.stringify(payload)
     }).then(res => {
+      self.props.history.push('/signin');
+      self.props.history.push('/createSurvey');
         console.log(res);
-        return res.status;
-    })
-        .catch(error => {
+        return res.json();
+    }).then(json =>{
+      console.log(json);
+
+    }
+
+    )
+      .catch(error => {
             console.log("This is error");
             return error;
         });

@@ -13,7 +13,7 @@ public class QuestionOption {
                       strategy = "uuid")
     private String questionOptionId;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "QUESTION_ID")
     private SurveyQuestion questionId;
 
