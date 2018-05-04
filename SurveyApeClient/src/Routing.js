@@ -49,7 +49,8 @@ class Routing extends Component {
       fetch('http://localhost:8080/survey/create', {
         method: 'POST',
         headers:{
-          ContentType: 'application/json'
+          'Content-type': 'application/json',
+          'Accept':'application/json'
         },
         credentials:'include',
         body: JSON.stringify(payload)
