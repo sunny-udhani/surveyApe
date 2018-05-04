@@ -2,10 +2,7 @@ package com.surveyApe.controller.surveyor;
 
 import com.surveyApe.config.QuestionTypeEnum;
 import com.surveyApe.entity.*;
-import com.surveyApe.service.QuestionOptionService;
-import com.surveyApe.service.QuestionService;
-import com.surveyApe.service.SurveyService;
-import com.surveyApe.service.UserService;
+import com.surveyApe.service.*;
 import netscape.javascript.JSObject;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -35,6 +32,8 @@ public class SurveyController {
     private QuestionService questionService;
     @Autowired
     private QuestionOptionService questionOptionService;
+    @Autowired
+    private SurveyResponseService surveyResponseService;
 
     @PostMapping(path = "/create", produces = MediaType.APPLICATION_JSON_VALUE)
     public @ResponseBody
@@ -47,7 +46,7 @@ public class SurveyController {
         int surveyType = Integer.parseInt(reqObj.getString("surveyType"));
         String surveyTitle = reqObj.getString("surveyTitle");
         //String surveyorEmail = reqObj.getString("surveyorEmail");
-        String surveyorEmail="aaj@aaj.com";
+        String surveyorEmail = "aaj@aaj.com";
         //String surveyorEmail = session.getAttribute("surveyorEmail").toString();
 
         if (!surveyService.validSurveyType(surveyType)) {
@@ -88,6 +87,22 @@ public class SurveyController {
 
             if (surveyQuestion == null) {
                 return new ResponseEntity<Object>("question not created", HttpStatus.BAD_REQUEST);
+            }
+
+        }
+
+        JSONArray attendeesArray = reqObj.getJSONArray("attendeesList");
+
+        for (int i = 0; i < attendeesArray.length(); i++) {
+            JSONObject attendeesObj = attendeesArray.getJSONObject(i);
+
+            String surveyeeEmail = attendeesObj.getString("email");
+            String surveyeeURI = attendeesObj.getString("URI");
+
+            SurveyResponse newSurveyeeResponseEntry = createNewSurveyeeResponseEntry(surveyVO.getSurveyId(), surveyeeEmail, surveyeeURI);
+
+            if (newSurveyeeResponseEntry == null) {
+                return new ResponseEntity<Object>("response entity not created", HttpStatus.BAD_REQUEST);
             }
 
         }
@@ -155,7 +170,6 @@ public class SurveyController {
         return new ResponseEntity<Object>(survey, HttpStatus.OK);
     }
 
-
     /**
      * Get all surveys for a surveyor
      */
@@ -183,7 +197,7 @@ public class SurveyController {
 
     @GetMapping(path = "surveyor/getSurvey/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public @ResponseBody
-    ResponseEntity<?> retrieveASurvey(@PathVariable String id,@RequestParam Map<String, String> params, HttpSession session) {
+    ResponseEntity<?> retrieveASurvey(@PathVariable String id, @RequestParam Map<String, String> params, HttpSession session) {
 
         Survey survey = surveyService.findBySurveyId(id);
         if (survey == null) {
@@ -204,7 +218,7 @@ public class SurveyController {
         SurveyQuestion question = new SurveyQuestion(questionText, questionType);
 
         boolean successFlag = createOptions(optionList, question);
-        System.out.println("SUCCESSFLAGGGGGGG:"+successFlag);
+        System.out.println("SUCCESSFLAGGGGGGG:" + successFlag);
         addQuestionToSurveyEntity(question, survey);
 
         questionService.addQuestion(question);
@@ -212,13 +226,42 @@ public class SurveyController {
         return question;
     }
 
+    public SurveyResponse createNewSurveyeeResponseEntry(String surveyId, String attendeeEmail, String attendeeURI) {
+        Survey survey = surveyService.findBySurveyId(surveyId);
+
+        if (survey == null) {
+            return null;
+        }
+
+
+        SurveyResponse attendeeResponseEntity = new SurveyResponse();
+        attendeeResponseEntity.setSurveyId(survey);
+        // no check for email in user table as only survey type closed requires users to be preregistered
+        attendeeResponseEntity.setUserEmail(attendeeEmail);
+
+        attendeeResponseEntity.setSurveyURI(attendeeURI);
+
+        //add attendee response entity to survey for two way binding
+        addSurveyResponseToSurveyEntity(attendeeResponseEntity, survey);
+
+        //save each entity
+        surveyResponseService.saveResponseEntity(attendeeResponseEntity);
+        surveyService.saveSurvey(survey);
+        return attendeeResponseEntity;
+    }
+
     public void addQuestionToSurveyEntity(SurveyQuestion question, Survey survey) {
         survey.getQuestionList().add(question);
         question.setSurveyId(survey);
     }
 
+    public void addSurveyResponseToSurveyEntity(SurveyResponse response, Survey survey) {
+        survey.getResponseList().add(response);
+        response.setSurveyId(survey);
+    }
+
     public void addOptionToQuestionEntity(QuestionOption option, SurveyQuestion question) {
-        System.out.println("ZZZZZZZ:"+question.getQuestionOptionList());
+        System.out.println("ZZZZZZZ:" + question.getQuestionOptionList());
         question.getQuestionOptionList().add(option);
 
         option.setQuestionId(question);
@@ -231,9 +274,9 @@ public class SurveyController {
 
     public boolean createOptions(String optionList, SurveyQuestion question) {
         for (String options : optionList.split(",")) {
-            System.out.println("OOOOOOOOO:"+options);
+            System.out.println("OOOOOOOOO:" + options);
             QuestionOption option = new QuestionOption(options);
-            System.out.println("XXXXXXXX"+option);
+            System.out.println("XXXXXXXX" + option);
             addOptionToQuestionEntity(option, question);
             questionOptionService.saveOption(option);
         }
