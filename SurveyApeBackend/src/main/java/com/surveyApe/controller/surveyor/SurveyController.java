@@ -43,9 +43,9 @@ public class SurveyController {
     ResponseEntity<?> createSurvey(@RequestBody String req, @RequestParam Map<String, String> params, HttpSession session) {
 
         JSONObject reqObj = new JSONObject(req);
-        
+
         int surveyType = Integer.parseInt(reqObj.getString("surveyType"));
-        String surveyTitle = reqObj.getString("surveyTitle");]
+        String surveyTitle = reqObj.getString("surveyTitle");
         String surveyorEmail="aaj@aaj.com";
 
         if (!surveyService.validSurveyType(surveyType)) {
