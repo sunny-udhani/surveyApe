@@ -87,9 +87,38 @@ class Routing extends Component {
     this.props.history.push('/createSurvey');
   }
 
-  gotoSignin = () => {
-        this.props.history.push('/signin');
-  };
+  verifyUser = (data) => {
+
+    API.verifyUser(data)
+        .then((res) => {
+            console.log(res.msg);
+            if (res.status == 200) {
+                alert("User verified successfully!");
+                this.props.history.push("/signin");
+            }
+            else if (res.status == 401) {
+                alert("User with this email id already exists. Please use another email id!");
+                this.props.history.push("/");
+                this.props.history.push("/signup");
+            }
+            else if(res.status === 409)
+            {
+              alert("User Already Exists. Please verify your account");
+              this.props.history.push("/confirmation");
+            }
+            else if(res.status === 302)
+            {
+              alert("User Already Exists. Please Click Ok to Signin.");
+              this.props.history.push("/signin");
+            }
+            else {
+                console.log("res.status===", res)
+                alert("Failed to register!Please check all the fields and try again");
+                this.props.history.push("/signup");
+            }
+        });
+
+  }
 
   gotoSignup = () => {
         this.props.history.push('/signup');
@@ -127,6 +156,40 @@ class Routing extends Component {
             });
     }
 
+    signIn = (payload) => {
+          API.signIn(payload)
+              .then((res) => {
+                  console.log(res.msg);
+                  if (res.status == 200) {
+                      alert("User Signed In Successfully");
+                      this.props.history.push("/createSurvey");
+                  }
+                  else if (res.status == 401) {
+                      alert("User with this email id already exists. Please use another email id!");
+                      this.props.history.push("/");
+                      this.props.history.push("/signup");
+                  }
+                  else if(res.status === 409)
+                  {
+                    alert("User Already Exists. Please verify your account");
+                    this.props.history.push("/confirmation");
+                  }
+                  else if(res.status === 302)
+                  {
+                    alert("User Already Exists. Please Click Ok to Signin.");
+                    this.props.history.push("/signin");
+                  }
+                  else {
+                      console.log("res.status===", res)
+                      alert("Failed to register!Please check all the fields and try again");
+                      this.props.history.push("/signup");
+                  }
+
+              });
+      }
+
+
+
     render() {
         return (
             <div className="container-fluid" style={{backgroundColor:"white"}}>
@@ -145,13 +208,13 @@ class Routing extends Component {
 
                 <Route exact path="/signin" render={() => (
                     <div>
-                        <Signin gotoSignup={this.gotoSignup}/>
+                        <Signin signIn={this.signIn}/>
                     </div>
                 )}/>
 
                 <Route exact path="/confirmation" render={() => (
                     <div>
-                        <Confirmation gotoSignin={this.gotoSignin}/>
+                        <Confirmation verifyUser={this.verifyUser}/>
                     </div>
                 )}/>
 
