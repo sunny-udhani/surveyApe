@@ -1,5 +1,6 @@
 package com.surveyApe.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
@@ -41,6 +42,7 @@ public class SurveyResponse {
         this.surveyResponseId = surveyResponseId;
     }
 
+    @JsonIgnore
     public Survey getSurveyId() {
         return surveyId;
     }
