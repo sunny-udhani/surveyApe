@@ -42,14 +42,10 @@ public class SurveyController {
     ResponseEntity<?> createSurvey(@RequestBody String req, @RequestParam Map<String, String> params, HttpSession session) {
 
         JSONObject reqObj = new JSONObject(req);
-        System.out.println(reqObj);
-        System.out.println(params);
 
         int surveyType = Integer.parseInt(reqObj.getString("surveyType"));
-        String surveyTitle = reqObj.getString("surveyTitle");
-        //String surveyorEmail = reqObj.getString("surveyorEmail");
-        String surveyorEmail = "aaj@aaj.com";
-        //String surveyorEmail = session.getAttribute("surveyorEmail").toString();
+        String surveyTitle = reqObj.getString("surveyTitle");]
+        String surveyorEmail="aaj@aaj.com";
 
         if (!surveyService.validSurveyType(surveyType)) {
             return new ResponseEntity<Object>("Invalid Survey Type", HttpStatus.BAD_REQUEST);
@@ -69,8 +65,7 @@ public class SurveyController {
         surveyService.createSurvey(surveyVO);
 
         JSONArray questionArray = reqObj.getJSONArray("questions");
-        System.out.println(reqObj);
-        System.out.println(params);
+
 
         for (int i = 0; i < questionArray.length(); i++) {
             JSONObject questionOnj = questionArray.getJSONObject(i);
@@ -112,9 +107,6 @@ public class SurveyController {
 
         JSONObject resp = new JSONObject();
         resp.append("survey_id", surveyVO.getSurveyId().toString());
-        System.out.println("RESPONSE: "+resp);
-        //JSONObject fake=new JSONObject();
-        //fake.append("1","1");
         return new ResponseEntity<Object>(resp, HttpStatus.OK);
     }
 
@@ -123,8 +115,7 @@ public class SurveyController {
     ResponseEntity<?> editSurvey(@RequestBody String req, @PathVariable String survey_id, @RequestParam Map<String, String> params, HttpSession session) {
 
         JSONObject reqObj = new JSONObject(req);
-        System.out.println(reqObj);
-        System.out.println(params);
+
 
         int surveyType = Integer.parseInt(reqObj.getString("surveyType"));
         String surveyTitle = reqObj.getString("surveyTitle");
@@ -147,8 +138,7 @@ public class SurveyController {
         surveyService.saveSurvey(survey);
 
         JSONArray questionArray = reqObj.getJSONArray("questions");
-        System.out.println(reqObj);
-        System.out.println(params);
+
 
         for (int i = 0; i < questionArray.length(); i++) {
             JSONObject questionOnj = questionArray.getJSONObject(i);
@@ -182,10 +172,7 @@ public class SurveyController {
     public @ResponseBody
     ResponseEntity<?> retrieveAllSurveys(@RequestParam Map<String, String> params, HttpSession session) {
 
-//        JSONObject reqObj = new JSONObject(req);
-//        System.out.println(reqObj);
         System.out.println(params);
-//        String surveyorEmail = session.getAttribute("surveyorEmail").toString();
         String surveyorEmail = params.get("surveyorEmail");
         User userVO = userService.getUserById(surveyorEmail).orElse(null);
         if (userVO == null) {
@@ -264,7 +251,6 @@ public class SurveyController {
     }
 
     public void addOptionToQuestionEntity(QuestionOption option, SurveyQuestion question) {
-        System.out.println("ZZZZZZZ:" + question.getQuestionOptionList());
         question.getQuestionOptionList().add(option);
 
         option.setQuestionId(question);
@@ -277,9 +263,9 @@ public class SurveyController {
 
     public boolean createOptions(String optionList, SurveyQuestion question) {
         for (String options : optionList.split(",")) {
-            System.out.println("OOOOOOOOO:" + options);
+
             QuestionOption option = new QuestionOption(options);
-            System.out.println("XXXXXXXX" + option);
+
             addOptionToQuestionEntity(option, question);
             questionOptionService.saveOption(option);
         }
