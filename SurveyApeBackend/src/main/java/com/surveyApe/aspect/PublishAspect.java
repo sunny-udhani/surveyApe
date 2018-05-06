@@ -37,6 +37,30 @@ public class PublishAspect {
         System.out.println(joinPoint.getSignature());
         System.out.println(joinPoint.getSignature().getName());
 
+        int result = checkForAttendees(joinPoint);
+
+        if (result == 0) {
+            return joinPoint.proceed();
+
+        } else if (result == 1) {
+            return new ResponseEntity<Object>("Invalid Survey Type", HttpStatus.BAD_REQUEST);
+
+        } else if (result == 2) {
+            return new ResponseEntity<Object>("No such survey", HttpStatus.BAD_REQUEST);
+
+        } else if (result == 3) {
+            return new ResponseEntity<Object>("No attendees added, so can't publish", HttpStatus.BAD_REQUEST);
+
+        }
+//
+//        if (session.getAttribute("company") == null) {
+//            System.out.println("Redirecting to login");
+//            return "/login";
+//        }
+        return joinPoint.proceed();
+    }
+
+    public int checkForAttendees(ProceedingJoinPoint joinPoint) {
         String methodName = joinPoint.getSignature().getName();
 
         Object[] args = joinPoint.getArgs();
@@ -47,7 +71,8 @@ public class PublishAspect {
         String publishInd = (reqObj.has("publishInd")) ? reqObj.getString("publishInd") : "";
 
         if (publishInd.equals("")) {
-            return joinPoint.proceed();
+//            allow jointpoint to proceed, no error
+            return 0;
         } else {
             int intPublishInd = Integer.parseInt(publishInd);
             if (intPublishInd == 1) {
@@ -57,7 +82,8 @@ public class PublishAspect {
                     int surveyType = Integer.parseInt(reqObj.getString("surveyType"));
 
                     if (!surveyService.validSurveyType(surveyType)) {
-                        return new ResponseEntity<Object>("Invalid Survey Type", HttpStatus.BAD_REQUEST);
+//                        send error, invalid survey type
+                        return 1;
                     }
                     if (surveyType == SurveyTypeEnum.CLOSED.getEnumCode()) {
 
@@ -66,19 +92,23 @@ public class PublishAspect {
 
                             Survey survey = surveyService.findBySurveyId(surveyId);
                             if (survey == null) {
-                                return new ResponseEntity<Object>("No such survey", HttpStatus.BAD_REQUEST);
+//                                send error, no such survey found
+                                return 2;
                             }
 
                             if (survey.getResponseList() != null) {
-                                int numberOfattendees = survey.getResponseList().size();
-                                if (numberOfattendees > 0)
-                                    return joinPoint.proceed();
+                                int numberOfAttendees = survey.getResponseList().size();
+                                if (numberOfAttendees > 0)
+                                    return 0;
                                 else
-                                    return new ResponseEntity<Object>("No attendees added, so can't publish", HttpStatus.BAD_REQUEST);
+//                                    send error, no attendee added, so can't publish
+                                    return 3;
                             } else
-                                return new ResponseEntity<Object>("No attendees added, so can't publish", HttpStatus.BAD_REQUEST);
+//                                send error, no attendee added, so can't publish
+                                return 3;
                         } else
-                            return joinPoint.proceed();
+//                            allow jointpoint to proceed, no error
+                            return 0;
 //                        JSONArray attendeesArray = reqObj.getJSONArray("attendeesList");
                     }
 
@@ -86,27 +116,25 @@ public class PublishAspect {
                     int surveyType = Integer.parseInt(reqObj.getString("surveyType"));
 
                     if (!surveyService.validSurveyType(surveyType)) {
-                        return new ResponseEntity<Object>("Invalid Survey Type", HttpStatus.BAD_REQUEST);
+//                        send error, invalid survey type
+                        return 1;
                     }
                     if (surveyType == SurveyTypeEnum.CLOSED.getEnumCode()) {
 
                         if (!(reqObj.has("attendeesList")))
-                            return new ResponseEntity<Object>("No attendees added, so can't publish", HttpStatus.BAD_REQUEST);
+//                            send error, no attendee added, so can't publish
+                            return 3;
                         else
-                            return joinPoint.proceed();
+//                            allow jointpoint to proceed, no error
+                            return 0;
 //                        JSONArray attendeesArray = reqObj.getJSONArray("attendeesList");
                     }
                 }
 
             } else {
-                return joinPoint.proceed();
+                return 0;
             }
         }
-//
-//        if (session.getAttribute("company") == null) {
-//            System.out.println("Redirecting to login");
-//            return "/login";
-//        }
-        return joinPoint.proceed();
+        return 0;
     }
 }
