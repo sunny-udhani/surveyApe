@@ -2,6 +2,10 @@ package com.surveyApe.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.surveyApe.entity.Message;
+import com.surveyApe.entity.User;
+import com.surveyApe.service.MailServices;
+import com.surveyApe.service.QuestionService;
+import com.surveyApe.service.SurveyService;
 import com.surveyApe.service.UserService;
 import org.json.JSONException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,17 +14,29 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.mail.SimpleMailMessage;
 
 import javax.ws.rs.Produces;
 import java.util.Map;
+import java.util.UUID;
+import org.json.JSONObject;
 
 @Controller
-@CrossOrigin(origins = "http://localhost:3000") //requires you to run react server on port 3000
+@CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true") //requires you to run react server on port 3000
 @RequestMapping(path = "/user")
 public class UserController {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private QuestionService questionService;
+
+    @Autowired
+    private SurveyService surveyService;
+
+    @Autowired
+    private MailServices mailServices;
 
 
     @GetMapping(path = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -83,6 +99,123 @@ public class UserController {
         Message error = new Message("User with id " + id + " does not exist", "404");
 
         return new ResponseEntity<Object>(success.getXML(), HttpStatus.OK);
+    }
+
+    @PostMapping(value="/login",consumes = MediaType.APPLICATION_JSON_VALUE)
+    public @ResponseBody ResponseEntity<?> loginUser(@RequestBody String data)
+    {
+
+        // check if the email id exists
+
+        System.out.println("Email id recieived "+ data);
+
+
+        JSONObject jso = new JSONObject(data);
+        String email = (String)jso.get("email");
+        String password = (String)jso.get("password");
+
+        System.out.println("Email id recieived "+ email);
+        System.out.println("password  recieived "+ password);
+
+        if(userService.userExists(email))
+        {
+
+            User u = userService.getUser(email);
+            if(u.getPassword().equals(password) && u.getVerificationInd()==true)
+            {
+                return new ResponseEntity<Object>(HttpStatus.OK);
+            }
+            if(u.getPassword().equals(password) && u.getVerificationInd()==false)
+            {
+                return new ResponseEntity<Object>(HttpStatus.CONFLICT);
+            }
+
+            if(u.getPassword()!=password)
+            {
+                return new ResponseEntity<Object>(HttpStatus.valueOf(900));
+            }
+
+
+        }
+        else {
+
+            return  new ResponseEntity<Object>(HttpStatus.NOT_FOUND);
+        }
+
+        return null;
+    }
+
+
+    @PostMapping(value = "/verify",consumes = MediaType.APPLICATION_JSON_VALUE)
+    public @ResponseBody ResponseEntity<?>  verifyUser(@RequestBody String data)
+
+    {
+
+        JSONObject jso = new JSONObject(data);
+        String email = (String)jso.get("email");
+        String code = (String)jso.get("confirmation");
+
+        String uniqueCode = userService.getVerificationCode(email);
+
+        if(code.equals(uniqueCode))
+        {
+
+            userService.updateInd(email);
+            return new ResponseEntity<Object>(HttpStatus.OK);
+
+        }
+
+        else {
+
+            return new ResponseEntity<Object>(HttpStatus.CONFLICT);
+        }
+
+    }
+
+    @PostMapping(value = "/signup",consumes = MediaType.APPLICATION_JSON_VALUE)
+    public @ResponseBody ResponseEntity<?>  signupUser(@RequestBody String data)
+    {
+        System.out.println("body");
+        JSONObject jso = new JSONObject(data);
+        System.out.println(jso.get("firstName"));
+        System.out.print(jso.get("firstName"));
+        System.out.print(jso.get("lastName"));
+        System.out.print(jso.get("email"));
+        String firstName = (String)jso.get("firstName");
+        String lastName = (String)jso.get("lastName");
+        String email = (String)jso.get("email");
+        String password = (String)jso.get("password");
+        String phone = (String)jso.get("phone");
+        String uid = UUID.randomUUID().toString();
+
+
+        if(userService.userExists(email))
+        {
+            System.out.print("User exists");
+            if(!userService.userStatus(email))
+            {
+                // user exists but not verified , verify your account! // Status Code 409
+                return new ResponseEntity<Object>(HttpStatus.CONFLICT);
+            }
+            // User Already Exists & Status Verifed Status Code 302 Sent please login with your  credentials
+
+            return new ResponseEntity<Object>(HttpStatus.FOUND);
+        }
+
+        else {
+
+             //  javaMailSender.send(mail);
+            userService.createUser(firstName,lastName,email,password,phone,uid,false);
+            mailServices.sendEmail(email, uid, "aviralkum@gmail.com", "MEssage from SurveyApp");
+
+
+        }
+
+        // User Created Successfully with Verification Pending
+
+
+        return  new ResponseEntity<Object>(HttpStatus.OK);
+
     }
 
 }

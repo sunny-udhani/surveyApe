@@ -62,7 +62,7 @@ class Signin extends Component {
 
 
             <div style={{marginTop: "2%",float: "left"}}>
-              <button className="btm btn-primary" onClick={()=>{this.props.registerUser({firstname:this.state.firstname,lastname:this.state.lastname,email:this.state.email,password:this.state.password})}}>Sign In</button>
+              <button className="btm btn-primary" onClick={()=>{this.props.signIn({email:this.state.email,password:this.state.password})}}>Sign In</button>
             </div>
 
             <div style={{marginTop: "4%", float: "left", marginLeft: "24%"}}>
