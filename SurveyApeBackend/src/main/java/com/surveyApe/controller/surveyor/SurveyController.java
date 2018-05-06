@@ -44,7 +44,7 @@ public class SurveyController {
         JSONObject reqObj = new JSONObject(req);
 
         int surveyType = Integer.parseInt(reqObj.getString("surveyType"));
-        String surveyTitle = reqObj.getString("surveyTitle");]
+        String surveyTitle = reqObj.getString("surveyTitle");
         String surveyorEmail="aaj@aaj.com";
 
         if (!surveyService.validSurveyType(surveyType)) {
@@ -112,7 +112,7 @@ public class SurveyController {
 
     @PostMapping(path = "/edit/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public @ResponseBody
-    ResponseEntity<?> editSurvey(@RequestBody String req, @PathVariable String survey_id, @RequestParam Map<String, String> params, HttpSession session) {
+    ResponseEntity<?> editSurvey(@RequestBody String req, @RequestParam Map<String, String> params, @PathVariable String survey_id, HttpSession session) {
 
         JSONObject reqObj = new JSONObject(req);
 
