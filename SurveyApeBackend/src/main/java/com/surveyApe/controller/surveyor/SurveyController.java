@@ -45,7 +45,7 @@ public class SurveyController {
 
         int surveyType = Integer.parseInt(reqObj.getString("surveyType"));
         String surveyTitle = reqObj.getString("surveyTitle");
-        String surveyorEmail="aaj@aaj.com";
+        String surveyorEmail = "aaj@aaj.com";
 
         if (!surveyService.validSurveyType(surveyType)) {
             return new ResponseEntity<Object>("Invalid Survey Type", HttpStatus.BAD_REQUEST);
@@ -88,22 +88,24 @@ public class SurveyController {
 
         }
 
-        JSONArray attendeesArray = reqObj.getJSONArray("attendeesList");
+        if (reqObj.has("attendeesList")) {
 
-        for (int i = 0; i < attendeesArray.length(); i++) {
-            JSONObject attendeesObj = attendeesArray.getJSONObject(i);
+            JSONArray attendeesArray = reqObj.getJSONArray("attendeesList");
 
-            String surveyeeEmail = attendeesObj.getString("email");
-            String surveyeeURI = attendeesObj.getString("URI");
+            for (int i = 0; i < attendeesArray.length(); i++) {
+                JSONObject attendeesObj = attendeesArray.getJSONObject(i);
 
-            SurveyResponse newSurveyeeResponseEntry = createNewSurveyeeResponseEntry(surveyVO.getSurveyId(), surveyeeEmail, surveyeeURI);
+                String surveyeeEmail = attendeesObj.getString("email");
+                String surveyeeURI = attendeesObj.getString("URI");
 
-            if (newSurveyeeResponseEntry == null) {
-                return new ResponseEntity<Object>("response entity not created", HttpStatus.BAD_REQUEST);
+                SurveyResponse newSurveyeeResponseEntry = createNewSurveyeeResponseEntry(surveyVO.getSurveyId(), surveyeeEmail, surveyeeURI);
+
+                if (newSurveyeeResponseEntry == null) {
+                    return new ResponseEntity<Object>("response entity not created", HttpStatus.BAD_REQUEST);
+                }
+
             }
-
         }
-
 
         JSONObject resp = new JSONObject();
         resp.append("survey_id", surveyVO.getSurveyId().toString());
@@ -205,7 +207,7 @@ public class SurveyController {
             return null;
         }
 
-        System.out.println("TEXT,TYPE:"+questionText+","+questionType);
+        System.out.println("TEXT,TYPE:" + questionText + "," + questionType);
         SurveyQuestion question = new SurveyQuestion(questionText, questionType);
 
         boolean successFlag = createOptions(optionList, question);
