@@ -218,6 +218,12 @@ class Routing extends Component {
                       </div>
                   )}/>
 
+                <Route exact path="/dashboard" render={() => (
+                      <div>
+                          <Dashboard submitResponses={this.submitResponses}/>
+                      </div>
+                  )}/>
+
                 <Route exact path="/signup" render={() => (
                     <div>
                         <Signup gotoSignin={this.gotoSignin} registerUser={this.registerUser}/>
