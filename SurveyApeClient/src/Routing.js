@@ -200,10 +200,14 @@ class Routing extends Component {
           });
       }
 
+      gotoCreateSurvey = () => {
+          this.props.history.push('/createSurvey');
+      }
+
 
     render() {
         return (
-            <div className="container-fluid" style={{backgroundColor:"white"}}>
+            <div className="container-fluid" style={{backgroundColor:"white", height: "100%"}}>
                 <Route exact path="/" render={() => (
                     <div>
                         <LandingPage gotoSignin={this.gotoSignin} gotoSignup={this.gotoSignup}/>
@@ -217,15 +221,10 @@ class Routing extends Component {
 
                 <Route exact path="/dashboard" render={() => (
                       <div>
-                          <Dashboard submitResponses={this.submitResponses}/>
+                          <Dashboard submitResponses={this.submitResponses} gotoCreateSurvey={this.gotoCreateSurvey}/>
                       </div>
                   )}/>
 
-                <Route exact path="/dashboard" render={() => (
-                      <div>
-                          <Dashboard submitResponses={this.submitResponses}/>
-                      </div>
-                  )}/>
 
                 <Route exact path="/signup" render={() => (
                     <div>
@@ -247,8 +246,8 @@ class Routing extends Component {
                 )}/>
 
               <Route exact path="/createSurvey" render={() => (
-                    <div>
-                        <CreateSurvey createSurvey={this.createSurvey}/>
+                    <div style={{height: "100%"}}>
+                        <CreateSurvey createSurvey={this.createSurvey} />
                     </div>
                 )}/>
 

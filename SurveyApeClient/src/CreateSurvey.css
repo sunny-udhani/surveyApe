@@ -1,0 +1,41 @@
+.survey-form {
+
+}
+
+.bar {
+  background-color: #061928;
+
+}
+
+.logo {
+  padding: 1.5% 0 0 0;
+}
+.textLogo {
+  padding: 2.3% 0 0 0;
+  font-size: 26px;
+  color: #1E8E5C;
+}
+
+.row.bar {
+  height: 80px;
+}
+
+.main-text {
+  padding: 0.5% 0 0.5% 3%;
+}
+
+.survey-name {
+  padding: 0.5% 0 0.5% 3%;
+}
+
+.labels {
+  font-size: 18px;
+}
+
+.inputs {
+  margin-left: 8.7%;
+}
+
+.inputs-add {
+  margin-left: 0;
+}
