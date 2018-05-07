@@ -23,7 +23,7 @@ public class Survey {
     private String surveyURI;
     private String surveyTitle;
     @Column(nullable = true)
-    private double surveyQRNumber;
+    private String surveyQRNumber;
     private Date startDate;
     private Date endDate;
     @Column(nullable = true)
@@ -83,11 +83,11 @@ public class Survey {
         this.surveyURI = surveyURI;
     }
 
-    public double getSurveyQRNumber() {
+    public String getSurveyQRNumber() {
         return surveyQRNumber;
     }
 
-    public void setSurveyQRNumber(double surveyQRNumber) {
+    public void setSurveyQRNumber(String surveyQRNumber) {
         this.surveyQRNumber = surveyQRNumber;
     }
 

@@ -1,11 +1,10 @@
 package com.surveyApe.controller.surveyor;
 
 import com.surveyApe.config.QuestionTypeEnum;
+import com.surveyApe.config.SurveyTypeEnum;
 import com.surveyApe.entity.*;
 import com.surveyApe.service.*;
-import netscape.javascript.JSObject;
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -15,7 +14,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
-import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -36,6 +35,8 @@ public class SurveyController {
     private QuestionOptionService questionOptionService;
     @Autowired
     private SurveyResponseService surveyResponseService;
+    @Autowired
+    private MailServices mailServices;
 
     @PostMapping(path = "/create", produces = MediaType.APPLICATION_JSON_VALUE)
     public @ResponseBody
@@ -63,6 +64,30 @@ public class SurveyController {
         surveyVO.setSurveyorEmail(userVO);
         surveyVO.setSurveyTitle(surveyTitle);
         surveyVO.setSurveyType(surveyType);
+
+        if (reqObj.has("url")) {
+            String url = reqObj.getString("url");
+            if (!url.equals("")) {
+                surveyVO.setSurveyURI(url);
+            }
+        }
+        if (reqObj.has("qr")) {
+            String qr = reqObj.getString("qr");
+            if (!qr.equals("")) {
+                surveyVO.setSurveyQRNumber(qr);
+            }
+        }
+        if (reqObj.has("endTime")) {
+            String endTime = reqObj.getString("endTime");
+            if (!endTime.equals("")) {
+                Date endDate = new Date(Long.getLong(endTime));
+                if (endDate.after(new Date()))
+                    surveyVO.setEndDate(endDate);
+                else
+                    return new ResponseEntity<Object>("Invalid End Date", HttpStatus.BAD_REQUEST);
+            }
+        }
+
         surveyService.createSurvey(surveyVO);
 
         JSONArray questionArray = reqObj.getJSONArray("questions");
@@ -108,6 +133,26 @@ public class SurveyController {
             }
         }
 
+        if (reqObj.has("inviteeList")) {
+
+            JSONArray invitedEmailsArray = reqObj.getJSONArray("inviteeList");
+
+            for (int i = 0; i < invitedEmailsArray.length(); i++) {
+                JSONObject attendeesObj = invitedEmailsArray.getJSONObject(i);
+
+                String surveyeeEmail = attendeesObj.getString("email");
+
+                SurveyResponse newSurveyeeResponseEntry = createNewSurveyeeResponseEntry(surveyVO.getSurveyId(), surveyeeEmail, "");
+
+                if (newSurveyeeResponseEntry == null) {
+                    return new ResponseEntity<Object>("response entity not created", HttpStatus.BAD_REQUEST);
+                }
+
+            }
+        }
+
+        sendEmailtoAttendees(surveyVO);
+
         JSONObject resp = new JSONObject();
         resp.append("survey_id", surveyVO.getSurveyId().toString());
         return new ResponseEntity<Object>(resp, HttpStatus.OK);
@@ -135,6 +180,31 @@ public class SurveyController {
         }
         survey.setSurveyTitle(surveyTitle);
         survey.setSurveyType(surveyType);
+
+        if (reqObj.has("url")) {
+            String url = reqObj.getString("url");
+            if (!url.equals("")) {
+                survey.setSurveyURI(url);
+            }
+        }
+        if (reqObj.has("qr")) {
+            String qr = reqObj.getString("qr");
+            if (!qr.equals("")) {
+                survey.setSurveyQRNumber(qr);
+            }
+        }
+        if (reqObj.has("endTime")) {
+            String endTime = reqObj.getString("endTime");
+            if (!endTime.equals("")) {
+                Date endDate = new Date(Long.getLong(endTime));
+                if (endDate.after(new Date()))
+                    survey.setEndDate(endDate);
+                else
+                    return new ResponseEntity<Object>("Invalid End Date", HttpStatus.BAD_REQUEST);
+            }
+        }
+
+
         surveyService.saveSurvey(survey);
 
         survey.getQuestionList().clear();
@@ -163,10 +233,50 @@ public class SurveyController {
 
         }
 
+        if (reqObj.has("attendeesList")) {
+            survey.getResponseList().clear();
+            surveyService.saveSurvey(survey);
+            JSONArray attendeesArray = reqObj.getJSONArray("attendeesList");
+
+            for (int i = 0; i < attendeesArray.length(); i++) {
+                JSONObject attendeesObj = attendeesArray.getJSONObject(i);
+
+                String surveyeeEmail = attendeesObj.getString("email");
+                String surveyeeURI = attendeesObj.getString("URI");
+
+                SurveyResponse newSurveyeeResponseEntry = createNewSurveyeeResponseEntry(survey.getSurveyId(), surveyeeEmail, surveyeeURI);
+
+                if (newSurveyeeResponseEntry == null) {
+                    return new ResponseEntity<Object>("response entity not created", HttpStatus.BAD_REQUEST);
+                }
+
+            }
+        }
+
+        if (reqObj.has("inviteeList")) {
+            survey.getResponseList().clear();
+            surveyService.saveSurvey(survey);
+
+            JSONArray invitedEmailsArray = reqObj.getJSONArray("inviteeList");
+
+            for (int i = 0; i < invitedEmailsArray.length(); i++) {
+                JSONObject attendeesObj = invitedEmailsArray.getJSONObject(i);
+
+                String surveyeeEmail = attendeesObj.getString("email");
+
+                SurveyResponse newSurveyeeResponseEntry = createNewSurveyeeResponseEntry(survey.getSurveyId(), surveyeeEmail, "");
+
+                if (newSurveyeeResponseEntry == null) {
+                    return new ResponseEntity<Object>("response entity not created", HttpStatus.BAD_REQUEST);
+                }
+
+            }
+        }
+
+        sendEmailtoAttendees(survey);
 
         return new ResponseEntity<Object>(survey, HttpStatus.OK);
     }
-
 
     /**
      * Get all surveys for a surveyor
@@ -232,7 +342,8 @@ public class SurveyController {
         // no check for email in user table as only survey type closed requires users to be preregistered
         attendeeResponseEntity.setUserEmail(attendeeEmail);
 
-        attendeeResponseEntity.setSurveyURI(attendeeURI);
+        if (!(attendeeURI.equals("")))
+            attendeeResponseEntity.setSurveyURI(attendeeURI);
 
         //add attendee response entity to survey for two way binding
         addSurveyResponseToSurveyEntity(attendeeResponseEntity, survey);
@@ -285,4 +396,42 @@ public class SurveyController {
         return false;
     }
 
+    public int sendEmailtoAttendees(Survey survey) {
+        boolean publishInd = survey.isPublishedInd();
+
+        if (publishInd) {
+
+            int surveyType = survey.getSurveyType();
+
+            if (surveyType == SurveyTypeEnum.CLOSED.getEnumCode() || surveyType == SurveyTypeEnum.GENERAL.getEnumCode()) {
+                List<SurveyResponse> surveyResponseList = survey.getResponseList();
+                if (surveyType == SurveyTypeEnum.CLOSED.getEnumCode()) {
+
+                    for (SurveyResponse response : surveyResponseList) {
+
+                        String attendeeEmail = response.getUserEmail();
+                        String attendeeURL = response.getSurveyURI();
+
+                        mailServices.sendEmail(attendeeEmail, "You must fill this survey: " + attendeeURL, "aviralkum@gmail.com", "Survey Filling request");
+
+                        return 0;
+                    }
+
+                } else {
+
+                    String surveyURL = survey.getSurveyURI();
+                    for (SurveyResponse response : surveyResponseList) {
+
+                        String attendeeEmail = response.getUserEmail();
+                        mailServices.sendEmail(attendeeEmail, "You are invited to take this survey: " + surveyURL, "aviralkum@gmail.com", "Survey Filling request");
+
+                        return 0;
+                    }
+                }
+            }
+        } else {
+            return 0;
+        }
+        return 0;
+    }
 }
