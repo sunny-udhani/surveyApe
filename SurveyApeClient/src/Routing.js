@@ -6,6 +6,7 @@ import Signin from './Signin';
 import Confirmation from './Confirmation';
 import LandingPage from './LandingPage';
 import CreateSurvey from './CreateSurvey';
+import Dashboard from './Dashboard';
 import * as API from './api/API';
 const headers = {
 
@@ -188,6 +189,13 @@ class Routing extends Component {
               });
       }
 
+      submitResponses = (payload) => {
+
+        API.submitResponses(payload)
+          .then((res) => {
+              console.log("response received after submitting response : ", res);
+          });
+      }
 
 
     render() {
@@ -198,6 +206,12 @@ class Routing extends Component {
                         <LandingPage gotoSignin={this.gotoSignin} gotoSignup={this.gotoSignup}/>
                     </div>
                 )}/>
+
+                <Route exact path="/dashboard" render={() => (
+                      <div>
+                          <Dashboard submitResponses={this.submitResponses}/>
+                      </div>
+                  )}/>
 
                 <Route exact path="/signup" render={() => (
                     <div>

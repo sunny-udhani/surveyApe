@@ -1,6 +1,9 @@
 .main {
   min-height: 700px;
-  background-color: black;
+  background-image: url('bg.jpeg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
   color: white;
   padding-top: 18%;
 }
@@ -13,4 +16,31 @@
 
 .leftButt {
   margin-right: 10%;
+}
+
+.butt {
+  fontSize: 24;
+   width: 80%;
+   height: 40px;
+   color: white;
+   font-size: 20px;
+   background-color: #1DBE72;
+   font-weight: 700;
+   border: none;
+   border-radius: 7px;
+}
+
+#anim {
+  animation-delay: 0.3s;
+  animation-duration: 1.5s;
+}
+
+#buttonMain {
+  animation-delay: 1.4s;
+  animation-duration: 1s;
+}
+
+#textMain1 {
+  animation-delay: 1s;
+  animation-duration: 1s;
 }
