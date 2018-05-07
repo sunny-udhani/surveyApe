@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 
 import './LandingPage.css';
 
-import bgLogo from './bglogo.png';
+import bgLogo from './logo1.png';
 
 
 class LandingPage extends Component {
@@ -21,7 +21,7 @@ render() {
           </div>
 
           <div className="col-lg-2" style={{textAlign: "center"}}>
-            <img src={bgLogo} alt="" />
+            <img className="animated swing" id="anim" src={bgLogo} alt="" />
           </div>
 
       </div>
@@ -32,12 +32,12 @@ render() {
           </div>
 
           <div className="col-lg-2" style={{textAlign: "center"}}>
-            <h2>SurveyApe</h2>
+            <h2 className="textMain animated fadeIn" id="textMain1" style={{color: "#68D783", fontWeight: 900}}>SurveyApe</h2>
           </div>
 
       </div>
 
-      <br/><br/>
+      <br/>
 
       <div className="row">
 
@@ -46,16 +46,15 @@ render() {
 
           <div className="col-lg-4 mainButtons">
 
+          <div className="row" >
+              <div className="col-lg-6 animated bounceInUp" id="buttonMain">
+                 <button className="butt" onClick={()=>{this.props.gotoSignup()}}>Sign Up</button>
+              </div>
 
-              <span className="leftButt" onClick={()=>{this.props.gotoSignup()}}>
-                <span><i className="fas fa-user-plus" style={{fontSize: 30}}></i></span> <span style={{fontSize: 24}}>Sign Up</span>
-              </span>
-
-
-
-              <span className="leftButt" onClick={()=>{this.props.gotoSignin()}}>
-                <span><i className="fas fa-sign-in-alt" style={{fontSize: 30}}></i></span> <span style={{fontSize: 24}}>Sign In</span>
-              </span>
+              <div className="col-lg-6 animated bounceInUp" id="buttonMain">
+                <button className="butt">Sign In</button>
+              </div>
+          </div>
 
           </div>
 

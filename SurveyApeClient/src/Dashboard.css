@@ -1,0 +1,51 @@
+.bar {
+  height: 90px;
+  background-color: #061928
+}
+
+.survey-pane {
+  height: 535px;;
+}
+
+.first {
+  border: 3px solid;
+  text-align: center;
+  padding-top: 10%;
+  padding-bottom: 15%;
+  background-color: #F3D59E;
+  border-radius: 9px;
+}
+
+.box {
+  padding-top: 3%;
+  margin-left: 4%;
+  margin-right: 4%
+}
+
+.row.first {
+
+}
+
+.imgBox {
+  width: 100%;
+  margin: 0 auto 0 auto;
+}
+
+.footer {
+  height: 80px;
+  background-color: #061928;
+
+}
+
+.imgBox1 {
+  color: #68D783;
+}
+
+.logo {
+  padding: 1.5% 0 0 0;
+}
+.textLogo {
+  padding: 2.3% 0 0 0;
+  font-size: 26px;
+  color: #1E8E5C;
+}
