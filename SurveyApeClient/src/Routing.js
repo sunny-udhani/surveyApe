@@ -17,7 +17,7 @@ class Routing extends Component {
     surveyorEmail:null
   }
 
-  createSurvey=(survey,closedSurveyList)=>{
+  createSurvey=(survey,closedSurveyList,inviteeList)=>{
     /*
     {surveyType:"",surveyTitle,questions:[{questionText:"ques",questionType:"",optionList:"optionStr"}],publish:t/f,url:"url"}
 
@@ -25,6 +25,7 @@ class Routing extends Component {
     > 1 way hash
     */
     console.log(closedSurveyList);
+    console.log(inviteeList);
     var surveyType=survey.type;
     if(surveyType==="General"){
       surveyType="1";
@@ -59,11 +60,13 @@ class Routing extends Component {
         attendeesList.push(obj);
       }
     }
-    if(attendeesList.length===0){
-      var payload={surveyType:surveyType,surveyorEmail:this.state.surveyorEmail,surveyTitle:survey.name,questions:survey.questions,url:url,qr:qr,publish:false};
+    var payload={surveyType:surveyType,surveyorEmail:this.state.surveyorEmail,surveyTitle:survey.name,questions:survey.questions,url:url,qr:qr,publish:false};
+
+    if(attendeesList.length>0){
+      payload.attendeesList=attendeesList;
     }
-    else{
-      var payload={surveyType:surveyType,surveyorEmail:this.state.surveyorEmail,surveyTitle:survey.name,questions:survey.questions,attendeesList:attendeesList,url:url,qr:qr,publish:false};
+    if(inviteeList.length>0){
+      payload.inviteeList=inviteeList;
     }
       //API FOR others
       API.createSurvey(payload)

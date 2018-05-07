@@ -13,13 +13,15 @@ class CreateSurvey extends Component{
       surveyName:null,
       closedSurveyStr:"",
       endTime:null,
-      closedSurveyList:[]
+      closedSurveyList:[],
+      inviteeStr:"",
+      inviteeList:[]
     }
   }
 
   createS = (survey) =>{
 
-    this.props.createSurvey(survey,this.state.closedSurveyList);
+    this.props.createSurvey(survey,this.state.closedSurveyList,this.state.inviteeList);
     this.setState({closedSurveyList:[],formType:null,
     surveyName:null,
     closedSurveyStr:"",});
@@ -30,6 +32,13 @@ class CreateSurvey extends Component{
     this.setState({closedSurveyList:temp,closedSurveyStr:""});
     console.log(this.state.closedSurveyStr);
   }
+
+  addInvitees= () =>{
+    var temp=this.state.inviteeStr.split(",");
+    this.setState({inviteeList:temp,inviteeStr:""});
+    console.log(this.state.inviteeStr);
+  }
+
   render(){
     return (
       <div style={{paddingLeft:"45%"}}>
@@ -51,10 +60,16 @@ class CreateSurvey extends Component{
         Select Recipients:<input type="text" value={this.state.closedSurveyStr} onChange={(event)=>this.setState({closedSurveyStr:event.target.value})}/>
       <input type="button" value="Add recipients" onClick={()=>this.addRecipients()}/>
       </div>):(<div>
+      {this.state.formType==="Open" && !this.state.inviteeList.length?(<div>
+        Select Invitees:<input type="text" value={this.state.inviteeStr} onChange={(event)=>this.setState({inviteeStr:event.target.value})}/>
+      <input type="button" value="Add invitees" onClick={()=>this.addInvitees()}/>
+      </div>):(<div>
       <GeneralForm createSurvey={this.createS} formType={this.state.formType} surveyName={this.state.surveyName}/>
     </div>)}
+    </div>)
+    }
   </div>)
-      }
+  }
 
       </div>
     )
