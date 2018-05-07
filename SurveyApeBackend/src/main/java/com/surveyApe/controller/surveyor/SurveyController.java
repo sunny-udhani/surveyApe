@@ -3,11 +3,10 @@ package com.surveyApe.controller.surveyor;
 import com.surveyApe.config.QuestionTypeEnum;
 import com.surveyApe.entity.*;
 import com.surveyApe.service.*;
-import netscape.javascript.JSObject;
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -15,7 +14,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
-import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -62,6 +61,30 @@ public class SurveyController {
         surveyVO.setSurveyorEmail(userVO);
         surveyVO.setSurveyTitle(surveyTitle);
         surveyVO.setSurveyType(surveyType);
+
+        if (reqObj.has("url")) {
+            String url = reqObj.getString("url");
+            if (!url.equals("")) {
+                surveyVO.setSurveyURI(url);
+            }
+        }
+        if (reqObj.has("qr")) {
+            String qr = reqObj.getString("qr");
+            if (!qr.equals("")) {
+                surveyVO.setSurveyQRNumber(qr);
+            }
+        }
+        if (reqObj.has("endTime")) {
+            String endTime = reqObj.getString("endTime");
+            if (!endTime.equals("")) {
+                Date endDate = new Date(Long.getLong(endTime));
+                if (endDate.after(new Date()))
+                    surveyVO.setEndDate(endDate);
+                else
+                    return new ResponseEntity<Object>("Invalid End Date", HttpStatus.BAD_REQUEST);
+            }
+        }
+
         surveyService.createSurvey(surveyVO);
 
         JSONArray questionArray = reqObj.getJSONArray("questions");
@@ -107,6 +130,24 @@ public class SurveyController {
             }
         }
 
+        if (reqObj.has("inviteeList")) {
+
+            JSONArray invitedEmailsArray = reqObj.getJSONArray("inviteeList");
+
+            for (int i = 0; i < invitedEmailsArray.length(); i++) {
+                JSONObject attendeesObj = invitedEmailsArray.getJSONObject(i);
+
+                String surveyeeEmail = attendeesObj.getString("email");
+
+                SurveyResponse newSurveyeeResponseEntry = createNewSurveyeeResponseEntry(surveyVO.getSurveyId(), surveyeeEmail, "");
+
+                if (newSurveyeeResponseEntry == null) {
+                    return new ResponseEntity<Object>("response entity not created", HttpStatus.BAD_REQUEST);
+                }
+
+            }
+        }
+
         JSONObject resp = new JSONObject();
         resp.append("survey_id", surveyVO.getSurveyId().toString());
         return new ResponseEntity<Object>(resp, HttpStatus.OK);
@@ -134,6 +175,31 @@ public class SurveyController {
         }
         survey.setSurveyTitle(surveyTitle);
         survey.setSurveyType(surveyType);
+
+        if (reqObj.has("url")) {
+            String url = reqObj.getString("url");
+            if (!url.equals("")) {
+                survey.setSurveyURI(url);
+            }
+        }
+        if (reqObj.has("qr")) {
+            String qr = reqObj.getString("qr");
+            if (!qr.equals("")) {
+                survey.setSurveyQRNumber(qr);
+            }
+        }
+        if (reqObj.has("endTime")) {
+            String endTime = reqObj.getString("endTime");
+            if (!endTime.equals("")) {
+                Date endDate = new Date(Long.getLong(endTime));
+                if (endDate.after(new Date()))
+                    survey.setEndDate(endDate);
+                else
+                    return new ResponseEntity<Object>("Invalid End Date", HttpStatus.BAD_REQUEST);
+            }
+        }
+
+
         surveyService.saveSurvey(survey);
 
         survey.getQuestionList().clear();
@@ -162,10 +228,48 @@ public class SurveyController {
 
         }
 
+        if (reqObj.has("attendeesList")) {
+            survey.getResponseList().clear();
+            surveyService.saveSurvey(survey);
+            JSONArray attendeesArray = reqObj.getJSONArray("attendeesList");
+
+            for (int i = 0; i < attendeesArray.length(); i++) {
+                JSONObject attendeesObj = attendeesArray.getJSONObject(i);
+
+                String surveyeeEmail = attendeesObj.getString("email");
+                String surveyeeURI = attendeesObj.getString("URI");
+
+                SurveyResponse newSurveyeeResponseEntry = createNewSurveyeeResponseEntry(survey.getSurveyId(), surveyeeEmail, surveyeeURI);
+
+                if (newSurveyeeResponseEntry == null) {
+                    return new ResponseEntity<Object>("response entity not created", HttpStatus.BAD_REQUEST);
+                }
+
+            }
+        }
+
+        if (reqObj.has("inviteeList")) {
+            survey.getResponseList().clear();
+            surveyService.saveSurvey(survey);
+
+            JSONArray invitedEmailsArray = reqObj.getJSONArray("inviteeList");
+
+            for (int i = 0; i < invitedEmailsArray.length(); i++) {
+                JSONObject attendeesObj = invitedEmailsArray.getJSONObject(i);
+
+                String surveyeeEmail = attendeesObj.getString("email");
+
+                SurveyResponse newSurveyeeResponseEntry = createNewSurveyeeResponseEntry(survey.getSurveyId(), surveyeeEmail, "");
+
+                if (newSurveyeeResponseEntry == null) {
+                    return new ResponseEntity<Object>("response entity not created", HttpStatus.BAD_REQUEST);
+                }
+
+            }
+        }
 
         return new ResponseEntity<Object>(survey, HttpStatus.OK);
     }
-
 
     /**
      * Get all surveys for a surveyor
@@ -231,7 +335,8 @@ public class SurveyController {
         // no check for email in user table as only survey type closed requires users to be preregistered
         attendeeResponseEntity.setUserEmail(attendeeEmail);
 
-        attendeeResponseEntity.setSurveyURI(attendeeURI);
+        if (!(attendeeURI.equals("")))
+            attendeeResponseEntity.setSurveyURI(attendeeURI);
 
         //add attendee response entity to survey for two way binding
         addSurveyResponseToSurveyEntity(attendeeResponseEntity, survey);
