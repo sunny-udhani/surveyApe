@@ -44,7 +44,8 @@ public class SurveyController {
 
         int surveyType = Integer.parseInt(reqObj.getString("surveyType"));
         String surveyTitle = reqObj.getString("surveyTitle");
-        String surveyorEmail = "aaj@aaj.com";
+        String surveyorEmail = session.getAttribute("surveyorEmail").toString();
+        //String surveyorEmail = "aaj@aaj.com";
 
         if (!surveyService.validSurveyType(surveyType)) {
             return new ResponseEntity<Object>("Invalid Survey Type", HttpStatus.BAD_REQUEST);

@@ -12,7 +12,7 @@ class GeneralForm extends Component{
       ans:null,
       style:null,
       question:"",
-      options:""
+      options:"",
     }
   }
 
@@ -223,8 +223,8 @@ class GeneralForm extends Component{
                    </div>
               })}
             </ul>
-            <input type="button" value="Create Survey" onClick={()=>{
-                this.props.createSurvey({type:this.props.formType,questions:this.state.questions,name:this.props.surveyName});
+            <input type="button" value="Save and Publish" onClick={()=>{
+                this.props.createSurvey({type:this.props.formType,questions:this.state.questions,name:this.props.surveyName,publish:true});
                 this.setState({
                   questions:[],
                   type:null,
@@ -235,6 +235,18 @@ class GeneralForm extends Component{
                   options:""
                 })
               }}/>
+              <input type="button" value="Save" onClick={()=>{
+                  this.props.createSurvey({type:this.props.formType,questions:this.state.questions,name:this.props.surveyName,publish:false});
+                  this.setState({
+                    questions:[],
+                    type:null,
+                    choice:null,
+                    ans:null,
+                    style:null,
+                    question:"",
+                    options:""
+                  })
+                }}/>
           </div>
         ):(
           <div></div>

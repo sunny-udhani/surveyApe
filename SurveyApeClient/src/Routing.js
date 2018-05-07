@@ -1,27 +1,31 @@
 import React, {Component} from 'react';
 import {Route, withRouter} from 'react-router-dom';
-
 import Signup from './Signup';
 import Signin from './Signin';
 import Confirmation from './Confirmation';
 import LandingPage from './LandingPage';
 import CreateSurvey from './CreateSurvey';
+import Dashboard from './Dashboard';
 import * as API from './api/API';
+var QRCode = require('qrcode.react');
 const headers = {
 
 };
 
 class Routing extends Component {
   state={
-
+    surveyorEmail:null
   }
 
-  createSurvey=(survey,closedSurveyList)=>{
+  createSurvey=(survey,closedSurveyList,inviteeList)=>{
     /*
     {surveyType:"",surveyTitle,questions:[{questionText:"ques",questionType:"",optionList:"optionStr"}],publish:t/f,url:"url"}
 
-    url-> 1 way hash
+    url-
+    > 1 way hash
     */
+    console.log(closedSurveyList);
+    console.log(inviteeList);
     var surveyType=survey.type;
     if(surveyType==="General"){
       surveyType="1";
@@ -43,48 +47,47 @@ class Routing extends Component {
     }
     console.log(survey.questions);
     var self=this;
-    var payload={surveyType:surveyType,surveyorEmail:"chandan.paranjape@gmail.com",surveyTitle:survey.name,questions:survey.questions,url:null,publish:false};
-    if(closedSurveyList.length===0){
-      //API FOR others
-      fetch('http://localhost:8080/survey/create', {
-        method: 'POST',
-        headers:{
-          'Content-type': 'application/json',
-          'Accept':'application/json'
-        },
-        credentials:'include',
-        body: JSON.stringify(payload)
-    }).then(res => {
-      self.props.history.push('/signin');
-      self.props.history.push('/createSurvey');
-        console.log(res);
-        return res.json();
-    }).then(json =>{
-      console.log(json);
-
-    }
-
-    )
-      .catch(error => {
-            console.log("This is error");
-            return error;
-        });
-    }
-    else{
-      //create unique id
-      var uniqueUrl=[];
+    var url=Math.random()*10000000;
+    var qr=url;
+    console.log(url);
+    var attendeesList=[];
+    if(closedSurveyList.length>0 && surveyType==="3"){
       for(var i=0;i<closedSurveyList.length;i++){
-        uniqueUrl[i]=survey.name+closedSurveyList[i];
+        var obj={};
+        obj.name=closedSurveyList[i];
+        var temp= url*(Math.random()*100000);
+        obj.url="/"+surveyType+"/open/"+temp;
+        attendeesList.push(obj);
       }
-      uniqueUrl.map(function(item){
-        console.log(item);
-      });
-
-      //API for closedSurveyList
-
     }
-    this.props.history.push('/signin');
-    this.props.history.push('/createSurvey');
+    var payload={surveyType:surveyType,surveyorEmail:this.state.surveyorEmail,surveyTitle:survey.name,questions:survey.questions,url:url,qr:qr,publish:false};
+
+    if(attendeesList.length>0){
+      payload.attendeesList=attendeesList;
+    }
+    if(inviteeList.length>0){
+      payload.inviteeList=inviteeList;
+    }
+      //API FOR others
+      API.createSurvey(payload)
+          .then((res) => {
+              console.log(res.msg);
+              if (res.status == 200) {
+                  alert("User registration is successful!");
+                  this.props.history.push("/signin");
+                  this.props.history.push('/createSurvey');
+              }
+              else if (res.status == 406) {
+                  alert("Representation error!");
+                  this.props.history.push('/signin');
+
+              }
+
+          });
+
+
+
+
   }
 
   verifyUser = (data) => {
@@ -162,6 +165,7 @@ class Routing extends Component {
                   console.log(res.msg);
                   if (res.status == 200) {
                       alert("User Signed In Successfully");
+                      this.setState({surveyorEmail:payload.email})
                       this.props.history.push("/createSurvey");
                   }
                   else if (res.status == 401) {
@@ -188,6 +192,13 @@ class Routing extends Component {
               });
       }
 
+      submitResponses = (payload) => {
+
+        API.submitResponses(payload)
+          .then((res) => {
+              console.log("response received after submitting response : ", res);
+          });
+      }
 
 
     render() {
@@ -198,6 +209,23 @@ class Routing extends Component {
                         <LandingPage gotoSignin={this.gotoSignin} gotoSignup={this.gotoSignup}/>
                     </div>
                 )}/>
+              <Route exact path="/qr" render={() => (
+                    <div>
+                        <QRCode value="http://facebook.github.io/react/" />
+                    </div>
+                )}/>
+
+                <Route exact path="/dashboard" render={() => (
+                      <div>
+                          <Dashboard submitResponses={this.submitResponses}/>
+                      </div>
+                  )}/>
+
+                <Route exact path="/dashboard" render={() => (
+                      <div>
+                          <Dashboard submitResponses={this.submitResponses}/>
+                      </div>
+                  )}/>
 
                 <Route exact path="/signup" render={() => (
                     <div>

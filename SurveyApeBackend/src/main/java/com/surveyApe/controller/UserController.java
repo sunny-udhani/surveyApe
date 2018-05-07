@@ -9,6 +9,7 @@ import com.surveyApe.service.SurveyService;
 import com.surveyApe.service.UserService;
 import org.json.JSONException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +17,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.mail.SimpleMailMessage;
 
+import javax.servlet.http.HttpSession;
+import javax.servlet.http.HttpSessionListener;
 import javax.ws.rs.Produces;
 import java.util.Map;
 import java.util.UUID;
@@ -102,7 +105,7 @@ public class UserController {
     }
 
     @PostMapping(value="/login",consumes = MediaType.APPLICATION_JSON_VALUE)
-    public @ResponseBody ResponseEntity<?> loginUser(@RequestBody String data)
+    public @ResponseBody ResponseEntity<?> loginUser(@RequestBody String data,HttpSession session)
     {
 
         // check if the email id exists
@@ -123,6 +126,7 @@ public class UserController {
             User u = userService.getUser(email);
             if(u.getPassword().equals(password) && u.getVerificationInd()==true)
             {
+                session.setAttribute("surveyorEmail",email);
                 return new ResponseEntity<Object>(HttpStatus.OK);
             }
             if(u.getPassword().equals(password) && u.getVerificationInd()==false)
