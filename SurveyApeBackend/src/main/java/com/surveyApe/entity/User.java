@@ -32,9 +32,9 @@ public class User {
         this.userType = userType;
     }
 
-    public boolean getVerificationInd() {
-        return verificationInd;
-    }
+//    public boolean getVerificationInd() {
+//        return verificationInd;
+//    }
 
     public void setVerificationInd(boolean verificationInd) {
         this.verificationInd = verificationInd;
@@ -42,6 +42,10 @@ public class User {
 
     public String getUniqueVerificationCode() {
         return uniqueVerificationCode;
+    }
+
+    public boolean isVerificationInd() {
+        return verificationInd;
     }
 
     public void setUniqueVerificationCode(String uniqueVerificationCode) {

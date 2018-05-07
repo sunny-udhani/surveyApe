@@ -154,8 +154,11 @@ public class SurveyController {
         sendEmailtoAttendees(surveyVO);
 
         JSONObject resp = new JSONObject();
-        resp.append("survey_id", surveyVO.getSurveyId().toString());
-        return new ResponseEntity<Object>(resp, HttpStatus.OK);
+        resp.put("survey_id", surveyVO.getSurveyId());
+        System.out.println(resp);
+
+        String response = "survey_id : "+surveyVO.getSurveyId();
+        return new ResponseEntity<Object>(surveyVO, HttpStatus.OK);
     }
 
     @PostMapping(path = "/edit/{id}", produces = MediaType.APPLICATION_JSON_VALUE)

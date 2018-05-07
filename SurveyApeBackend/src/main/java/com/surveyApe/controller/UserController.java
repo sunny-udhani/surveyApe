@@ -22,10 +22,12 @@ import javax.servlet.http.HttpSessionListener;
 import javax.ws.rs.Produces;
 import java.util.Map;
 import java.util.UUID;
+
 import org.json.JSONObject;
 
 @Controller
-@CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true") //requires you to run react server on port 3000
+@CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
+//requires you to run react server on port 3000
 @RequestMapping(path = "/user")
 public class UserController {
 
@@ -104,112 +106,101 @@ public class UserController {
         return new ResponseEntity<Object>(success.getXML(), HttpStatus.OK);
     }
 
-    @PostMapping(value="/login",consumes = MediaType.APPLICATION_JSON_VALUE)
-    public @ResponseBody ResponseEntity<?> loginUser(@RequestBody String data,HttpSession session)
-    {
+    @PostMapping(value = "/login", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public @ResponseBody
+    ResponseEntity<?> loginUser(@RequestBody String data, HttpSession session) {
 
         // check if the email id exists
 
-        System.out.println("Email id recieived "+ data);
+        System.out.println("Email id recieived " + data);
 
 
         JSONObject jso = new JSONObject(data);
-        String email = (String)jso.get("email");
-        String password = (String)jso.get("password");
+        String email = (String) jso.get("email");
+        String password = (String) jso.get("password");
 
-        System.out.println("Email id recieived "+ email);
-        System.out.println("password  recieived "+ password);
+        System.out.println("Email id recieived " + email);
+        System.out.println("password  recieived " + password);
 
-        if(userService.userExists(email))
-        {
+        if (userService.userExists(email)) {
 
             User u = userService.getUser(email);
-            if(u.getPassword().equals(password) && u.getVerificationInd()==true)
-            {
-                session.setAttribute("surveyorEmail",email);
+            if (u.getPassword().equals(password) && u.isVerificationInd() == true) {
+                session.setAttribute("surveyorEmail", email);
                 return new ResponseEntity<Object>(HttpStatus.OK);
             }
-            if(u.getPassword().equals(password) && u.getVerificationInd()==false)
-            {
+            if (u.getPassword().equals(password) && u.isVerificationInd() == false) {
                 return new ResponseEntity<Object>(HttpStatus.CONFLICT);
             }
 
-            if(u.getPassword()!=password)
-            {
+            if (u.getPassword() != password) {
                 return new ResponseEntity<Object>(HttpStatus.valueOf(900));
             }
 
 
-        }
-        else {
+        } else {
 
-            return  new ResponseEntity<Object>(HttpStatus.NOT_FOUND);
+            return new ResponseEntity<Object>(HttpStatus.NOT_FOUND);
         }
 
         return null;
     }
 
 
-    @PostMapping(value = "/verify",consumes = MediaType.APPLICATION_JSON_VALUE)
-    public @ResponseBody ResponseEntity<?>  verifyUser(@RequestBody String data)
+    @PostMapping(value = "/verify", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public @ResponseBody
+    ResponseEntity<?> verifyUser(@RequestBody String data)
 
     {
 
         JSONObject jso = new JSONObject(data);
-        String email = (String)jso.get("email");
-        String code = (String)jso.get("confirmation");
+        String email = (String) jso.get("email");
+        String code = (String) jso.get("confirmation");
 
         String uniqueCode = userService.getVerificationCode(email);
 
-        if(code.equals(uniqueCode))
-        {
+        if (code.equals(uniqueCode)) {
 
             userService.updateInd(email);
             return new ResponseEntity<Object>(HttpStatus.OK);
 
-        }
-
-        else {
+        } else {
 
             return new ResponseEntity<Object>(HttpStatus.CONFLICT);
         }
 
     }
 
-    @PostMapping(value = "/signup",consumes = MediaType.APPLICATION_JSON_VALUE)
-    public @ResponseBody ResponseEntity<?>  signupUser(@RequestBody String data)
-    {
+    @PostMapping(value = "/signup", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public @ResponseBody
+    ResponseEntity<?> signupUser(@RequestBody String data) {
         System.out.println("body");
         JSONObject jso = new JSONObject(data);
         System.out.println(jso.get("firstName"));
         System.out.print(jso.get("firstName"));
         System.out.print(jso.get("lastName"));
         System.out.print(jso.get("email"));
-        String firstName = (String)jso.get("firstName");
-        String lastName = (String)jso.get("lastName");
-        String email = (String)jso.get("email");
-        String password = (String)jso.get("password");
-        String phone = (String)jso.get("phone");
+        String firstName = (String) jso.get("firstName");
+        String lastName = (String) jso.get("lastName");
+        String email = (String) jso.get("email");
+        String password = (String) jso.get("password");
+        String phone = (String) jso.get("phone");
         String uid = UUID.randomUUID().toString();
 
 
-        if(userService.userExists(email))
-        {
+        if (userService.userExists(email)) {
             System.out.print("User exists");
-            if(!userService.userStatus(email))
-            {
+            if (!userService.userStatus(email)) {
                 // user exists but not verified , verify your account! // Status Code 409
                 return new ResponseEntity<Object>(HttpStatus.CONFLICT);
             }
             // User Already Exists & Status Verifed Status Code 302 Sent please login with your  credentials
 
             return new ResponseEntity<Object>(HttpStatus.FOUND);
-        }
+        } else {
 
-        else {
-
-             //  javaMailSender.send(mail);
-            userService.createUser(firstName,lastName,email,password,phone,uid,false);
+            //  javaMailSender.send(mail);
+            userService.createUser(firstName, lastName, email, password, phone, uid, false);
             mailServices.sendEmail(email, uid, "aviralkum@gmail.com", "MEssage from SurveyApp");
 
 
@@ -218,7 +209,7 @@ public class UserController {
         // User Created Successfully with Verification Pending
 
 
-        return  new ResponseEntity<Object>(HttpStatus.OK);
+        return new ResponseEntity<Object>(HttpStatus.OK);
 
     }
 
