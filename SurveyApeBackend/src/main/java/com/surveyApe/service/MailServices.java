@@ -1,17 +1,10 @@
 package com.surveyApe.service;
 
 
-import com.surveyApe.entity.Survey;
-import com.surveyApe.entity.SurveyQuestion;
-import com.surveyApe.repository.SurveyQuestionRepository;
-import com.surveyApe.repository.SurveyRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
-
-import java.util.Optional;
-import java.util.List;
 @Service
 public class  MailServices {
 

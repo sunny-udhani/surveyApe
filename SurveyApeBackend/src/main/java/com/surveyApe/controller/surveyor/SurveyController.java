@@ -1,12 +1,12 @@
 package com.surveyApe.controller.surveyor;
 
 import com.surveyApe.config.QuestionTypeEnum;
+import com.surveyApe.config.SurveyTypeEnum;
 import com.surveyApe.entity.*;
 import com.surveyApe.service.*;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -35,6 +35,8 @@ public class SurveyController {
     private QuestionOptionService questionOptionService;
     @Autowired
     private SurveyResponseService surveyResponseService;
+    @Autowired
+    private MailServices mailServices;
 
     @PostMapping(path = "/create", produces = MediaType.APPLICATION_JSON_VALUE)
     public @ResponseBody
@@ -148,6 +150,8 @@ public class SurveyController {
 
             }
         }
+
+        sendEmailtoAttendees(surveyVO);
 
         JSONObject resp = new JSONObject();
         resp.append("survey_id", surveyVO.getSurveyId().toString());
@@ -268,6 +272,8 @@ public class SurveyController {
 
             }
         }
+
+        sendEmailtoAttendees(survey);
 
         return new ResponseEntity<Object>(survey, HttpStatus.OK);
     }
@@ -390,4 +396,42 @@ public class SurveyController {
         return false;
     }
 
+    public int sendEmailtoAttendees(Survey survey) {
+        boolean publishInd = survey.isPublishedInd();
+
+        if (publishInd) {
+
+            int surveyType = survey.getSurveyType();
+
+            if (surveyType == SurveyTypeEnum.CLOSED.getEnumCode() || surveyType == SurveyTypeEnum.GENERAL.getEnumCode()) {
+                List<SurveyResponse> surveyResponseList = survey.getResponseList();
+                if (surveyType == SurveyTypeEnum.CLOSED.getEnumCode()) {
+
+                    for (SurveyResponse response : surveyResponseList) {
+
+                        String attendeeEmail = response.getUserEmail();
+                        String attendeeURL = response.getSurveyURI();
+
+                        mailServices.sendEmail(attendeeEmail, "You must fill this survey: " + attendeeURL, "aviralkum@gmail.com", "Survey Filling request");
+
+                        return 0;
+                    }
+
+                } else {
+
+                    String surveyURL = survey.getSurveyURI();
+                    for (SurveyResponse response : surveyResponseList) {
+
+                        String attendeeEmail = response.getUserEmail();
+                        mailServices.sendEmail(attendeeEmail, "You are invited to take this survey: " + surveyURL, "aviralkum@gmail.com", "Survey Filling request");
+
+                        return 0;
+                    }
+                }
+            }
+        } else {
+            return 0;
+        }
+        return 0;
+    }
 }

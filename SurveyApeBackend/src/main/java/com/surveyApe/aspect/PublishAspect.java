@@ -15,7 +15,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.PostMapping;
 
-import javax.servlet.http.HttpSession;
 import java.util.Map;
 
 @Aspect
@@ -33,7 +32,7 @@ public class PublishAspect {
     }
 
     @Around("controller(requestMapping)")
-    public Object beforeAll(ProceedingJoinPoint joinPoint, PostMapping requestMapping) throws Throwable {
+    public Object beforeSaveSurvey(ProceedingJoinPoint joinPoint, PostMapping requestMapping) throws Throwable {
         System.out.println(joinPoint.getSignature());
         System.out.println(joinPoint.getSignature().getName());
 
@@ -106,10 +105,15 @@ public class PublishAspect {
                             } else
 //                                send error, no attendee added, so can't publish
                                 return 3;
-                        } else
+                        } else {
+                            JSONArray attendeeList = reqObj.getJSONArray("attendeesList");
+                            if (attendeeList.length() == 0)
+//                            send error, no attendee added, so can't publish
+                                return 3;
 //                            allow jointpoint to proceed, no error
                             return 0;
 //                        JSONArray attendeesArray = reqObj.getJSONArray("attendeesList");
+                        }
                     }
 
                 } else {
@@ -124,10 +128,15 @@ public class PublishAspect {
                         if (!(reqObj.has("attendeesList")))
 //                            send error, no attendee added, so can't publish
                             return 3;
-                        else
+                        else {
+                            JSONArray attendeeList = reqObj.getJSONArray("attendeesList");
+                            if (attendeeList.length() == 0)
+//                            send error, no attendee added, so can't publish
+                                return 3;
 //                            allow jointpoint to proceed, no error
                             return 0;
 //                        JSONArray attendeesArray = reqObj.getJSONArray("attendeesList");
+                        }
                     }
                 }
 
