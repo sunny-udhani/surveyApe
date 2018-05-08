@@ -4,6 +4,27 @@ const headers = {
     'Accept': 'application/json'
 };
 
+export const getSurvey = (id) =>
+    fetch(`${api}/survey/surveyor/getSurvey/`+id, {
+        method: 'GET',
+        headers: {
+            ...headers,
+            'Content-Type': 'application/json',
+            'Access-Control-Allow-Origin': '*',
+            'Access-Control-Allow-Credentials': 'true'
+
+        },
+        credentials:'include'
+    }).then(res => {
+        console.log(res);
+        return res.json();
+    }).catch(error => {
+        console.log("This is error");
+        return error;
+    });
+
+
+
 export const createSurvey = (payload) =>
     fetch(`${api}/survey/create`, {
         method: 'POST',
@@ -15,7 +36,7 @@ export const createSurvey = (payload) =>
         body: JSON.stringify(payload)
     }).then(res => {
         console.log(res);
-        return res;
+        return res.json();
     }).catch(error => {
         console.log("This is error");
         return error;

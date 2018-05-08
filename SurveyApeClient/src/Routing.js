@@ -10,6 +10,7 @@ import Survey from './Survey';
 import OpenUniqueSurvey from './OpenUniqueSurvey';
 import OpenUniqueSurveyEmail from './OpenUniqueSurveyEmail';
 import SurveyDetails from './SurveyDetails';
+import EditSurvey from './EditSurvey';
 import * as API from './api/API';
 
 var QRCode = require('qrcode.react');
@@ -17,7 +18,8 @@ const headers = {};
 
 class Routing extends Component {
     state = {
-        surveyorEmail: null
+        surveyorEmail: null,
+        surveyId:null
     }
 
     createSurvey = (survey, closedSurveyList, inviteeList) => {
@@ -70,14 +72,25 @@ class Routing extends Component {
             payload.attendeesList = attendeesList;
         }
         if (inviteeList.length > 0) {
-            payload.inviteeList = inviteeList;
+          var temp=[];
+          for(var i=0;i<inviteeList.length;i++){
+            temp.push({"email":inviteeList[i],"inviteeURI":url})
+          }
+          payload.inviteeList = temp;
         }
         //API FOR others
         API.createSurvey(payload)
             .then((res) => {
-                console.log(res.msg);
+                console.log(res);
+                if(res.surveyId){
+                  this.setState({surveyId:res.surveyId});
+                  this.props.history.push("/editSurvey");
+                }
+
+
                 if (res.status == 200) {
-                    alert("User registration is successful!");
+                  //  alert("Survey successfully created");
+                    console.log(res.json());
                     this.props.history.push("/signin");
                     this.props.history.push('/createSurvey');
                 }
@@ -223,6 +236,12 @@ class Routing extends Component {
                         <QRCode value="http://facebook.github.io/react/"/>
                     </div>
                 )}/>
+
+              <Route exact path="/editSurvey" render={() => (
+                      <div>
+                        <EditSurvey surveyId={this.state.surveyId}/>
+                      </div>
+                )} />
 
                 <Route exact path="/dashboard" render={() => (
                     <div>

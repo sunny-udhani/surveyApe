@@ -116,7 +116,7 @@ class CreateSurvey extends Component {
       <input type="button" className="btn btn-primary" value="Add recipients" onClick={()=>this.addRecipients()}/>
       </div>):(<div>
 
-      {this.state.formType==="Open" && !this.state.inviteeList.length?(<div>
+      {this.state.formType==="General" && !this.state.inviteeList.length?(<div>
         Select Invitees:<input type="text" value={this.state.inviteeStr} onChange={(event)=>this.setState({inviteeStr:event.target.value})}/>
       <input type="button" className="btn btn-primary" value="Add invitees" onClick={()=>this.addInvitees()}/>
       </div>):(<div>

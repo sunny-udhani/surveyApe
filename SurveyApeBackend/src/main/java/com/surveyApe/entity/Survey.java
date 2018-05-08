@@ -33,7 +33,7 @@ public class Survey {
     private List<SurveyQuestion> questionList=new ArrayList<SurveyQuestion>();
 
     @OneToMany(mappedBy = "surveyId", cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
-    private List<SurveyResponse> responseList;
+    private List<SurveyResponse> responseList=new ArrayList<SurveyResponse>();
 
     public List<SurveyQuestion> getQuestionList() {
         return questionList;

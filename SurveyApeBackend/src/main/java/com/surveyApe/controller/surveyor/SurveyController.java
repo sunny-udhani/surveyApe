@@ -287,9 +287,9 @@ public class SurveyController {
     @GetMapping(path = "surveyor/getAll", produces = MediaType.APPLICATION_JSON_VALUE)
     public @ResponseBody
     ResponseEntity<?> retrieveAllSurveys(@RequestParam Map<String, String> params, HttpSession session) {
-
         System.out.println(params);
-        String surveyorEmail = params.get("surveyorEmail");
+       // String surveyorEmail = params.get("surveyorEmail");
+        String surveyorEmail="chandan.paranjape@gmail.com";
         User userVO = userService.getUserById(surveyorEmail).orElse(null);
         if (userVO == null) {
             return new ResponseEntity<Object>("Invalid user / user id", HttpStatus.BAD_REQUEST);
