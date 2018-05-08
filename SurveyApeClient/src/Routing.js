@@ -6,16 +6,10 @@ import Confirmation from './Confirmation';
 import LandingPage from './LandingPage';
 import CreateSurvey from './CreateSurvey';
 import Dashboard from './Dashboard';
-<<<<<<< HEAD
-import SurveyDetails from './SurveyDetails';
-=======
 import Survey from './Survey';
 import OpenUniqueSurvey from './OpenUniqueSurvey';
 import OpenUniqueSurveyEmail from './OpenUniqueSurveyEmail';
-
-import { matchPath } from 'react-router'
-
->>>>>>> c604f4e2f11dd8dbaefd1af3b37dbc9970a72ba7
+import SurveyDetails from './SurveyDetails';
 import * as API from './api/API';
 var QRCode = require('qrcode.react');
 const headers = {
