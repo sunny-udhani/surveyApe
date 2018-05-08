@@ -14,6 +14,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -121,8 +122,10 @@ public class SurveyController {
             for (int i = 0; i < attendeesArray.length(); i++) {
                 JSONObject attendeesObj = attendeesArray.getJSONObject(i);
 
+                System.out.println(attendeesObj);
+
                 String surveyeeEmail = attendeesObj.getString("email");
-                String surveyeeURI = attendeesObj.getString("URI");
+                String surveyeeURI = attendeesObj.getString("url");
 
                 SurveyResponse newSurveyeeResponseEntry = createNewSurveyeeResponseEntry(surveyVO.getSurveyId(), surveyeeEmail, surveyeeURI);
 
@@ -157,7 +160,7 @@ public class SurveyController {
         resp.put("survey_id", surveyVO.getSurveyId());
         System.out.println(resp);
 
-        String response = "survey_id : "+surveyVO.getSurveyId();
+        String response = "survey_id : " + surveyVO.getSurveyId();
         return new ResponseEntity<Object>(surveyVO, HttpStatus.OK);
     }
 
@@ -321,7 +324,7 @@ public class SurveyController {
             return null;
         }
 
-        System.out.println("TEXT,TYPE:" + questionText + "," + questionType);
+//        System.out.println("TEXT,TYPE:" + questionText + "," + questionType);
         SurveyQuestion question = new SurveyQuestion(questionText, questionType);
 
         boolean successFlag = createOptions(optionList, question);
@@ -363,7 +366,12 @@ public class SurveyController {
     }
 
     public void addSurveyResponseToSurveyEntity(SurveyResponse response, Survey survey) {
-        survey.getResponseList().add(response);
+        List<SurveyResponse> responseList = survey.getResponseList();
+        if (responseList == null)
+            responseList = new ArrayList<>();
+
+        responseList.add(response);
+        survey.setResponseList(responseList);
         response.setSurveyId(survey);
     }
 

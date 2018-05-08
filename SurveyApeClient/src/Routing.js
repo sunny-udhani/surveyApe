@@ -46,27 +46,35 @@ class Routing extends Component {
         }
         else {
 
-    }
-    for(var i=0;i<survey.questions.length;i++){
-      survey.questions[i].optionList=survey.questions[i].optionList.join(',');
-    }
-    console.log(survey.questions);
-    var self=this;
-    var url="http://localhost:8080/surveyee/takeSurvey/"+surveyType+"/"+Math.random()*10000000;
-    var qr=url+"?qr=true";
-    console.log(url);
-    var attendeesList=[];
-    if(closedSurveyList.length>0 && surveyType==="3"){
-      for(var i=0;i<closedSurveyList.length;i++){
-        var obj={};
-        obj.name=closedSurveyList[i];
-        var temp= url*(Math.random()*100000);
-        obj.url="http://localhost:8080/surveyee/takeSurvey/"+surveyType+"/"+temp;
-        attendeesList.push(obj);
-      }
-    }
-    //INVITEE GENERAL ATTENDEE CLOSED
-    var payload={surveyType:surveyType,surveyorEmail:this.state.surveyorEmail,surveyTitle:survey.name,questions:survey.questions,url:url,qr:qr,publish:false};
+        }
+        for (var i = 0; i < survey.questions.length; i++) {
+            survey.questions[i].optionList = survey.questions[i].optionList.join(',');
+        }
+        console.log(survey.questions);
+        var self = this;
+        var url = "http://localhost:8080/surveyee/takeSurvey/" + surveyType + "/" + Math.random() * 10000000;
+        var qr = url + "?qr=true";
+        console.log(url);
+        var attendeesList = [];
+        if (closedSurveyList.length > 0 && surveyType === "3") {
+            for (var i = 0; i < closedSurveyList.length; i++) {
+                var obj = {};
+                obj.email = closedSurveyList[i];
+                var temp = (Math.random() * 100000);
+                obj.url = "http://localhost:8080/surveyee/takeSurvey/" + surveyType + "/" + temp;
+                attendeesList.push(obj);
+            }
+        }
+        //INVITEE GENERAL ATTENDEE CLOSED
+        var payload = {
+            surveyType: surveyType,
+            surveyorEmail: this.state.surveyorEmail,
+            surveyTitle: survey.name,
+            questions: survey.questions,
+            url: url,
+            qr: qr,
+            publish: false
+        };
 
         if (attendeesList.length > 0) {
             payload.attendeesList = attendeesList;
@@ -78,6 +86,9 @@ class Routing extends Component {
           }
           payload.inviteeList = temp;
         }
+
+        console.log("payload");
+        console.log(payload);
         //API FOR others
         API.createSurvey(payload)
             .then((res) => {
@@ -226,7 +237,7 @@ class Routing extends Component {
                         <LandingPage gotoSignin={this.gotoSignin} gotoSignup={this.gotoSignup}/>
                     </div>
                 )}/>
-              <Route exact path="/surveyDetails" render={() => (
+                <Route exact path="/surveyDetails" render={() => (
                     <div>
                         <SurveyDetails/>
                     </div>
@@ -259,7 +270,7 @@ class Routing extends Component {
 
                 <Route exact path="/signin" render={() => (
                     <div>
-                        <Signin signIn={this.signIn} gotoSignup={this.gotoSignup} />
+                        <Signin signIn={this.signIn} gotoSignup={this.gotoSignup}/>
                     </div>
                 )}/>
 
@@ -276,22 +287,22 @@ class Routing extends Component {
                 )}/>
 
                 <Route exact path="/surveyee/takeSurvey" render={() => (
-                      <div>
-                          <Survey submitSurvey={this.submitSurvey}/>
-                      </div>
+                    <div>
+                        <Survey submitSurvey={this.submitSurvey}/>
+                    </div>
                 )}/>
 
                 <Route exact path="/openUniqueSurvey" render={() => (
-                      <div>
+                    <div>
                         <OpenUniqueSurvey redirectToSurvey={this.redirectToSurvey}/>
-                      </div>
-                )} />
+                    </div>
+                )}/>
 
                 <Route exact path="/openUniqueSurveyEmail" render={() => (
-                      <div>
+                    <div>
                         <OpenUniqueSurveyEmail redirectToSurvey={this.redirectToSurvey}/>
-                      </div>
-                )} />
+                    </div>
+                )}/>
 
             </div>
         );
