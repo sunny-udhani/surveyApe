@@ -90,7 +90,7 @@ public class UserService {
 
         Optional<User> o = userRepository.findById(id);
         User u = o.get();
-        if(u.getVerificationInd()==true)
+        if(u.isVerificationInd()==true)
         {
             return true;
         }

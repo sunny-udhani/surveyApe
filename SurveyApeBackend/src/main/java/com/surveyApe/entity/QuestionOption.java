@@ -1,5 +1,6 @@
 package com.surveyApe.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
@@ -29,6 +30,7 @@ public class QuestionOption {
         this.questionOptionId = questionOptionId;
     }
 
+    @JsonIgnore
     public SurveyQuestion getQuestionId() {
         return questionId;
     }
@@ -63,5 +65,8 @@ public class QuestionOption {
 
     public QuestionOption(String optionText){
         this.setOptionText(optionText);
+    }
+    public QuestionOption(){
+//        this.setOptionText(optionText);
     }
 }
