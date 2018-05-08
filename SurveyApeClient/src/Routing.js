@@ -47,7 +47,7 @@ class Routing extends Component {
     }
     console.log(survey.questions);
     var self=this;
-    var url=Math.random()*10000000;
+    var url="http://localhost:8080/"+surveyType+"/open/"+Math.random()*10000000;
     var qr=url;
     console.log(url);
     var attendeesList=[];
@@ -56,7 +56,7 @@ class Routing extends Component {
         var obj={};
         obj.name=closedSurveyList[i];
         var temp= url*(Math.random()*100000);
-        obj.url="/"+surveyType+"/open/"+temp;
+        obj.url="http://localhost:8080/"+surveyType+"/open/"+temp;
         attendeesList.push(obj);
       }
     }
