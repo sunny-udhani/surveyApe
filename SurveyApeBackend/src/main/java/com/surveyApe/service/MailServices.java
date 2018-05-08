@@ -15,7 +15,7 @@ public class  MailServices {
     {
         try {
             SimpleMailMessage mail = new SimpleMailMessage();
-            System.out.println(to + Message + from + subject);
+//            System.out.println(to + Message + from + subject);
             mail.setTo(to);
             mail.setFrom(from);
             mail.setSubject(subject);
