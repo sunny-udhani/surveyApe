@@ -130,6 +130,10 @@ class Routing extends Component {
         this.props.history.push('/signup');
     };
 
+    gotoSignin = () => {
+        this.props.history.push('/signin');
+    };
+
     registerUser = (payload) => {
         API.registerUser(payload)
             .then((res) => {
@@ -199,14 +203,14 @@ class Routing extends Component {
             });
     }
 
-      gotoCreateSurvey = () => {
-          this.props.history.push('/createSurvey');
-      }
+    gotoCreateSurvey = () => {
+        this.props.history.push('/createSurvey');
+    }
 
 
     render() {
         return (
-            <div className="container-fluid" style={{backgroundColor:"white", height: "100%"}}>
+            <div className="container-fluid" style={{backgroundColor: "white", height: "100%"}}>
                 <Route exact path="/" render={() => (
                     <div>
                         <LandingPage gotoSignin={this.gotoSignin} gotoSignup={this.gotoSignup}/>
@@ -219,10 +223,10 @@ class Routing extends Component {
                 )}/>
 
                 <Route exact path="/dashboard" render={() => (
-                      <div>
-                          <Dashboard submitResponses={this.submitResponses} gotoCreateSurvey={this.gotoCreateSurvey}/>
-                      </div>
-                  )}/>
+                    <div>
+                        <Dashboard submitResponses={this.submitResponses} gotoCreateSurvey={this.gotoCreateSurvey}/>
+                    </div>
+                )}/>
 
 
                 <Route exact path="/signup" render={() => (
@@ -234,7 +238,7 @@ class Routing extends Component {
 
                 <Route exact path="/signin" render={() => (
                     <div>
-                        <Signin signIn={this.signIn}/>
+                        <Signin signIn={this.signIn} gotoSignup={this.gotoSignup} />
                     </div>
                 )}/>
 
@@ -244,9 +248,9 @@ class Routing extends Component {
                     </div>
                 )}/>
 
-              <Route exact path="/createSurvey" render={() => (
+                <Route exact path="/createSurvey" render={() => (
                     <div style={{height: "100%"}}>
-                        <CreateSurvey createSurvey={this.createSurvey} />
+                        <CreateSurvey createSurvey={this.createSurvey}/>
                     </div>
                 )}/>
 
