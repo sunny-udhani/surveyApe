@@ -24,6 +24,22 @@ export const getSurvey = (id) =>
     });
 
 
+    export const editSurvey = (payload,id) =>
+        fetch(`${api}/survey/edit/${id}`, {
+            method: 'POST',
+            headers: {
+                ...headers,
+                'Content-Type': 'application/json'
+            },
+            credentials: 'include',
+            body: JSON.stringify(payload)
+        }).then(res => {
+            console.log(res);
+            return res.json();
+        }).catch(error => {
+            console.log("This is error");
+            return error;
+        });
 
 export const createSurvey = (payload) =>
     fetch(`${api}/survey/create`, {

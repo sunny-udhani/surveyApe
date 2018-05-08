@@ -116,6 +116,101 @@ class Routing extends Component {
 
     }
 
+    editSurvey = (survey, closedSurveyList, inviteeList) => {
+        /*
+        {surveyType:"",surveyTitle,questions:[{questionText:"ques",questionType:"",optionList:"optionStr"}],publish:t/f,url:"url"}
+
+        url-
+        > 1 way hash
+        */
+        console.log(closedSurveyList);
+        console.log(inviteeList);
+        var surveyType = survey.type;
+        if (surveyType === "General") {
+            surveyType = "1";
+        }
+        else if (surveyType === "Open") {
+            surveyType = "2";
+        }
+        else if (surveyType === "Closed") {
+            surveyType = "3";
+        }
+        else if (surveyType === "Anonymous") {
+            surveyType = "4";
+        }
+        else {
+
+        }
+        for (var i = 0; i < survey.questions.length; i++) {
+            survey.questions[i].optionList = survey.questions[i].optionList.join(',');
+        }
+        console.log(survey.questions);
+        var self = this;
+        var url = "http://localhost:8080/surveyee/takeSurvey/" + surveyType + "/" + Math.random() * 10000000;
+        var qr = url + "?qr=true";
+        console.log(url);
+        var attendeesList = [];
+        if (closedSurveyList.length > 0 && surveyType === "3") {
+            for (var i = 0; i < closedSurveyList.length; i++) {
+                var obj = {};
+                obj.email = closedSurveyList[i];
+                var temp = (Math.random() * 100000);
+                obj.url = "http://localhost:8080/surveyee/takeSurvey/" + surveyType + "/" + temp;
+                attendeesList.push(obj);
+            }
+        }
+        //INVITEE GENERAL ATTENDEE CLOSED
+        var payload = {
+            survey_id:this.state.surveyId,
+            surveyType: surveyType,
+            surveyorEmail: this.state.surveyorEmail,
+            surveyTitle: survey.name,
+            questions: survey.questions,
+            url: url,
+            qr: qr,
+            publish: false
+        };
+
+        if (attendeesList.length > 0) {
+            payload.attendeesList = attendeesList;
+        }
+        if (inviteeList.length > 0) {
+          var temp=[];
+          for(var i=0;i<inviteeList.length;i++){
+            temp.push({"email":inviteeList[i],"inviteeURI":url})
+          }
+          payload.inviteeList = temp;
+        }
+
+        console.log("payload");
+        console.log(payload);
+        //API FOR others
+        var temp=this.state.surveyId;
+        API.editSurvey(payload,temp)
+            .then((res) => {
+                console.log(res);
+                if(res.surveyId){
+                  this.props.history.push("/dashboard");
+                }
+
+
+                if (res.status == 200) {
+                  //  alert("Survey successfully created");
+                    console.log(res.json());
+                    this.props.history.push("/signin");
+                    this.props.history.push('/createSurvey');
+                }
+                else if (res.status == 406) {
+                    alert("Representation error!");
+                    this.props.history.push('/signin');
+
+                }
+
+            });
+
+
+    }
+
     verifyUser = (data) => {
 
         API.verifyUser(data)
@@ -250,7 +345,7 @@ class Routing extends Component {
 
               <Route exact path="/editSurvey" render={() => (
                       <div>
-                        <EditSurvey surveyId={this.state.surveyId}/>
+                        <EditSurvey surveyId={this.state.surveyId} editSurvey={this.editSurvey}/>
                       </div>
                 )} />
 
