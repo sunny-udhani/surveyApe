@@ -9,9 +9,7 @@ import Dashboard from './Dashboard';
 import Survey from './Survey';
 import OpenUniqueSurvey from './OpenUniqueSurvey';
 import OpenUniqueSurveyEmail from './OpenUniqueSurveyEmail';
-
-import { matchPath } from 'react-router'
-
+import SurveyDetails from './SurveyDetails';
 import * as API from './api/API';
 
 var QRCode = require('qrcode.react');
@@ -52,8 +50,8 @@ class Routing extends Component {
     }
     console.log(survey.questions);
     var self=this;
-    var url="http://localhost:8080/"+surveyType+"/open/"+Math.random()*10000000;
-    var qr=url;
+    var url="http://localhost:8080/surveyee/takeSurvey/"+surveyType+"/"+Math.random()*10000000;
+    var qr=url+"?qr=true";
     console.log(url);
     var attendeesList=[];
     if(closedSurveyList.length>0 && surveyType==="3"){
@@ -61,10 +59,11 @@ class Routing extends Component {
         var obj={};
         obj.name=closedSurveyList[i];
         var temp= url*(Math.random()*100000);
-        obj.url="http://localhost:8080/"+surveyType+"/open/"+temp;
+        obj.url="http://localhost:8080/surveyee/takeSurvey/"+surveyType+"/"+temp;
         attendeesList.push(obj);
       }
     }
+    //INVITEE GENERAL ATTENDEE CLOSED
     var payload={surveyType:surveyType,surveyorEmail:this.state.surveyorEmail,surveyTitle:survey.name,questions:survey.questions,url:url,qr:qr,publish:false};
 
         if (attendeesList.length > 0) {
@@ -212,6 +211,11 @@ class Routing extends Component {
                 <Route exact path="/" render={() => (
                     <div>
                         <LandingPage gotoSignin={this.gotoSignin} gotoSignup={this.gotoSignup}/>
+                    </div>
+                )}/>
+              <Route exact path="/surveyDetails" render={() => (
+                    <div>
+                        <SurveyDetails/>
                     </div>
                 )}/>
                 <Route exact path="/qr" render={() => (
