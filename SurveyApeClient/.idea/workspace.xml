@@ -2,7 +2,12 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="b6a651ca-bf56-4d2b-9bb1-e38e2d23bab6" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/OpenUniqueSurvey.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/OpenUniqueSurvey.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/OpenUniqueSurveyEmail.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Survey.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Survey.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Routing.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Routing.js" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
@@ -32,13 +37,8 @@
       <file leaf-file-name="Routing.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/Routing.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="2108">
-              <caret line="240" column="28" selection-start-line="240" selection-start-column="28" selection-end-line="240" selection-end-column="28" />
-              <folding>
-                <element signature="e#557#3009#0" />
-                <element signature="e#3038#4247#0" />
-                <element signature="e#4272#4323#0" />
-              </folding>
+            <state relative-caret-position="3910">
+              <caret line="238" column="28" selection-start-line="238" selection-start-column="28" selection-end-line="238" selection-end-column="28" />
             </state>
           </provider>
         </entry>
@@ -56,7 +56,7 @@
         <entry file="file://$PROJECT_DIR$/package.json">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="408">
-              <caret line="24" column="33" selection-start-line="24" selection-start-column="33" selection-end-line="24" selection-end-column="33" />
+              <caret line="25" column="33" selection-start-line="25" selection-start-column="33" selection-end-line="25" selection-end-column="33" />
             </state>
           </provider>
         </entry>
@@ -115,7 +115,7 @@
       <file leaf-file-name="Signin.js" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/Signin.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="17">
+            <state relative-caret-position="-187">
               <caret line="5" column="6" selection-start-line="5" selection-start-column="6" selection-end-line="5" selection-end-column="6" />
               <folding>
                 <element signature="e#0#39#0" expanded="true" />
@@ -191,7 +191,6 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -199,26 +198,11 @@
               <item name="surveyape-client" type="b2602c69:ProjectViewProjectNode" />
               <item name="SurveyApeClient" type="462c0819:PsiDirectoryNode" />
             </path>
-            <path>
-              <item name="surveyape-client" type="b2602c69:ProjectViewProjectNode" />
-              <item name="SurveyApeClient" type="462c0819:PsiDirectoryNode" />
-              <item name="public" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="surveyape-client" type="b2602c69:ProjectViewProjectNode" />
-              <item name="SurveyApeClient" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="surveyape-client" type="b2602c69:ProjectViewProjectNode" />
-              <item name="SurveyApeClient" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="api" type="462c0819:PsiDirectoryNode" />
-            </path>
           </expand>
           <select />
         </subPane>
       </pane>
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -299,6 +283,7 @@
       <workItem from="1520812636871" duration="1201000" />
       <workItem from="1524473241868" duration="1241000" />
       <workItem from="1524476435666" duration="2272000" />
+      <workItem from="1525751958339" duration="610000" />
     </task>
     <task id="LOCAL-00001" summary="updates">
       <created>1525737030547</created>
@@ -318,17 +303,16 @@
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="134601000" />
+    <option name="totallyTimeSpent" value="135211000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1382" height="744" extended-state="6" />
-    <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.17931548" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.17931548" />
       <window_info anchor="bottom" id="TODO" order="6" />
       <window_info anchor="bottom" id="Docker" order="9" />
       <window_info anchor="bottom" id="Event Log" order="7" sideWeight="0.51488096" side_tool="true" weight="0.3825397" />
-      <window_info anchor="bottom" id="Version Control" order="10" weight="0.32857144" />
+      <window_info anchor="bottom" id="Version Control" order="10" visible="true" weight="0.3280255" />
       <window_info anchor="bottom" id="Run" order="2" weight="0.3280255" />
       <window_info id="npm" order="2" side_tool="true" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
@@ -518,7 +502,7 @@
     <entry file="file://$PROJECT_DIR$/package.json">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="408">
-          <caret line="24" column="33" selection-start-line="24" selection-start-column="33" selection-end-line="24" selection-end-column="33" />
+          <caret line="25" column="33" selection-start-line="25" selection-start-column="33" selection-end-line="25" selection-end-column="33" />
         </state>
       </provider>
     </entry>
@@ -561,19 +545,14 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/Routing.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2108">
-          <caret line="240" column="28" selection-start-line="240" selection-start-column="28" selection-end-line="240" selection-end-column="28" />
-          <folding>
-            <element signature="e#557#3009#0" />
-            <element signature="e#3038#4247#0" />
-            <element signature="e#4272#4323#0" />
-          </folding>
+        <state relative-caret-position="3910">
+          <caret line="238" column="28" selection-start-line="238" selection-start-column="28" selection-end-line="238" selection-end-column="28" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/Signin.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="17">
+        <state relative-caret-position="-187">
           <caret line="5" column="6" selection-start-line="5" selection-start-column="6" selection-end-line="5" selection-end-column="6" />
           <folding>
             <element signature="e#0#39#0" expanded="true" />

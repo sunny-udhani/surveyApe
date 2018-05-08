@@ -6,6 +6,12 @@ import Confirmation from './Confirmation';
 import LandingPage from './LandingPage';
 import CreateSurvey from './CreateSurvey';
 import Dashboard from './Dashboard';
+import Survey from './Survey';
+import OpenUniqueSurvey from './OpenUniqueSurvey';
+import OpenUniqueSurveyEmail from './OpenUniqueSurveyEmail';
+
+import { matchPath } from 'react-router'
+
 import * as API from './api/API';
 
 var QRCode = require('qrcode.react');
@@ -40,34 +46,26 @@ class Routing extends Component {
         }
         else {
 
-        }
-        for (var i = 0; i < survey.questions.length; i++) {
-            survey.questions[i].optionList = survey.questions[i].optionList.join(',');
-        }
-        console.log(survey.questions);
-        var self = this;
-        var url = Math.random() * 10000000;
-        var qr = url;
-        console.log(url);
-        var attendeesList = [];
-        if (closedSurveyList.length > 0 && surveyType === "3") {
-            for (var i = 0; i < closedSurveyList.length; i++) {
-                var obj = {};
-                obj.name = closedSurveyList[i];
-                var temp = url * (Math.random() * 100000);
-                obj.url = "/" + surveyType + "/open/" + temp;
-                attendeesList.push(obj);
-            }
-        }
-        var payload = {
-            surveyType: surveyType,
-            surveyorEmail: this.state.surveyorEmail,
-            surveyTitle: survey.name,
-            questions: survey.questions,
-            url: url.toString(),
-            qr: qr.toString(),
-            publish: false
-        };
+    }
+    for(var i=0;i<survey.questions.length;i++){
+      survey.questions[i].optionList=survey.questions[i].optionList.join(',');
+    }
+    console.log(survey.questions);
+    var self=this;
+    var url="http://localhost:8080/"+surveyType+"/open/"+Math.random()*10000000;
+    var qr=url;
+    console.log(url);
+    var attendeesList=[];
+    if(closedSurveyList.length>0 && surveyType==="3"){
+      for(var i=0;i<closedSurveyList.length;i++){
+        var obj={};
+        obj.name=closedSurveyList[i];
+        var temp= url*(Math.random()*100000);
+        obj.url="http://localhost:8080/"+surveyType+"/open/"+temp;
+        attendeesList.push(obj);
+      }
+    }
+    var payload={surveyType:surveyType,surveyorEmail:this.state.surveyorEmail,surveyTitle:survey.name,questions:survey.questions,url:url,qr:qr,publish:false};
 
         if (attendeesList.length > 0) {
             payload.attendeesList = attendeesList;
@@ -253,6 +251,24 @@ class Routing extends Component {
                         <CreateSurvey createSurvey={this.createSurvey}/>
                     </div>
                 )}/>
+
+                <Route exact path="/surveyee/takeSurvey" render={() => (
+                      <div>
+                          <Survey submitSurvey={this.submitSurvey}/>
+                      </div>
+                )}/>
+
+                <Route exact path="/openUniqueSurvey" render={() => (
+                      <div>
+                        <OpenUniqueSurvey redirectToSurvey={this.redirectToSurvey}/>
+                      </div>
+                )} />
+
+                <Route exact path="/openUniqueSurveyEmail" render={() => (
+                      <div>
+                        <OpenUniqueSurveyEmail redirectToSurvey={this.redirectToSurvey}/>
+                      </div>
+                )} />
 
             </div>
         );
