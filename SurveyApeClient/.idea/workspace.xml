@@ -1,15 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="b6a651ca-bf56-4d2b-9bb1-e38e2d23bab6" name="Default" comment="">
-      <change afterPath="$PROJECT_DIR$/src/OpenUniqueSurvey.css" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/OpenUniqueSurvey.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/OpenUniqueSurveyEmail.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/Survey.css" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/Survey.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Routing.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Routing.js" afterDir="false" />
-    </list>
+    <list default="true" id="b6a651ca-bf56-4d2b-9bb1-e38e2d23bab6" name="Default" comment="" />
     <ignored path="$PROJECT_DIR$/.tmp/" />
     <ignored path="$PROJECT_DIR$/temp/" />
     <ignored path="$PROJECT_DIR$/tmp/" />
@@ -115,8 +107,8 @@
       <file leaf-file-name="Signin.js" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/Signin.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-187">
-              <caret line="5" column="6" selection-start-line="5" selection-start-column="6" selection-end-line="5" selection-end-column="6" />
+            <state relative-caret-position="493">
+              <caret line="29" column="14" lean-forward="true" selection-start-line="29" selection-start-column="14" selection-end-line="29" selection-end-column="14" />
               <folding>
                 <element signature="e#0#39#0" expanded="true" />
               </folding>
@@ -283,7 +275,7 @@
       <workItem from="1520812636871" duration="1201000" />
       <workItem from="1524473241868" duration="1241000" />
       <workItem from="1524476435666" duration="2272000" />
-      <workItem from="1525751958339" duration="610000" />
+      <workItem from="1525751958339" duration="1278000" />
     </task>
     <task id="LOCAL-00001" summary="updates">
       <created>1525737030547</created>
@@ -299,14 +291,22 @@
       <option name="project" value="LOCAL" />
       <updated>1525737304388</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="Merge remote-tracking branch 'remotes/origin/master' into sunny0426&#10;&#10;# Conflicts:&#10;#&#9;SurveyApeClient/src/Routing.js">
+      <created>1525752770551</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1525752770551</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="135211000" />
+    <option name="totallyTimeSpent" value="135879000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1382" height="744" extended-state="6" />
+    <editor active="true" />
     <layout>
       <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.17931548" />
       <window_info anchor="bottom" id="TODO" order="6" />
@@ -552,8 +552,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/Signin.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-187">
-          <caret line="5" column="6" selection-start-line="5" selection-start-column="6" selection-end-line="5" selection-end-column="6" />
+        <state relative-caret-position="493">
+          <caret line="29" column="14" lean-forward="true" selection-start-line="29" selection-start-column="14" selection-end-line="29" selection-end-column="14" />
           <folding>
             <element signature="e#0#39#0" expanded="true" />
           </folding>
