@@ -6,6 +6,12 @@ import Confirmation from './Confirmation';
 import LandingPage from './LandingPage';
 import CreateSurvey from './CreateSurvey';
 import Dashboard from './Dashboard';
+import Survey from './Survey';
+import OpenUniqueSurvey from './OpenUniqueSurvey';
+import OpenUniqueSurveyEmail from './OpenUniqueSurveyEmail';
+
+import { matchPath } from 'react-router'
+
 import * as API from './api/API';
 var QRCode = require('qrcode.react');
 const headers = {
@@ -250,6 +256,24 @@ class Routing extends Component {
                         <CreateSurvey createSurvey={this.createSurvey} />
                     </div>
                 )}/>
+
+                <Route exact path="/surveyee/takeSurvey" render={() => (
+                      <div>
+                          <Survey submitSurvey={this.submitSurvey}/>
+                      </div>
+                )}/>
+
+                <Route exact path="/openUniqueSurvey" render={() => (
+                      <div>
+                        <OpenUniqueSurvey redirectToSurvey={this.redirectToSurvey}/>
+                      </div>
+                )} />
+
+                <Route exact path="/openUniqueSurveyEmail" render={() => (
+                      <div>
+                        <OpenUniqueSurveyEmail redirectToSurvey={this.redirectToSurvey}/>
+                      </div>
+                )} />
 
             </div>
         );

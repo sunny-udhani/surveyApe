@@ -1,0 +1,15 @@
+.mainPageSurvey {
+  height: auto;
+  min-height: 300px;
+  width: 100%;
+  background-color: green;
+  opacity: 0.6;
+}
+
+.question {
+  width: 100%;
+  height: auto;
+  color: white;
+  border: 1px solid;
+  text-align: center;
+}
