@@ -6,7 +6,7 @@ import Routing from "./Routing";
 class App extends Component {
     render() {
         return (
-            <div className="App">
+            <div className="App" style={{height: "100%"}}>
                 <BrowserRouter>
                     <Routing/>
                 </BrowserRouter>

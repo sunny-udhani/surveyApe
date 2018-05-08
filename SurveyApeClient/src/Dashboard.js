@@ -39,6 +39,7 @@ class Dashboard extends Component {
   }
 
 
+
   render() {
     return (
       <div className="dashboard">
@@ -58,7 +59,9 @@ class Dashboard extends Component {
 
               <div className="row survey-pane">
 
-                      <div className="col-lg-3 col-sm-1 box">
+                      <div className="col-lg-3 col-sm-1 box" onClick={() => {
+                        this.props.gotoCreateSurvey()
+                      }}>
                           <div className="row first">
                               <div className="imgBox">
                                   <i className="fas fa-plus-circle fa-5x imgBox1"></i>

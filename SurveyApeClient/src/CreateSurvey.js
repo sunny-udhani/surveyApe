@@ -4,8 +4,11 @@ import GeneralForm from './GeneralForm';
 import ClosedForm from './ClosedForm';
 import OpenForm from './OpenForm';
 import AnonymousForm from './AnonymousForm';
+import Logo from './logo.png';
 
-class CreateSurvey extends Component{
+import './CreateSurvey.css';
+
+class CreateSurvey extends Component {
   constructor(props){
     super(props);
     this.state={
@@ -41,35 +44,90 @@ class CreateSurvey extends Component{
 
   render(){
     return (
-      <div style={{paddingLeft:"45%"}}>
-        {!this.state.formType || !this.state.surveyName || !this.state.endTime?(
-          <div>
-            Survey Name:<input type="text" value={this.state.surveyName} onChange={(event)=>this.setState({surveyName:event.target.value})}/>
+      <div className="survey-form">
+
+      {/* header section */}
+          <div className="row bar">
+              <div className="col-lg-1 logo">
+                  <img src={Logo} />
+              </div>
+              <div className="col-lg-3 textLogo">
+                Survey Ape
+              </div>
+              <div className="col-lg-4">
+
+              </div>
+
+          </div>
+
           <br/>
-            <select onChange={(event)=>{this.setState({formType:event.target.value})}}>
-      <option disabled selected value> -- select a form type-- </option>
-      <option value="General">General</option>
-      <option value="Closed">Closed</option>
-      <option value="Open">Open</option>
-      <option value="Anonymous">Anonymous</option>
-    </select>
-    <br/>
-    End Time: <input type="date" onChange={(event)=>this.setState({endTime:event.target.value})}/>
+        {/* Banner Text */}
+
+        <div className="row">
+          <div className="col-lg-3 main-text">
+            <h3>Create a Survey</h3>
+          </div>
+        </div>
+
+        {/* MainBody */}
+
+        {!this.state.formType || !this.state.surveyName || !this.state.endTime?(<div>
+          <div className="row">
+                <div className="col-lg-6 survey-name">
+                  <span className="labels">Survey Name:</span>
+                  <span className="inputs"><input type="text"  style={{width: "50%"}} value={this.state.surveyName} onChange={(event)=>this.setState({surveyName:event.target.value})}/></span>
+                </div>
+
+                <br/>
+          </div>
+
+<div className="row">
+  <div className="col-lg-6 survey-name">
+    <span className="labels">Survey Type:</span>
+      <span className="inputs" style={{marginLeft: "10%"}}>
+        <select style={{width: "50%", height:30}} onChange={(event)=>{this.setState({formType:event.target.value})}}>
+          <option disabled selected value> -- select a form type-- </option>
+          <option value="General">General</option>
+          <option value="Closed">Closed</option>
+          <option value="Open">Open</option>
+          <option value="Anonymous">Anonymous</option>
+        </select>
+    </span>
+  </div>
+</div>
+
+
+
+    <div className="row">
+        <div className="col-lg-6 survey-name">
+            <span className="labels">Survey Type:</span>
+
+            <span className="inputs" style={{marginLeft: "10%"}}>
+
+              <input type="date" style={{width: "50%"}} onChange={(event)=>this.setState({endTime:event.target.value})}/>
+
+            </span>
+        </div>
+    </div>
+
 </div>):(<div>
       {this.state.formType==="Closed" && !this.state.closedSurveyList.length && this.state.endTime?(<div>
         Select Recipients:<input type="text" value={this.state.closedSurveyStr} onChange={(event)=>this.setState({closedSurveyStr:event.target.value})}/>
-      <input type="button" value="Add recipients" onClick={()=>this.addRecipients()}/>
+      <input type="button" className="btn btn-primary" value="Add recipients" onClick={()=>this.addRecipients()}/>
       </div>):(<div>
+
       {this.state.formType==="Open" && !this.state.inviteeList.length?(<div>
         Select Invitees:<input type="text" value={this.state.inviteeStr} onChange={(event)=>this.setState({inviteeStr:event.target.value})}/>
-      <input type="button" value="Add invitees" onClick={()=>this.addInvitees()}/>
+      <input type="button" className="btn btn-primary" value="Add invitees" onClick={()=>this.addInvitees()}/>
       </div>):(<div>
       <GeneralForm createSurvey={this.createS} formType={this.state.formType} surveyName={this.state.surveyName}/>
-    </div>)}
+    </div>)
+  }
     </div>)
     }
   </div>)
   }
+
 
       </div>
     )
