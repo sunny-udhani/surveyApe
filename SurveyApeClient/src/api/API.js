@@ -125,3 +125,20 @@ export const registerUser = (payload) =>
                     console.log("This is error");
                     return error;
                 });
+
+
+                export const getSurvey1 = () =>
+                    fetch(`${api}/survey/surveyor/getSurvey/`+'ff8080816342a05f0163435c8c31001e', {
+                        method: 'GET',
+                        headers: {
+                            ...headers,
+                            'Content-Type': 'application/json'
+                        },
+                        credentials: 'include'
+                    }).then(res => {
+                        console.log(res);
+                        return res.json();
+                    }).catch(error => {
+                        console.log("This is error");
+                        return error;
+                    });
