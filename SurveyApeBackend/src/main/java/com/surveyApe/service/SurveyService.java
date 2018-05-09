@@ -50,4 +50,10 @@ public class SurveyService {
 //        return true;
     }
 
+    public Survey findSurveyByURL(String url) {
+
+        return surveyRepository.findSurveyBySurveyURIEquals(url).orElse(null);
+
+    }
+
 }
