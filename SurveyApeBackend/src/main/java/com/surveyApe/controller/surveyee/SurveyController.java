@@ -2,9 +2,11 @@ package com.surveyApe.controller.surveyee;
 
 import com.surveyApe.config.QuestionTypeEnum;
 import com.surveyApe.config.SurveyTypeEnum;
-import com.surveyApe.entity.*;
+import com.surveyApe.entity.QuestionOption;
+import com.surveyApe.entity.Survey;
+import com.surveyApe.entity.SurveyQuestion;
+import com.surveyApe.entity.SurveyResponse;
 import com.surveyApe.service.*;
-import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -15,7 +17,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -58,12 +59,13 @@ public class SurveyController {
 
             return new ResponseEntity<Object>("{'survey_id' : '" + survey.getSurveyId() + "'}", HttpStatus.OK);
 
-        } else if (surveyType == SurveyTypeEnum.GENERAL.getEnumCode()) {
+        } else if (surveyType == SurveyTypeEnum.CLOSED.getEnumCode()) {
 
-        } else if (surveyType == SurveyTypeEnum.GENERAL.getEnumCode()) {
+        } else if (surveyType == SurveyTypeEnum.OPEN.getEnumCode()) {
 
         }
-        return null;
+        return new ResponseEntity<Object>("No such survey", HttpStatus.BAD_REQUEST);
+//        return null;
     }
 
 
