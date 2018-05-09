@@ -384,7 +384,7 @@ public class SurveyController {
     public @ResponseBody
     ResponseEntity<?> retrieveAllSurveys(@RequestParam Map<String, String> params, HttpSession session) {
         System.out.println(params);
-       String surveyorEmail = params.get("surveyorEmail");
+       String surveyorEmail = session.getAttribute("surveyorEmail").toString();
         //String surveyorEmail="chandan.paranjape@gmail.com";
         User userVO = userService.getUserById(surveyorEmail).orElse(null);
         if (userVO == null) {

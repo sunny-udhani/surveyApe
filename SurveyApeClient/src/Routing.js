@@ -11,6 +11,7 @@ import OpenUniqueSurvey from './OpenUniqueSurvey';
 import OpenUniqueSurveyEmail from './OpenUniqueSurveyEmail';
 import SurveyDetails from './SurveyDetails';
 import EditSurvey from './EditSurvey';
+import MySurveys from './MySurveys';
 import * as API from './api/API';
 
 var QRCode = require('qrcode.react');
@@ -21,6 +22,8 @@ class Routing extends Component {
         surveyorEmail: null,
         surveyId:null
     }
+
+
 
     createSurvey = (survey, closedSurveyList, inviteeList) => {
         /*
@@ -52,7 +55,7 @@ class Routing extends Component {
         }
         console.log(survey.questions);
         var self = this;
-        var url = "http://localhost:8080/surveyee/takeSurvey/" + surveyType + "/" + Math.random() * 10000000;
+        var url = "http://localhost:3000/surveyee/takeSurvey/" + surveyType + "/" + Math.random() * 10000000;
         var qr = url + "?qr=true";
         console.log(url);
         var attendeesList = [];
@@ -61,7 +64,7 @@ class Routing extends Component {
                 var obj = {};
                 obj.email = closedSurveyList[i];
                 var temp = (Math.random() * 100000);
-                obj.url = "http://localhost:8080/surveyee/takeSurvey/" + surveyType + "/" + temp;
+                obj.url = "http://localhost:3000/surveyee/takeSurvey/" + surveyType + "/" + temp;
                 attendeesList.push(obj);
             }
         }
@@ -144,9 +147,8 @@ class Routing extends Component {
         for (var i = 0; i < survey.questions.length; i++) {
             survey.questions[i].optionList = survey.questions[i].optionList.join(',');
         }
-        console.log(survey.questions);
         var self = this;
-        var url = "http://localhost:8080/surveyee/takeSurvey/" + surveyType + "/" + Math.random() * 10000000;
+        var url = "http://localhost:3000/surveyee/takeSurvey/" + surveyType + "/" + Math.random() * 10000000;
         var qr = url + "?qr=true";
         console.log(url);
         var attendeesList = [];
@@ -155,7 +157,7 @@ class Routing extends Component {
                 var obj = {};
                 obj.email = closedSurveyList[i];
                 var temp = (Math.random() * 100000);
-                obj.url = "http://localhost:8080/surveyee/takeSurvey/" + surveyType + "/" + temp;
+                obj.url = "http://localhost:3000/surveyee/takeSurvey/" + surveyType + "/" + temp;
                 attendeesList.push(obj);
             }
         }
@@ -191,8 +193,7 @@ class Routing extends Component {
           payload.added = attendeesList;
           payload.removed=removed;
         }
-
-        if (inviteeList.length > 0) {
+        else if (inviteeList.length > 0) {
 
           for(var i=0;i<survey.oldInvitees.length;i++){
             for(var j=0;j<inviteeList.length;j++){
@@ -203,9 +204,9 @@ class Routing extends Component {
             }
           }
 
-            for(var j=0;j<survey.oldInvitees.length;i++){
-              if(inviteeList.indexOf(survey.oldInvitees[i])>=0){
-                inviteeList.splice(inviteeList.indexOf(survey.oldInvitees[i]),1);
+            for(var j=0;j<survey.oldInvitees.length;j++){
+              if(inviteeList.indexOf(survey.oldInvitees[j])>=0){
+                inviteeList.splice(inviteeList.indexOf(survey.oldInvitees[j]),1);
               }
             }
 
@@ -354,6 +355,41 @@ class Routing extends Component {
         this.props.history.push('/createSurvey');
     }
 
+    EditSurvey= (id)=>{
+      this.setState({surveyId:id},function(){
+        this.props.history.push('/editSurvey');
+      });
+
+    }
+
+    PublishSurvey=(id)=>{
+      //API call for publish survey
+      API.publishSurvey({surveyId:id}).
+      then((res)=>{
+        this.props.history.push('/');
+        this.props.history.push('/mySurveys');
+      });
+    }
+
+    EndSurvey=(id)=>{
+      //API call for end survey
+      API.endSurvey({surveyId:id}).
+      then((res)=>{
+        this.props.history.push('/');
+        this.props.history.push('/mySurveys');
+      });
+    }
+
+
+    AddInvitees=(invitees)=>{
+      //API call for add invitees
+      var arr=invitees.split(',');
+      //API
+      alert('Invitees Successfully Added');
+
+    }
+
+
 
     render() {
         return (
@@ -363,6 +399,13 @@ class Routing extends Component {
                         <LandingPage gotoSignin={this.gotoSignin} gotoSignup={this.gotoSignup}/>
                     </div>
                 )}/>
+
+              <Route exact path="/mySurveys" render={() => (
+                    <div>
+                        <MySurveys EditSurvey={this.EditSurvey} PublishSurvey={this.PublishSurvey} EndSurvey={this.EndSurvey} AddInvitees={this.AddInvitees}/>
+                    </div>
+                )}/>
+
                 <Route exact path="/surveyDetails" render={() => (
                     <div>
                         <SurveyDetails surveyId={this.state.surveyId}/>

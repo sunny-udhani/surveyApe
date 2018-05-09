@@ -4,6 +4,65 @@ const headers = {
     'Accept': 'application/json'
 };
 
+export const publishSurvey= (payload) =>{
+  fetch(`${api}/survey/publish`, {
+      method: 'POST',
+      headers: {
+          ...headers,
+          'Content-Type': 'application/json'
+      },
+      credentials: 'include',
+      body: JSON.stringify(payload)
+  }).then(res => {
+      console.log(res);
+      return res.json();
+  }).catch(error => {
+      console.log("This is error");
+      return error;
+  });
+}
+
+
+export const endSurvey= (payload) =>{
+  fetch(`${api}/survey/end`, {
+      method: 'POST',
+      headers: {
+          ...headers,
+          'Content-Type': 'application/json'
+      },
+      credentials: 'include',
+      body: JSON.stringify(payload)
+  }).then(res => {
+      console.log(res);
+      return res.json();
+  }).catch(error => {
+      console.log("This is error");
+      return error;
+  });
+}
+
+export const getMySurveys = () =>
+    fetch(`${api}/survey/surveyor/getAll`, {
+        method: 'GET',
+        headers: {
+            ...headers,
+            'Content-Type': 'application/json',
+            'Access-Control-Allow-Origin': '*',
+            'Access-Control-Allow-Credentials': 'true'
+
+        },
+        credentials:'include'
+    }).then(res => {
+        console.log(res);
+        return res.json();
+    }).catch(error => {
+        console.log("This is error");
+        return error;
+    });
+
+
+
+
 export const getSurvey = (id) =>
     fetch(`${api}/survey/surveyor/getSurvey/`+id, {
         method: 'GET',
@@ -127,8 +186,8 @@ export const registerUser = (payload) =>
                 });
 
 
-                export const getSurvey1 = () =>
-                    fetch(`${api}/survey/surveyor/getSurvey/`+'ff8080816342a05f0163435c8c31001e', {
+                export const getSurvey1 = (surveyType,randSurvey) =>
+                    fetch(`${api}/survey/surveyor/${surveyType}/${randSurvey}`, {
                         method: 'GET',
                         headers: {
                             ...headers,

@@ -23,7 +23,7 @@ componentWillMount()
   console.log(this.props.match.params);
 
   {/* fetching the survey from database */}
-  API.getSurvey1()
+  API.getSurvey1(this.props.match.params.surveyType,this.props.match.params.randSurvey)
             .then((res) => {
 
                     console.log(res);
@@ -36,6 +36,10 @@ componentWillMount()
                     })
 
             });
+}
+
+submitResponses = (surveyId,answerObj,submit)=>{
+
 }
 
 onStarClick(nextValue, prevValue, name) {

@@ -78,7 +78,7 @@ class EditSurvey extends Component{
           }
           var x=0;
           for(var j=0;j<res.responseList.length;j++){
-            if(res.responseList[i].completeInd===true){
+            if(res.responseList[j].completeInd===true){
               x++;
             }
           }
