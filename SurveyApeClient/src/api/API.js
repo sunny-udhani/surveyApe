@@ -203,8 +203,8 @@ export const registerUser = (payload) =>
                 });
 
 
-                export const getSurvey1 = (surveyType,randSurvey) =>
-                    fetch(`${api}/survey/surveyor/${surveyType}/${randSurvey}`, {
+                export const getSurvey1 = (id) =>
+                    fetch(`${api}/survey/surveyor/getSurvey/`+id, {
                         method: 'GET',
                         headers: {
                             ...headers,
@@ -218,3 +218,20 @@ export const registerUser = (payload) =>
                         console.log("This is error");
                         return error;
                     });
+
+                    export const getSurveyId = (data) =>
+                        fetch(`${api}/surveyee/getSurvey/uri`, {
+                            method: 'POST',
+                            headers: {
+                                ...headers,
+                                'Content-Type': 'application/json'
+                            },
+                            credentials: 'include',
+                            body: JSON.stringify(data)
+                        }).then(res => {
+                            console.log(res.body);
+                            return res.json();
+                        }).catch(error => {
+                            console.log("This is error");
+                            return error;
+                        });

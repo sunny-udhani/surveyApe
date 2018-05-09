@@ -61,18 +61,23 @@ public class SurveyController1 {
             if (!survey.isPublishedInd())
                 return new ResponseEntity<Object>("Survey not available", HttpStatus.NOT_ACCEPTABLE);
 
-            Date now = new Date();
-            if (now.after(survey.getEndDate())) {
+            if (survey.getEndDate() != null) {
 
-                closeSurveyBasedonEndDate(survey);
-                if (survey.isSurveyCompletedInd())
-                    return new ResponseEntity<Object>("Survey has ended", HttpStatus.SERVICE_UNAVAILABLE);
-                else
-                    return new ResponseEntity<Object>("Survey has ended", HttpStatus.SERVICE_UNAVAILABLE);
+                Date now = new Date();
+                if (now.after(survey.getEndDate())) {
 
+                    closeSurveyBasedonEndDate(survey);
+                    if (survey.isSurveyCompletedInd())
+                        return new ResponseEntity<Object>("Survey has ended", HttpStatus.SERVICE_UNAVAILABLE);
+                    else
+                        return new ResponseEntity<Object>("Survey has ended", HttpStatus.SERVICE_UNAVAILABLE);
+
+                }
             }
 
-            return new ResponseEntity<Object>("{'survey_id' : '" + survey.getSurveyId() + "'}", HttpStatus.OK);
+            JSONObject res = new JSONObject();
+            res.put("survey_id", survey.getSurveyId());
+            return new ResponseEntity<Object>(res.toString(), HttpStatus.OK);
 
         } else if (surveyType == SurveyTypeEnum.CLOSED.getEnumCode() || surveyType == SurveyTypeEnum.OPEN.getEnumCode()) {
 
@@ -86,18 +91,24 @@ public class SurveyController1 {
             if (!surveyResponse.isSurveyURIValidInd())
                 return new ResponseEntity<Object>("Your URL is no longer valid", HttpStatus.FORBIDDEN);
 
-            Date now = new Date();
-            if (now.after(surveyResponse.getSurveyId().getEndDate())) {
+            if (surveyResponse.getSurveyId().getEndDate() != null) {
+                Date now = new Date();
+                if (now.after(surveyResponse.getSurveyId().getEndDate())) {
 
-                Survey survey = closeSurveyBasedonEndDate(surveyResponse.getSurveyId());
-                if (survey.isSurveyCompletedInd())
-                    return new ResponseEntity<Object>("Survey has ended", HttpStatus.SERVICE_UNAVAILABLE);
-                else
-                    return new ResponseEntity<Object>("Survey has ended", HttpStatus.SERVICE_UNAVAILABLE);
-
+                    Survey survey = closeSurveyBasedonEndDate(surveyResponse.getSurveyId());
+                    if (survey.isSurveyCompletedInd())
+                        return new ResponseEntity<Object>("Survey has ended", HttpStatus.SERVICE_UNAVAILABLE);
+                    else
+                        return new ResponseEntity<Object>("Survey has ended", HttpStatus.SERVICE_UNAVAILABLE);
+                }
             }
 
-            return new ResponseEntity<Object>(surveyResponse, HttpStatus.OK);
+            JSONObject response = new JSONObject();
+            response.put("surveyResponse_id", surveyResponse.getSurveyResponseId());
+            response.put("email", surveyResponse.getUserEmail());
+            response.put("survey_id", surveyResponse.getSurveyId().getSurveyId());
+
+            return new ResponseEntity<Object>(response.toString(), HttpStatus.OK);
 
 
         } else {
@@ -109,14 +120,22 @@ public class SurveyController1 {
     }
 
 
-    @GetMapping(path = "/getSurvey/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(path = "/getSurvey/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public @ResponseBody
-    ResponseEntity<?> retrieveASurveyFromId(@PathVariable String id, @RequestParam Map<String, String> params, HttpSession session) {
+    ResponseEntity<?> retrieveASurveyFromId(@RequestBody String req, @PathVariable String id, @RequestParam Map<String, String> params, HttpSession session) {
 
         Survey survey = surveyService.findBySurveyId(id);
         if (survey == null) {
             return new ResponseEntity<Object>("No such survey", HttpStatus.BAD_REQUEST);
         }
+
+        if (survey.getSurveyType() == SurveyTypeEnum.CLOSED.getEnumCode()) {
+            String userEmail = session.getAttribute("email").toString();
+            if (!userEmail.equals("")) {
+
+            }
+        }
+
         return new ResponseEntity<Object>(survey, HttpStatus.OK);
     }
 
@@ -129,117 +148,6 @@ public class SurveyController1 {
         return survey;
     }
 
-
-    public SurveyResponse createNewSurveyeeResponseEntry(String surveyId, String attendeeEmail, String attendeeURI) {
-        Survey survey = surveyService.findBySurveyId(surveyId);
-
-        if (survey == null) {
-            return null;
-        }
-
-
-        SurveyResponse attendeeResponseEntity = new SurveyResponse();
-        attendeeResponseEntity.setSurveyId(survey);
-        // no check for email in user table as only survey type closed requires users to be preregistered
-        attendeeResponseEntity.setUserEmail(attendeeEmail);
-
-        if (!(attendeeURI.equals("")))
-            attendeeResponseEntity.setSurveyURI(attendeeURI);
-
-        //add attendee response entity to survey for two way binding
-        addSurveyResponseToSurveyEntity(attendeeResponseEntity, survey);
-
-        //save each entity
-        surveyResponseService.saveResponseEntity(attendeeResponseEntity);
-        surveyService.saveSurvey(survey);
-        return attendeeResponseEntity;
-    }
-
-    public void addQuestionToSurveyEntity(SurveyQuestion question, Survey survey) {
-        survey.getQuestionList().add(question);
-        question.setSurveyId(survey);
-    }
-
-    public void addSurveyResponseToSurveyEntity(SurveyResponse response, Survey survey) {
-        List<SurveyResponse> responseList = survey.getResponseList();
-        if (responseList == null)
-            responseList = new ArrayList<>();
-
-        responseList.add(response);
-        survey.setResponseList(responseList);
-        response.setSurveyId(survey);
-    }
-
-    public void addOptionToQuestionEntity(QuestionOption option, SurveyQuestion question) {
-        question.getQuestionOptionList().add(option);
-
-        option.setQuestionId(question);
-    }
-
-    public void removeQuestionFromSurveyEntity(SurveyQuestion question, Survey survey) {
-        survey.getQuestionList().remove(question);
-        question.setSurveyId(null);
-    }
-
-    public boolean createOptions(String optionList, SurveyQuestion question) {
-        for (String options : optionList.split(",")) {
-
-            QuestionOption option = new QuestionOption(options);
-
-            addOptionToQuestionEntity(option, question);
-            questionOptionService.saveOption(option);
-        }
-
-        return true;
-    }
-
-    public boolean validQuestionType(int questionType) {
-
-        for (QuestionTypeEnum e : QuestionTypeEnum.values()) {
-            if (e.getEnumCode() == questionType)
-                return true;
-        }
-        return false;
-    }
-
-    public int sendEmailtoAttendees(Survey survey) {
-        boolean publishInd = survey.isPublishedInd();
-
-        if (publishInd) {
-
-            int surveyType = survey.getSurveyType();
-
-            if (surveyType == SurveyTypeEnum.CLOSED.getEnumCode() || surveyType == SurveyTypeEnum.GENERAL.getEnumCode()) {
-                List<SurveyResponse> surveyResponseList = survey.getResponseList();
-                if (surveyType == SurveyTypeEnum.CLOSED.getEnumCode()) {
-
-                    for (SurveyResponse response : surveyResponseList) {
-
-                        String attendeeEmail = response.getUserEmail();
-                        String attendeeURL = response.getSurveyURI();
-
-                        mailServices.sendEmail(attendeeEmail, "You must fill this survey: " + attendeeURL, "aviralkum@gmail.com", "Survey Filling request");
-
-                        return 0;
-                    }
-
-                } else {
-
-                    String surveyURL = survey.getSurveyURI();
-                    for (SurveyResponse response : surveyResponseList) {
-
-                        String attendeeEmail = response.getUserEmail();
-                        mailServices.sendEmail(attendeeEmail, "You are invited to take this survey: " + surveyURL, "aviralkum@gmail.com", "Survey Filling request");
-
-                        return 0;
-                    }
-                }
-            }
-        } else {
-            return 0;
-        }
-        return 0;
-    }
     //endregion
 
 }
