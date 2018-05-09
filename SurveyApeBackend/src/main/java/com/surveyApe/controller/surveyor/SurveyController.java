@@ -372,6 +372,39 @@ public class SurveyController {
             return new ResponseEntity<Object>("No such survey", HttpStatus.BAD_REQUEST);
         }
 
+        if (reqObj.has("publish")) {
+            boolean publishInd = reqObj.getBoolean("publish");
+            survey.setPublishedInd(publishInd);
+        }
+
+        sendEmailtoAttendees(survey);
+
+        return new ResponseEntity<Object>(survey, HttpStatus.OK);
+    }
+
+    @PostMapping(path = "/endSurvey/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public @ResponseBody
+    ResponseEntity<?> endSurvey(@RequestBody String req, @RequestParam Map<String, String> params, @PathVariable String id, HttpSession session) {
+
+        JSONObject reqObj = new JSONObject(req);
+
+        String surveyorEmail = session.getAttribute("surveyorEmail").toString();
+        String surveyId = id;
+        User userVO = userService.getUserById(surveyorEmail).orElse(null);
+        if (userVO == null) {
+            return new ResponseEntity<Object>("Invalid user / user id", HttpStatus.BAD_REQUEST);
+        }
+
+        Survey survey = surveyService.findBySurveyIdAndSurveyorEmail(surveyId, userVO);
+        if (survey == null) {
+            return new ResponseEntity<Object>("No such survey", HttpStatus.BAD_REQUEST);
+        }
+
+        if (reqObj.has("publish")) {
+            boolean publishInd = reqObj.getBoolean("publish");
+            survey.setPublishedInd(publishInd);
+        }
+
         sendEmailtoAttendees(survey);
 
         return new ResponseEntity<Object>(survey, HttpStatus.OK);

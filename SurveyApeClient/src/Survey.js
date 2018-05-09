@@ -4,6 +4,7 @@ import StarRatingComponent from 'react-star-rating-component';
 
 import './Survey.css';
 import * as API from './api/API';
+import Logo from './logo.png';
 
 class Survey extends Component {
 constructor(props) {
@@ -30,6 +31,7 @@ componentWillMount()
 
                     this.setState({
                       surveyId:res.surveyId,
+                      surveyTitle: res.surveyTitle,
                       questionList: res.questionList,
                       responseList: res.responseList,
                       answerObj: []
@@ -80,7 +82,9 @@ else if(question.questionType === 2){ { /* Radio */}
     return (
 
           <div className="question">
+          <div className="col-lg-12" style={{backgroundColor: "gray"}}>
             <h3>{question.questionText}</h3>
+          </div>
 
             {question.questionOptionList.map(option => (
               <div>
@@ -106,7 +110,11 @@ else if(question.questionType === 2){ { /* Radio */}
       return (
 
             <div className="question">
+
+
+            <div className="col-lg-12" style={{backgroundColor: "gray"}}>
               <h3>{question.questionText}</h3>
+            </div>
 
               {question.questionOptionList.map(option => (
                 <div>
@@ -158,10 +166,12 @@ else if(question.questionType === 2){ { /* Radio */}
         return (
 
               <div className="question">
+              <div className="col-lg-12" style={{backgroundColor: "gray", textAlign: "left", paddingLeft: 20, fontSize: 18}}>
                 <h3>{question.questionText}</h3>
+              </div>
 
                 {question.questionOptionList.map(option => (
-                  <div>
+                  <div style={{textAlign: "left", paddingLeft: 20}}>
                     <input type="radio" name="yn" onClick={(event)=>{
                           var temp=this.state.answerObj;
                           for(var i=0;i<temp.length;i++){
@@ -244,8 +254,6 @@ else if(question.questionType === 2){ { /* Radio */}
                       value={this.state.rating}
                       onStarClick={this.onStarClick.bind(this)}
                     />
-
-
                     </div>
 
                 </div>
@@ -259,14 +267,47 @@ else if(question.questionType === 2){ { /* Radio */}
     render() {
 
       return (
-          <div className="mainPageSurvey">
+        <div>
+        <div className="row bar">
+            <div className="col-lg-1 logo">
+                <img src={Logo} />
+            </div>
+            <div className="col-lg-3 textLogo">
+              Survey Ape
+            </div>
+            <div className="col-lg-4">
+
+            </div>
+
+        </div>
+          <h2> Survey Name: {this.state.surveyTitle}</h2>
+          <div className="row mainPageSurvey">
             {this.state.questionList.map(question => (
 
                 this.renderOptions(question)
 
             ))}
-            <input type="button" value="Save" onClick={()=>this.submitResponses(this.state.surveyId,this.state.answerObj,false)}/>
-            <input type="button" value="Submit" onClick={()=>this.submitResponses(this.state.surveyId,this.state.answerObj,true)}/>
+            </div>
+            <br/>
+            <div className="row">
+              <div className="col-lg-4">
+              </div>
+
+              <div className="col-lg-1" style={{marginLeft: 80}}>
+                <button className="btn btn-primary save" onClick={()=>this.submitResponses(this.state.surveyId,this.state.answerObj,false)}>
+                  Save
+                </button>
+              </div>
+              <div className="col-lg-1">
+                <button className="btn btn-primary submit" onClick={()=>this.submitResponses(this.state.surveyId,this.state.answerObj,true)}>
+                  Submit
+                </button>
+              </div>
+
+            </div>
+
+
+
           </div>
     );
 

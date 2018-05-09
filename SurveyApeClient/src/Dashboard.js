@@ -8,37 +8,9 @@ class Dashboard extends Component {
   constructor(props){
     super(props);
     this.state={
-      survey_id: 1,
-      surveyurivalid_ind: 1,
-      surveyuri: "abc/def",
-      complete_ind: 1,
-      surveyee_id: "shashank.singh9193@gmail.com",
-      responses: [
-        {
-          question_id: 1,
-          response_text: "I am shashank",
-          option_id: 3
-        },
-        {
-          question_id: 2,
-          response_text: "I am Aviral",
-          option_id: 4
-        },
-        {
-          question_id: 3,
-          response_text: "I am chandan",
-          option_id: 2
-        },
-        {
-          question_id: 4,
-          response_text: "I am Sunny",
-          option_id: 1
-        }
-      ]
+
     }
   }
-
-
 
   render() {
     return (
@@ -96,9 +68,6 @@ class Dashboard extends Component {
                       </div>
              </div>
 
-             <div className="row">
-                <button className="btn btn-success" onClick={() => {this.props.submitResponses(this.state)}}>Send Responses</button>
-             </div>
 
               <div className="row footer">
 

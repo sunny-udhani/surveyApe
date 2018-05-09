@@ -9,4 +9,5 @@ import java.util.Optional;
 public interface SurveyResponseRepository extends CrudRepository<SurveyResponse, String> {
 
     Optional<SurveyResponse> findBySurveyIdEqualsAndUserEmailEquals(String surveyId, String email);
+    Optional<SurveyResponse> findDistinctBySurveyURIEquals(String url);
 }
