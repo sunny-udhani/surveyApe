@@ -73,7 +73,7 @@ class Routing extends Component {
             questions: survey.questions,
             url: url,
             qr: qr,
-            publish: false
+            publish: survey.publish
         };
 
         if (attendeesList.length > 0) {
