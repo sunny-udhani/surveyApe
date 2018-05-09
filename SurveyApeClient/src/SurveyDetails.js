@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-
+import * as API from './api/API';
 class SurveyDetails extends Component{
   constructor(props){
     super(props);
@@ -11,6 +11,13 @@ class SurveyDetails extends Component{
       submittedCount:10,
       totalCount:100
     }
+
+
+    API.getSurvey(this.props.surveyId)
+    .then((res)=>{
+      console.log(res);
+    })
+
   }
 
   render(){

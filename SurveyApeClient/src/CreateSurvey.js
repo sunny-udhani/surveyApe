@@ -100,12 +100,12 @@ class CreateSurvey extends Component {
 
     <div className="row">
         <div className="col-lg-6 survey-name">
-            <span className="labels">Survey Type:</span>
+            <span className="labels">End Time:</span>
 
             <span className="inputs" style={{marginLeft: "10%"}}>
 
               <input type="date" style={{width: "50%"}} onChange={(event)=>this.setState({endTime:event.target.value})}/>
-
+              <input type="button" value="No end time" onClick={()=>this.setState({endTime:true})} />
             </span>
         </div>
     </div>

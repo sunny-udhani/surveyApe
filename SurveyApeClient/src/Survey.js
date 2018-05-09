@@ -27,7 +27,7 @@ componentWillMount()
             .then((res) => {
 
                     console.log(res);
-
+                    
                     this.setState({
                       questionList: res.questionList,
                       responseList: res.responseList

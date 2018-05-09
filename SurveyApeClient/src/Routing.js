@@ -73,7 +73,7 @@ class Routing extends Component {
             questions: survey.questions,
             url: url,
             qr: qr,
-            publish: false
+            publish: survey.publish
         };
 
         if (attendeesList.length > 0) {
@@ -174,12 +174,27 @@ class Routing extends Component {
         if (attendeesList.length > 0) {
             payload.attendeesList = attendeesList;
         }
+        var removed=[];
+        var added=[];
         if (inviteeList.length > 0) {
-          var temp=[];
-          for(var i=0;i<inviteeList.length;i++){
-            temp.push({"email":inviteeList[i],"inviteeURI":url})
+
+          for(var i=0;i<survey.oldInvitees.length;i++){
+            for(var j=0;j<inviteeList.length;j++){
+              if(survey.oldInvitees[i]===inviteeList[j]){
+                removed.push(inviteeList[j]);
+                break;
+              }
+            }
           }
-          payload.inviteeList = temp;
+
+            for(var j=0;j<survey.oldInvitees.length;i++){
+              if(inviteeList.indexOf(survey.oldInvitees[i])>=0){
+                inviteeList.splice(inviteeList.indexOf(survey.oldInvitees[i]),1);
+              }
+            }
+
+          payload.added = inviteeList;
+          payload.removed=removed;
         }
 
         console.log("payload");
@@ -190,7 +205,7 @@ class Routing extends Component {
             .then((res) => {
                 console.log(res);
                 if(res.surveyId){
-                  this.props.history.push("/dashboard");
+                  this.props.history.push("/surveyDetails");
                 }
 
 
@@ -334,7 +349,7 @@ class Routing extends Component {
                 )}/>
                 <Route exact path="/surveyDetails" render={() => (
                     <div>
-                        <SurveyDetails/>
+                        <SurveyDetails surveyId={this.state.surveyId}/>
                     </div>
                 )}/>
                 <Route exact path="/qr" render={() => (
