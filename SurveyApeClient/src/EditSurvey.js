@@ -115,6 +115,7 @@ class EditSurvey extends Component{
 
           //this.setState({closedSurveyStr:temp2.join(",")});
           this.setState({closedSurveyStr:""});
+          this.setState({oldInvitees:temp2});
         }
     });
 
@@ -529,7 +530,7 @@ class EditSurvey extends Component{
                 }
 
                 if(inviteeList.length>0){
-                  this.props.editSurvey({type:""+this.state.surveyType,questions:this.state.questions,name:this.state.surveyTitle,publish:true},[],inviteeList);
+                  this.props.editSurvey({type:""+this.state.surveyType,questions:this.state.questions,name:this.state.surveyTitle,publish:true,oldInvitees:this.state.oldInvitees},[],inviteeList);
                 }
                 else if(closedSurveyList.length>0){
                   this.props.editSurvey({type:""+this.state.surveyType,questions:this.state.questions,name:this.state.surveyTitle,publish:true,oldInvitees:this.state.oldInvitees},closedSurveyList,[]);
@@ -556,7 +557,22 @@ class EditSurvey extends Component{
         <div className="col-lg-2">
 
             <input type="button" className="btn btn-primary" value="Save" onClick={()=>{
-                this.props.createSurvey({type:this.state.surveyType,questions:this.state.questions,name:this.state.surveyName,publish:false});
+              if(this.state.inviteeStr){
+              var inviteeList=this.state.inviteeStr.split(",");
+              }
+              if(this.state.closedSurveyStr){
+              var closedSurveyList=this.state.closedSurveyStr.split(",");
+              }
+
+              if(inviteeList.length>0){
+                this.props.editSurvey({type:""+this.state.surveyType,questions:this.state.questions,name:this.state.surveyTitle,publish:false},[],inviteeList);
+              }
+              else if(closedSurveyList.length>0){
+                this.props.editSurvey({type:""+this.state.surveyType,questions:this.state.questions,name:this.state.surveyTitle,publish:false,oldInvitees:this.state.oldInvitees},closedSurveyList,[]);
+              }
+              else{
+                this.props.editSurvey({type:""+this.state.surveyType,questions:this.state.questions,name:this.state.surveyTitle,publish:false,oldInvitees:this.state.oldInvitees},[],[]);
+              }
                 this.setState({
                   questions:[],
                   type:null,

@@ -168,14 +168,30 @@ class Routing extends Component {
             questions: survey.questions,
             url: url,
             qr: qr,
-            publish: false
+            publish: survey.publish
         };
-
-        if (attendeesList.length > 0) {
-            payload.attendeesList = attendeesList;
-        }
         var removed=[];
         var added=[];
+        if (attendeesList.length > 0) {
+          for(var i=0;i<survey.oldInvitees.length;i++){
+            for(var j=0;j<attendeesList.length;j++){
+              if(survey.oldInvitees[i]===attendeesList[j]){
+                removed.push(attendeesList[j]);
+                break;
+              }
+            }
+          }
+
+            for(var j=0;j<survey.oldInvitees.length;i++){
+              if(attendeesList.indexOf(survey.oldInvitees[i])>=0){
+                attendeesList.splice(attendeesList.indexOf(survey.oldInvitees[i]),1);
+              }
+            }
+
+          payload.added = attendeesList;
+          payload.removed=removed;
+        }
+
         if (inviteeList.length > 0) {
 
           for(var i=0;i<survey.oldInvitees.length;i++){
