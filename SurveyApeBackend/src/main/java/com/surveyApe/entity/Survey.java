@@ -28,6 +28,7 @@ public class Survey {
     private Date endDate;
     @Column(nullable = true)
     private boolean publishedInd;
+    private boolean surveyCompletedInd;
 
     @OneToMany(mappedBy = "surveyId", cascade = CascadeType.REMOVE, fetch = FetchType.EAGER)
     private List<SurveyQuestion> questionList=new ArrayList<SurveyQuestion>();
@@ -121,5 +122,13 @@ public class Survey {
 
     public void setSurveyTitle(String surveyTitle) {
         this.surveyTitle = surveyTitle;
+    }
+
+    public boolean isSurveyCompletedInd() {
+        return surveyCompletedInd;
+    }
+
+    public void setSurveyCompletedInd(boolean surveyCompletedInd) {
+        this.surveyCompletedInd = surveyCompletedInd;
     }
 }
