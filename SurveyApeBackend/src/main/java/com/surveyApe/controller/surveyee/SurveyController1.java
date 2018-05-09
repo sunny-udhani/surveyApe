@@ -26,7 +26,7 @@ import java.util.Map;
 @CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
 //requires you to run react server on port 3000
 @RequestMapping(path = "/surveyee")
-public class SurveyController {
+public class SurveyController1 {
 
     @Autowired
     private SurveyService surveyService;
@@ -58,13 +58,30 @@ public class SurveyController {
             if (survey == null)
                 return new ResponseEntity<Object>("No such survey", HttpStatus.BAD_REQUEST);
 
+            if (!survey.isPublishedInd())
+                return new ResponseEntity<Object>("Survey not available", HttpStatus.NOT_ACCEPTABLE);
+
+            Date now = new Date();
+            if (now.after(survey.getEndDate())) {
+
+                closeSurveyBasedonEndDate(survey);
+                if (survey.isSurveyCompletedInd())
+                    return new ResponseEntity<Object>("Survey has ended", HttpStatus.SERVICE_UNAVAILABLE);
+                else
+                    return new ResponseEntity<Object>("Survey has ended", HttpStatus.SERVICE_UNAVAILABLE);
+
+            }
+
             return new ResponseEntity<Object>("{'survey_id' : '" + survey.getSurveyId() + "'}", HttpStatus.OK);
 
-        } else if (surveyType == SurveyTypeEnum.CLOSED.getEnumCode()) {
+        } else if (surveyType == SurveyTypeEnum.CLOSED.getEnumCode() || surveyType == SurveyTypeEnum.OPEN.getEnumCode()) {
 
             SurveyResponse surveyResponse = surveyResponseService.getSurveyResponseEntityFromUrl(url);
             if (surveyResponse == null)
                 return new ResponseEntity<Object>("No such survey", HttpStatus.BAD_REQUEST);
+
+            if (!surveyResponse.getSurveyId().isPublishedInd())
+                return new ResponseEntity<Object>("Survey not available", HttpStatus.NOT_ACCEPTABLE);
 
             if (!surveyResponse.isSurveyURIValidInd())
                 return new ResponseEntity<Object>("Your URL is no longer valid", HttpStatus.FORBIDDEN);
@@ -83,10 +100,11 @@ public class SurveyController {
             return new ResponseEntity<Object>(surveyResponse, HttpStatus.OK);
 
 
-        } else if (surveyType == SurveyTypeEnum.OPEN.getEnumCode()) {
+        } else {
+            return new ResponseEntity<Object>("invalid region", HttpStatus.OK);
 
         }
-        return new ResponseEntity<Object>("No such survey", HttpStatus.BAD_REQUEST);
+//        return new ResponseEntity<Object>("No such survey", HttpStatus.BAD_REQUEST);
 //        return null;
     }
 
