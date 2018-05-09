@@ -92,7 +92,8 @@ class EditSurvey extends Component{
           for(var i=0;i<temp.length;i++){
             temp2.push(temp[i].userEmail);
           }
-          this.setState({inviteeStr:temp2.join(",")});
+        //  this.setState({inviteeStr:temp2.join(",")});
+        this.setState({inviteeStr:""});
         }
 
         if(res.surveyType===3){
@@ -101,7 +102,8 @@ class EditSurvey extends Component{
           for(var i=0;i<temp.length;i++){
             temp2.push(temp[i].userEmail);
           }
-          this.setState({closedSurveyStr:temp2.join(",")});
+          //this.setState({closedSurveyStr:temp2.join(",")});
+          this.setState({closedSurveyStr:""});
         }
     });
 
