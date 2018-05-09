@@ -21,8 +21,16 @@ public class SurveyResponseService {
     private SurveyResponseRepository surveyResponseRepository;
 
 
-    public void saveResponseEntity(SurveyResponse response){
+    public void saveResponseEntity(SurveyResponse response) {
         surveyResponseRepository.save(response);
+    }
+
+    public SurveyResponse findAttendee(String survey_id, String attendee_email) {
+        return surveyResponseRepository.findBySurveyIdEqualsAndUserEmailEquals(survey_id, attendee_email).orElse(null);
+    }
+
+    public void deleteAttendee(SurveyResponse response) {
+        surveyResponseRepository.delete(response);
     }
 
     public String surveyResponse(Survey surveyID , String userEmail,String surveyURI,boolean completeInd,boolean uriind) {
