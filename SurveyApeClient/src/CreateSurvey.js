@@ -104,8 +104,8 @@ class CreateSurvey extends Component {
 
             <span className="inputs" style={{marginLeft: "10%"}}>
 
-              <input type="date" style={{width: "50%"}} onChange={(event)=>this.setState({endTime:event.target.value})}/>
-              <input type="button" value="No end time" onClick={()=>this.setState({endTime:true})} />
+              <input type="date" style={{width: "50%"}} style={{marginLeft: 20}} onChange={(event)=>this.setState({endTime:event.target.value})}/>
+              <button className="btn btn-primary" style={{marginLeft: 20}}  onClick={()=>this.setState({endTime:true})}>No End Time</button>
             </span>
         </div>
     </div>
