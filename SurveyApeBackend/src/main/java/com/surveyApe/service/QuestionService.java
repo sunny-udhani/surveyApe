@@ -1,26 +1,61 @@
 package com.surveyApe.service;
 
-import com.surveyApe.config.QuestionTypeEnum;
-import com.surveyApe.config.SurveyTypeEnum;
-import com.surveyApe.entity.QuestionOption;
+
+import com.surveyApe.entity.QuestionResponse;
 import com.surveyApe.entity.Survey;
 import com.surveyApe.entity.SurveyQuestion;
-import com.surveyApe.repository.QuestionOptionRepository;
+import com.surveyApe.entity.SurveyResponse;
+import com.surveyApe.repository.QuestionResponseRepository;
 import com.surveyApe.repository.SurveyQuestionRepository;
 import com.surveyApe.repository.SurveyRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+import java.util.List;
 @Service
-public class QuestionService {
+public class  QuestionService {
+
     @Autowired
-    public SurveyQuestionRepository surveyQuestionRepository;
+    private SurveyQuestionRepository surveyQuestionRepository;
     @Autowired
-    public QuestionOptionRepository questionOptionRepository;
-    @Autowired
-    public SurveyRepository surveyRepository;
+    private QuestionResponseRepository questionResponseRepository;
 
     public void addQuestion(SurveyQuestion question){
         surveyQuestionRepository.save(question);
     }
+
+    public Survey getQuestion(String id)
+    {
+
+
+
+        return null;
+
+    }
+
+    public String createResponse(SurveyResponse responseId, String response, SurveyQuestion questionId)
+
+    {
+
+        QuestionResponse q = new QuestionResponse();
+        q.setSurveyResponseId(responseId);
+        q.setQuestionId(questionId);
+        q.setResponse(response);
+        questionResponseRepository.save(q);
+
+
+        //
+        return "";
+
+
+    }
+
+    public SurveyQuestion getSurveyQuestion(String id)
+    {
+        Optional<SurveyQuestion> s = surveyQuestionRepository.findById(id);
+
+        return  s.get();
+    }
+
 }
