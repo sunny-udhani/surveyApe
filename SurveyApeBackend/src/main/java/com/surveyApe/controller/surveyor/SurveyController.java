@@ -247,10 +247,10 @@ public class SurveyController {
 
         }
 
-        if (reqObj.has("addAttendeesList")) {
-//            survey.getResponseList().clear();
-//            surveyService.saveSurvey(survey);
-            JSONArray attendeesArray = reqObj.getJSONArray("addAttendeesList");
+        if (reqObj.has("attendeesList")) {
+            survey.getResponseList().clear();
+            surveyService.saveSurvey(survey);
+            JSONArray attendeesArray = reqObj.getJSONArray("attendeesList");
 
             for (int i = 0; i < attendeesArray.length(); i++) {
                 JSONObject attendeesObj = attendeesArray.getJSONObject(i);
@@ -266,30 +266,12 @@ public class SurveyController {
 
             }
         }
-        if (reqObj.has("removeAttendeesList")) {
-//            survey.getResponseList().clear();
-//            surveyService.saveSurvey(survey);
-            JSONArray attendeesArray = reqObj.getJSONArray("removeAttendeesList");
 
-            for (int i = 0; i < attendeesArray.length(); i++) {
-                JSONObject attendeesObj = attendeesArray.getJSONObject(i);
+        if (reqObj.has("inviteeList")) {
+            survey.getResponseList().clear();
+            surveyService.saveSurvey(survey);
 
-                String surveyeeEmail = attendeesObj.getString("email");
-
-                boolean flag = removeAttendeeFromSurvey(survey.getSurveyId(), surveyeeEmail);
-
-                if (flag == false) {
-                    return new ResponseEntity<Object>("response entity not created", HttpStatus.BAD_REQUEST);
-                }
-
-            }
-        }
-
-        if (reqObj.has("addInviteeList")) {
-//            survey.getResponseList().clear();
-//            surveyService.saveSurvey(survey);
-
-            JSONArray invitedEmailsArray = reqObj.getJSONArray("addInviteeList");
+            JSONArray invitedEmailsArray = reqObj.getJSONArray("inviteeList");
 
             for (int i = 0; i < invitedEmailsArray.length(); i++) {
                 JSONObject attendeesObj = invitedEmailsArray.getJSONObject(i);
@@ -299,25 +281,6 @@ public class SurveyController {
                 SurveyResponse newSurveyeeResponseEntry = createNewSurveyeeResponseEntry(survey.getSurveyId(), surveyeeEmail, "");
 
                 if (newSurveyeeResponseEntry == null) {
-                    return new ResponseEntity<Object>("response entity not created", HttpStatus.BAD_REQUEST);
-                }
-
-            }
-        }
-
-        if (reqObj.has("removeInviteeList")) {
-//            survey.getResponseList().clear();
-//            surveyService.saveSurvey(survey);
-            JSONArray attendeesArray = reqObj.getJSONArray("removeInviteeList");
-
-            for (int i = 0; i < attendeesArray.length(); i++) {
-                JSONObject attendeesObj = attendeesArray.getJSONObject(i);
-
-                String surveyeeEmail = attendeesObj.getString("email");
-
-                boolean flag = removeAttendeeFromSurvey(survey.getSurveyId(), surveyeeEmail);
-
-                if (flag == false) {
                     return new ResponseEntity<Object>("response entity not created", HttpStatus.BAD_REQUEST);
                 }
 
@@ -421,8 +384,8 @@ public class SurveyController {
     public @ResponseBody
     ResponseEntity<?> retrieveAllSurveys(@RequestParam Map<String, String> params, HttpSession session) {
         System.out.println(params);
-        // String surveyorEmail = params.get("surveyorEmail");
-        String surveyorEmail = "chandan.paranjape@gmail.com";
+       String surveyorEmail = params.get("surveyorEmail");
+        //String surveyorEmail="chandan.paranjape@gmail.com";
         User userVO = userService.getUserById(surveyorEmail).orElse(null);
         if (userVO == null) {
             return new ResponseEntity<Object>("Invalid user / user id", HttpStatus.BAD_REQUEST);
@@ -473,15 +436,15 @@ public class SurveyController {
             return null;
         }
 
+
         SurveyResponse attendeeResponseEntity = new SurveyResponse();
         attendeeResponseEntity.setSurveyId(survey);
         // no check for email in user table as only survey type closed requires users to be preregistered
         attendeeResponseEntity.setUserEmail(attendeeEmail);
 
-        if (!(attendeeURI.equals(""))) {
+        if (!(attendeeURI.equals("")))
             attendeeResponseEntity.setSurveyURI(attendeeURI);
-            attendeeResponseEntity.setSurveyURIValidInd(true);
-        }
+
         //add attendee response entity to survey for two way binding
         addSurveyResponseToSurveyEntity(attendeeResponseEntity, survey);
 
@@ -489,28 +452,6 @@ public class SurveyController {
         surveyResponseService.saveResponseEntity(attendeeResponseEntity);
         surveyService.saveSurvey(survey);
         return attendeeResponseEntity;
-    }
-
-    public boolean removeAttendeeFromSurvey(String surveyId, String attendeeEmail) {
-        Survey survey = surveyService.findBySurveyId(surveyId);
-
-        if (survey == null) {
-            return false;
-        }
-
-        SurveyResponse attendeeResponseEntity = surveyResponseService.findAttendee(survey.getSurveyId(), attendeeEmail);
-
-        if (attendeeResponseEntity == null) {
-            return false;
-        }
-
-        //remove attendee response entity to survey for two way binding
-        removeAttendeeFromSurveyEntity(attendeeResponseEntity, survey);
-
-        //save each entity
-        surveyResponseService.deleteAttendee(attendeeResponseEntity);
-        surveyService.saveSurvey(survey);
-        return true;
     }
 
     public void addQuestionToSurveyEntity(SurveyQuestion question, Survey survey) {
@@ -537,11 +478,6 @@ public class SurveyController {
     public void removeQuestionFromSurveyEntity(SurveyQuestion question, Survey survey) {
         survey.getQuestionList().remove(question);
         question.setSurveyId(null);
-    }
-
-    public void removeAttendeeFromSurveyEntity(SurveyResponse surveyResponse, Survey survey) {
-        survey.getResponseList().remove(surveyResponse);
-        surveyResponse.setSurveyId(null);
     }
 
     public boolean createOptions(String optionList, SurveyQuestion question) {
