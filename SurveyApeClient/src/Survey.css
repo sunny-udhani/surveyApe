@@ -2,14 +2,36 @@
   height: auto;
   min-height: 300px;
   width: 100%;
-  background-color: green;
   opacity: 0.6;
+  text-align: left;
 }
 
 .question {
-  width: 100%;
+  width: 60%;
   height: auto;
   color: white;
   border: 1px solid;
   text-align: center;
+  margin-left: 20%;
+  margin-top: 20px;
+  padding: 0px 0 10px 0px;
+  background-color: black;
+  border-radius: 4px;
+}
+
+.questionText {
+  background-color: gray;
+}
+
+.bar {
+  height: 90px;
+  background-color: #061928
+}
+
+.save {
+  width: 100px;
+}
+
+.submit {
+  width: 100px;
 }

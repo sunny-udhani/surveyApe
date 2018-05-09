@@ -128,7 +128,7 @@ export const registerUser = (payload) =>
 
 
                 export const getSurvey1 = () =>
-                    fetch(`${api}/survey/surveyor/getSurvey/`+'ff8080816342a05f0163435c8c31001e', {
+                    fetch(`${api}/survey/surveyor/getSurvey/`+'ff80808163445b350163445c5afd0000', {
                         method: 'GET',
                         headers: {
                             ...headers,
