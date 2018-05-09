@@ -1,12 +1,9 @@
 package com.surveyApe.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.surveyApe.entity.Message;
-import com.surveyApe.entity.User;
-import com.surveyApe.service.MailServices;
-import com.surveyApe.service.QuestionService;
-import com.surveyApe.service.SurveyService;
-import com.surveyApe.service.UserService;
+import com.surveyApe.entity.*;
+import com.surveyApe.service.*;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpRequest;
@@ -42,6 +39,9 @@ public class UserController {
 
     @Autowired
     private MailServices mailServices;
+
+    @Autowired
+    private SurveyResponseService surveyResponseService;
 
 
     @GetMapping(path = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -212,5 +212,77 @@ public class UserController {
         return new ResponseEntity<Object>(HttpStatus.OK);
 
     }
+    @PostMapping(value="/submitSurvey",consumes = MediaType.APPLICATION_JSON_VALUE)
+    public @ResponseBody ResponseEntity<?> loginUser(@RequestBody String data)
+    {
+
+        System.out.println(data);
+        JSONObject jso = new JSONObject(data);
+        String surveyID = String.valueOf(jso.get("survey_id"));
+        String surveyee_ID = (String)jso.get("surveyee_id");
+        String surveyuri = (String)jso.get("surveyuri");
+        String uind = String.valueOf(jso.get("complete_ind"));
+        String cind = String.valueOf(jso.get("surveyurivalid_ind"));
+        String surveyur = (String)jso.get("surveyuri");
+        Boolean uindicator = true;
+        Boolean cindicator = false;
+        if(uind.equals(1))
+        {
+            uindicator = true;
+        }
+        else
+        {
+            uindicator = false;
+        }
+
+        if(cind.equals(1))
+        {
+            cindicator = true;
+        }
+        else
+        {
+            cindicator = false;
+        }
+
+
+        System.out.println(jso.get("survey_id"));
+        System.out.println(jso.get("surveyee_id"));
+        System.out.println(jso.get("responses"));
+        //String res = (String)jso.get("response_text");
+        //  JSONObject obj2 = new JSONObject("response_text");
+        // Table 1 : Update :  complete_ind , surveuri, survey
+        // fetch the survey id based on the given survey ud
+        Survey s = surveyResponseService.getSurvey(surveyID);
+
+        String responseId = surveyResponseService.surveyResponse(s,surveyee_ID,surveyur,cindicator,uindicator);
+
+        // save in question_response table
+        // get the survey response id from survey_response table where email = current email
+
+        SurveyResponse sr = surveyResponseService.getSurveyResponse(responseId);
+        SurveyQuestion sq = questionService.getSurveyQuestion(surveyID);
+        // insert this response id
+        JSONArray c = jso.getJSONArray("responses");
+
+        for(int i=0;i<c.length();i++)
+        {
+            JSONObject n = c.getJSONObject(i);
+            System.out.println(n.get("question_id"));
+            String ques = String.valueOf(n.get("question_id"));
+            String res = String.valueOf((n.get("response_text")));
+            SurveyQuestion q = new SurveyQuestion();
+            q.setSurveyQuestionId(ques);
+
+            questionService.createResponse(sr,res,q);
+
+
+
+        }
+
+        return new ResponseEntity<Object>(null,HttpStatus.OK);
+
+
+    }
+
 
 }
