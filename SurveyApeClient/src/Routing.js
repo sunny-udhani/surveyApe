@@ -257,7 +257,7 @@ class Routing extends Component {
                     this.props.history.push("/signup");
                 }
                 else if (res.status === 409) {
-                    alert("User Already Exists. Please verify your account");
+                    alert("Incorrect Email or Confirmation Code!! Please Enter Correctly to verify your account");
                     this.props.history.push("/confirmation");
                 }
                 else if (res.status === 302) {
@@ -287,7 +287,7 @@ class Routing extends Component {
                 console.log(res.msg);
                 if (res.status == 200) {
                     alert("User registration is successful!");
-                    this.props.history.push("/signin");
+                    this.props.history.push("/confirmation");
                 }
                 else if (res.status == 401) {
                     alert("User with this email id already exists. Please use another email id!");
@@ -318,7 +318,7 @@ class Routing extends Component {
                 if (res.status == 200) {
                     alert("User Signed In Successfully");
                     this.setState({surveyorEmail: payload.email})
-                    this.props.history.push("/createSurvey");
+                    this.props.history.push("/dashboard");
                 }
                 else if (res.status == 401) {
                     alert("User with this email id already exists. Please use another email id!");

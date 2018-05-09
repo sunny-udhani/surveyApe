@@ -52,7 +52,7 @@ render() {
               </div>
 
               <div className="col-lg-6 animated bounceInUp" id="buttonMain">
-                <button className="butt">Sign In</button>
+                <button className="butt" onClick={()=>{this.props.gotoSignin()}}>Sign In</button>
               </div>
           </div>
 

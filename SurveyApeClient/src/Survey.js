@@ -250,8 +250,6 @@ else if(question.questionType === 2){ { /* Radio */}
                       value={this.state.rating}
                       onStarClick={this.onStarClick.bind(this)}
                     />
-
-
                     </div>
 
                 </div>
