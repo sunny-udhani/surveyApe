@@ -417,7 +417,7 @@ public class SurveyController {
     public @ResponseBody
     ResponseEntity<?> retrieveAllSurveys(@RequestParam Map<String, String> params, HttpSession session) {
         System.out.println(params);
-       String surveyorEmail = session.getAttribute("surveyorEmail").toString();
+        String surveyorEmail = session.getAttribute("surveyorEmail").toString();
         //String surveyorEmail="chandan.paranjape@gmail.com";
         User userVO = userService.getUserById(surveyorEmail).orElse(null);
         if (userVO == null) {
@@ -475,9 +475,10 @@ public class SurveyController {
         // no check for email in user table as only survey type closed requires users to be preregistered
         attendeeResponseEntity.setUserEmail(attendeeEmail);
 
-        if (!(attendeeURI.equals("")))
+        if (!(attendeeURI.equals(""))) {
             attendeeResponseEntity.setSurveyURI(attendeeURI);
-
+            attendeeResponseEntity.setSurveyURIValidInd(true);
+        }
         //add attendee response entity to survey for two way binding
         addSurveyResponseToSurveyEntity(attendeeResponseEntity, survey);
 
