@@ -7,7 +7,8 @@ public enum QuestionTypeEnum {
     YesNo(4),
     Text(5),
     DateTime(6),
-    Rating(7);
+    Rating(7),
+    Images(8);
 
     private final int enumCode;
 

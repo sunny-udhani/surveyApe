@@ -186,7 +186,7 @@ class GeneralForm extends Component{
       </div>
 
 
-      {(this.state.choice==="TEXT" && this.state.ans && this.state.style)?(
+      {(this.state.choice==="TEXT" && this.state.ans!=null && this.state.style!=null)?(
         <div>
 
         <div className="row">
@@ -223,7 +223,43 @@ class GeneralForm extends Component{
           </div>
 
         </div>
-      ):(
+      ):this.state.choice==="IMAGE" && this.state.ans!=null && this.state.style!=null ?(
+        <div>
+          IMAGE OPTIONS
+          <div className="row">
+                <div className="col-lg-6 survey-name">
+                  <span className="labels">Question</span>
+                  <span className="inputs">
+                    <input type="text" value={this.state.question} onChange={(event)=>{
+                        this.setState({question:event.target.value});
+                      }}/>
+                  </span>
+                </div>
+          </div>
+
+          <div className="row">
+                <div className="col-lg-6 survey-name">
+                  <span className="labels">Options (Give images )</span>
+                  <span className="inputs">
+                      <input type="text" value={this.state.options} onChange={(event)=>{
+                          this.setState({options:event.target.value});
+                        }}/>
+                  </span>
+                </div>
+          </div>
+
+
+          <div className="row">
+                <div className="col-lg-6 survey-name">
+                  <span className="inputs-add"><br/>
+                    <input type="button" className="btn btn-primary" onClick={()=>this.addQuestion(this.state.question,this.state.options)} value="Add Question"/>
+                  </span>
+                </div>
+          </div>
+
+        </div>
+      ):
+      (
         <div>
 
 
@@ -236,6 +272,7 @@ class GeneralForm extends Component{
                     }}/>
                 </span>
               </div>
+
         </div>
 
           <br/>

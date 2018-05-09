@@ -17,7 +17,9 @@ class EditSurvey extends Component{
       closedSurveyStr:null,
       closedSurveyList:[],
       inviteeList:[],
-      inviteeStr:null
+      inviteeStr:null,
+      oldInvitees:[],
+      surveyAnswers:0
     }
     API.getSurvey(this.props.surveyId)
     .then((res) => {
@@ -74,6 +76,13 @@ class EditSurvey extends Component{
           for(var j=0;j<res.questionList[i].questionOptionList.length;j++){
             optionList.push(res.questionList[i].questionOptionList[j].optionText);
           }
+          var x=0;
+          for(var j=0;j<res.responseList.length;j++){
+            if(res.responseList[i].completeInd===true){
+              x++;
+            }
+          }
+          this.setState({surveyAnswers:x});
           temp.push({id:id,questionText:res.questionList[i].questionText,optionList:optionList,questionType:type,choice:choice,style:style,answerType:ans});
           id++;
         }
@@ -92,8 +101,9 @@ class EditSurvey extends Component{
           for(var i=0;i<temp.length;i++){
             temp2.push(temp[i].userEmail);
           }
-        //  this.setState({inviteeStr:temp2.join(",")});
-        this.setState({inviteeStr:""});
+        this.setState({inviteeStr:temp2.join(",")});
+        this.setState({oldInvitees:temp2});
+      //  this.setState({inviteeStr:""});
         }
 
         if(res.surveyType===3){
@@ -102,6 +112,7 @@ class EditSurvey extends Component{
           for(var i=0;i<temp.length;i++){
             temp2.push(temp[i].userEmail);
           }
+
           //this.setState({closedSurveyStr:temp2.join(",")});
           this.setState({closedSurveyStr:""});
         }
@@ -210,7 +221,7 @@ class EditSurvey extends Component{
   </div>):(<div>
   </div>)}
     <div>
-      {!this.state.type?(
+      {!this.state.type && this.state.surveyAnswers===0?(
 
 
         <div className="row">
@@ -488,8 +499,6 @@ class EditSurvey extends Component{
 
 
     </div>
-      Questions List Populate
-      Delete question
   QUESTIONS:
     <ul>
       {this.state.questions.map((item)=>{
@@ -500,7 +509,9 @@ class EditSurvey extends Component{
               })}
             </ul>
              </li>
-             <input type="button" className="btn btn-primary" onClick={()=>{this.deleteQuestion(item.id)}} value="Delete Question"/>
+             {this.state.surveyAnswers<1?(<div><input type="button" className="btn btn-primary" onClick={()=>{this.deleteQuestion(item.id)}} value="Delete Question"/></div>):
+             (<div></div>)}
+
            </div>
       })}
     </ul>
@@ -521,10 +532,10 @@ class EditSurvey extends Component{
                   this.props.editSurvey({type:""+this.state.surveyType,questions:this.state.questions,name:this.state.surveyTitle,publish:true},[],inviteeList);
                 }
                 else if(closedSurveyList.length>0){
-                  this.props.editSurvey({type:""+this.state.surveyType,questions:this.state.questions,name:this.state.surveyTitle,publish:true},closedSurveyList,[]);
+                  this.props.editSurvey({type:""+this.state.surveyType,questions:this.state.questions,name:this.state.surveyTitle,publish:true,oldInvitees:this.state.oldInvitees},closedSurveyList,[]);
                 }
                 else{
-                  this.props.editSurvey({type:""+this.state.surveyType,questions:this.state.questions,name:this.state.surveyTitle,publish:true},[],[]);
+                  this.props.editSurvey({type:""+this.state.surveyType,questions:this.state.questions,name:this.state.surveyTitle,publish:true,oldInvitees:this.state.oldInvitees},[],[]);
                 }
                 this.setState({
                   questions:[],
