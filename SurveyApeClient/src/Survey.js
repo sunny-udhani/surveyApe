@@ -13,7 +13,8 @@ this.state={
     "questionList": [],
     "responseList": [],
     "rating": 1,
-    "surveyResponses": []
+    "surveyResponses": [],
+    "surveyId": ''
 
 }
 }
@@ -21,26 +22,70 @@ this.state={
 
 componentWillMount()
 {
-  console.log(this.props.match.params);
+
+  console.log("http://localhost:3000"+this.props.match.url);
+  console.log("surveyType: ",this.props.match.params.surveyType);
+  console.log("SurveyRandomNumber: ",this.props.match.params.randSurvey);
+
+  {/*  Sending the URl and SurveyType to the backend */}
+
+  var data = {
+    "url": "http://localhost:3000"+this.props.match.url,
+    "surveyType": this.props.match.params.surveyType
+  }
+
+  console.log("payload");
+  console.log(data);
+
+  if(this.props.match.params.surveyType == 1)
+    {
+      API.getSurveyId(data)
+                .then((res) => {
+                  console.log("surveyId Fetched: ");
+                      console.log(res.survey_id);
+                  this.setState({surveyId: res.survey_id});
+
+                  API.getSurvey1(this.state.surveyId)
+                            .then((res) => {
+                                    console.log(res);
+
+                                    this.setState({
+                                      surveyId:res.surveyId,
+                                      surveyTitle: res.surveyTitle,
+                                      questionList: res.questionList,
+                                      responseList: res.responseList,
+                                      answerObj: []
+                                    })
+                            });
+                });
+    }
+  else {
+    API.getSurveyId(data)
+              .then((res) => {
+                console.log("surveyId Fetched for Non-General Surveys: ");
+                    console.log(res.survey_id);
+                    this.setState({surveyId: res.survey_id});
+
+                    API.getSurvey1(this.state.surveyId)
+                              .then((res) => {
+                                      console.log(res);
+
+                                      this.setState({
+                                        surveyId:res.surveyId,
+                                        surveyTitle: res.surveyTitle,
+                                        questionList: res.questionList,
+                                        responseList: res.responseList,
+                                        answerObj: []
+                                      })
+                              });
+              });
+  }
 
   {/* fetching the survey from database */}
-  API.getSurvey1(this.props.match.params.surveyType,this.props.match.params.randSurvey)
-            .then((res) => {
 
-                    console.log(res);
-
-                    this.setState({
-                      surveyId:res.surveyId,
-                      surveyTitle: res.surveyTitle,
-                      questionList: res.questionList,
-                      responseList: res.responseList,
-                      answerObj: []
-                    })
-
-            });
 }
 
-submitResponses = (surveyId,answerObj,submit)=>{
+submitResponses = (surveyId,answerObj,submit)=> {
 
 }
 
