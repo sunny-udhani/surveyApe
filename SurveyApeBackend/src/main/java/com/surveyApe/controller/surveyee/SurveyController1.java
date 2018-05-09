@@ -75,7 +75,9 @@ public class SurveyController1 {
                 }
             }
 
-            return new ResponseEntity<Object>("{'survey_id' : '" + survey.getSurveyId() + "'}", HttpStatus.OK);
+            JSONObject res = new JSONObject();
+            res.put("survey_id", survey.getSurveyId());
+            return new ResponseEntity<Object>(res.toString(), HttpStatus.OK);
 
         } else if (surveyType == SurveyTypeEnum.CLOSED.getEnumCode() || surveyType == SurveyTypeEnum.OPEN.getEnumCode()) {
 
@@ -101,7 +103,12 @@ public class SurveyController1 {
                 }
             }
 
-            return new ResponseEntity<Object>(surveyResponse, HttpStatus.OK);
+            JSONObject response = new JSONObject();
+            response.put("surveyResponse_id", surveyResponse.getSurveyResponseId());
+            response.put("email", surveyResponse.getUserEmail());
+            response.put("survey_id", surveyResponse.getSurveyId().getSurveyId());
+
+            return new ResponseEntity<Object>(response.toString(), HttpStatus.OK);
 
 
         } else {
@@ -113,16 +120,21 @@ public class SurveyController1 {
     }
 
 
-    @GetMapping(path = "/getSurvey/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(path = "/getSurvey/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public @ResponseBody
-    ResponseEntity<?> retrieveASurveyFromId(@PathVariable String id, @RequestParam Map<String, String> params, HttpSession session) {
+    ResponseEntity<?> retrieveASurveyFromId(@RequestBody String req, @PathVariable String id, @RequestParam Map<String, String> params, HttpSession session) {
 
         Survey survey = surveyService.findBySurveyId(id);
         if (survey == null) {
             return new ResponseEntity<Object>("No such survey", HttpStatus.BAD_REQUEST);
         }
 
-        if(survey.getSurveyType() == SurveyTypeEnum.CLOSED.getEnumCode()){}
+        if (survey.getSurveyType() == SurveyTypeEnum.CLOSED.getEnumCode()) {
+            String userEmail = session.getAttribute("email").toString();
+            if (!userEmail.equals("")) {
+
+            }
+        }
 
         return new ResponseEntity<Object>(survey, HttpStatus.OK);
     }
