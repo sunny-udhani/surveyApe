@@ -344,11 +344,14 @@ class Routing extends Component {
     }
 
     submitResponses = (payload) => {
+        if(this.state.surveyorEmail){
+          this.props.history.push('/dashboard');
 
-        API.submitResponses(payload)
-            .then((res) => {
-                console.log("response received after submitting response : ", res);
-            });
+        }
+        else{
+          this.props.history.push('/signin');
+        }
+
     }
 
     gotoCreateSurvey = () => {

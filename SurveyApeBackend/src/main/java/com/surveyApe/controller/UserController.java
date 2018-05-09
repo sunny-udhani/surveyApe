@@ -24,6 +24,7 @@ import org.json.JSONObject;
 
 @Controller
 //requires you to run react server on port 3000
+@CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
 @RequestMapping(path = "/user")
 public class UserController {
 

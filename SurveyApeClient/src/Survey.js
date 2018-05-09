@@ -14,7 +14,8 @@ this.state={
     "responseList": [],
     "rating": 1,
     "surveyResponses": [],
-    "surveyId": ''
+    "surveyId": '',
+    "email":null
 
 }
 }
@@ -64,7 +65,8 @@ componentWillMount()
               .then((res) => {
                 console.log("surveyId Fetched for Non-General Surveys: ");
                     console.log(res.survey_id);
-                    this.setState({surveyId: res.survey_id});
+                    this.setState({surveyId: res.survey_id,
+                    email:res.email});
 
                     API.getSurvey1(this.state.surveyId)
                               .then((res) => {
@@ -86,10 +88,18 @@ componentWillMount()
 }
 
 submitResponses = (surveyId,answerObj,submit)=> {
+  var payload={surveyId:surveyId,answerObj:answerObj,submit:submit,surveyee_id:this.state.email};
+API.submitResponse(payload)
+.then(res =>{
+  this.props.submitResponses();
+})
+.catch(err =>{
+  console.log(err);
+})
 
 }
 
-onStarClick(nextValue, prevValue, name) {
+onStarClick1(nextValue, prevValue, name) {
     this.setState({rating: nextValue});
   }
 
@@ -297,7 +307,23 @@ else if(question.questionType === 2){ { /* Radio */}
                       name="rate1"
                       starCount={5}
                       value={this.state.rating}
-                      onStarClick={this.onStarClick.bind(this)}
+                       onStarClick={(next, pre,name) =>{
+                          this.onStarClick1.bind(this)
+                         this.setState({rating:next});
+                         var temp=this.state.answerObj;
+                         for(var i=0;i<temp.length;i++){
+                           if(temp[i].qid===question.surveyQuestionId){
+                            temp.splice(i,1);
+                             break;
+                           }
+                         }
+                         temp.push({qid:question.surveyQuestionId,answer:next});
+                         console.log(temp);
+                         this.setState({answerObj:temp});
+                       }}
+
+
+                       name={question.surveyQuestionId} />
                     />
                     </div>
 

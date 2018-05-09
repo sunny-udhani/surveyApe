@@ -6,7 +6,26 @@ const headers = {
     'Accept': 'application/json'
 };
 
-/*
+
+export const submitResponse= (payload) =>{
+  fetch(`${api}/user/submitSurvey`, {
+      method: 'POST',
+      headers: {
+          ...headers,
+          'Content-Type': 'application/json'
+      },
+      credentials: 'include',
+      body:JSON.stringify(payload)
+  }).then(res => {
+      console.log(res);
+      return res.json();
+  }).catch(error => {
+      console.log("This is error");
+      return error;
+  });
+}
+
+
 export const PublishSurvey1 = (id) =>{
   fetch(`${api}/survey/publish/${id}`, {
       method: 'POST',
@@ -25,20 +44,8 @@ export const PublishSurvey1 = (id) =>{
       return error;
   });
 }
-*/
 
-export const PublishSurvey1 = (id) =>{
-  axios.post(`${api}/survey/publish/${id}`, {
-    surveyId: id,
-    publish: true
-  })
-  .then(function (response) {
-    return response.body;
-  })
-  .catch(function (error) {
-    console.log(error);
-  });
-}
+
 
 
 export const endSurvey= (id) =>{
