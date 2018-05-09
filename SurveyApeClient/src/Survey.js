@@ -1,139 +1,49 @@
 import React, {Component} from 'react';
+import {withRouter} from 'react-router';
+import StarRatingComponent from 'react-star-rating-component';
 
 import './Survey.css';
+import * as API from './api/API';
 
 class Survey extends Component {
+constructor(props) {
+  super(props);
+this.state={
+    "questionList": [],
+    "responseList": [],
+    "rating": 1,
+    "surveyResponses": []
 
-state={
-  "questionList": [
-        {
-            "surveyQuestionId": "1",
-            "questionText": "what is your favourite fruit ?",
-            "questionType": 3,
-            "questionOrderNumber": 1,
-            "questionOptionList": [
-              {
-                "option_order_number": 1,
-                "option_text": "Orange"
-              },
-              {
-                "option_order_number": 2,
-                "option_text": "Mango"
-              },
-              {
-                "option_order_number": 3,
-                "option_text": "Banana"
-              },
-              {
-                "option_order_number": 4,
-                "option_text": "Pineapple"
-              }
-            ],
-            "questionResponseList": []
-        },
-        {
-            "surveyQuestionId": "2",
-            "questionText": "what is your favourite Animal ?",
-            "questionType": 1,
-            "questionOrderNumber": 1,
-            "questionOptionList": [
-              {
-                "option_order_number": 1,
-                "option_text": "Dog"
-              },
-              {
-                "option_order_number": 2,
-                "option_text": "Cat"
-              },
-              {
-                "option_order_number": 3,
-                "option_text": "Horse"
-              },
-              {
-                "option_order_number": 4,
-                "option_text": "Shivanku"
-              }
-            ],
-            "questionResponseList": []
-        },
-        {
-            "surveyQuestionId": "1",
-            "questionText": "what is your Gender ?",
-            "questionType": 2,
-            "questionOrderNumber": 1,
-            "questionOptionList": [
-              {
-                "option_order_number": 1,
-                "option_text": "Male"
-              },
-              {
-                "option_order_number": 2,
-                "option_text": "Female"
-              },
-              {
-                "option_order_number": 3,
-                "option_text": "Chakka"
-              }
-            ],
-            "questionResponseList": []
-        },
-        {
-            "surveyQuestionId": "1",
-            "questionText": "what is your favourite fruit ?",
-            "questionType": 4,
-            "questionOrderNumber": 1,
-            "questionOptionList": [
-              {
-                "option_order_number": 1,
-                "option_text": "Orange"
-              },
-              {
-                "option_order_number": 2,
-                "option_text": "Mango"
-              },
-              {
-                "option_order_number": 3,
-                "option_text": "Banana"
-              },
-              {
-                "option_order_number": 4,
-                "option_text": "Pineapple"
-              }
-            ],
-            "questionResponseList": []
-        },
-        {
-            "surveyQuestionId": "1",
-            "questionText": "what is your favourite fruit ?",
-            "questionType": 5,
-            "questionOrderNumber": 1,
-            "questionOptionList": [
-
-            ],
-            "questionResponseList": []
-        },
-        {
-            "surveyQuestionId": "1",
-            "questionText": "what is your Date of Birth ?",
-            "questionType": 6,
-            "questionOrderNumber": 1,
-            "questionOptionList": [
-
-            ],
-            "questionResponseList": []
-        }
-
-    ]
+}
 }
 
 
+componentWillMount()
+{
+  console.log(this.props.match.params);
 
+  {/* fetching the survey from database */}
+  API.getSurvey1()
+            .then((res) => {
 
+                    console.log(res);
+
+                    this.setState({
+                      questionList: res.questionList,
+                      responseList: res.responseList
+                    })
+
+            });
+}
+
+onStarClick(nextValue, prevValue, name) {
+    this.setState({rating: nextValue});
+  }
 
 
 renderOptions (question) {
 
-  if(question.questionType === 1){
+  if(question.questionType === 1){  {/* Dropdown */}
       return (
 
             <div className="question">
@@ -141,8 +51,7 @@ renderOptions (question) {
               <select>
               {question.questionOptionList.map(option => (
 
-                  <option value={option.option_text}>{option.option_text}</option>
-
+                  <option value={option.optionText}>{option.optionText}</option>
 
               ))}
               </select>
@@ -151,7 +60,7 @@ renderOptions (question) {
       );
     }
 
-else if(question.questionType === 2){
+else if(question.questionType === 2){ { /* Radio */}
     return (
 
           <div className="question">
@@ -167,7 +76,7 @@ else if(question.questionType === 2){
     );
   }
 
-  else if(question.questionType === 3){
+  else if(question.questionType === 3){  {/*  CheckBox */}
       return (
 
             <div className="question">
@@ -183,7 +92,7 @@ else if(question.questionType === 2){
       );
     }
 
-    else if(question.questionType === 4){
+    else if(question.questionType === 4){    {/*  Yes/NO  */}
         return (
 
               <div className="question">
@@ -191,7 +100,7 @@ else if(question.questionType === 2){
 
                 {question.questionOptionList.map(option => (
                   <div>
-                    <input type="checkbox" name={question.surveyQuestionId} /> {option.option_text}
+                    <input type="radio" name="gender" value={option.optionText} /> {option.optionText}<br />
                   </div>
                 ))}
               </div>
@@ -199,7 +108,7 @@ else if(question.questionType === 2){
         );
       }
 
-      else if(question.questionType === 5){
+      else if(question.questionType === 5){ {/* Text */}
           return (
 
                 <div className="question">
@@ -212,7 +121,7 @@ else if(question.questionType === 2){
           );
         }
 
-        else if(question.questionType === 6){
+        else if(question.questionType === 6){  {/* Date */}
             return (
 
                   <div className="question">
@@ -235,11 +144,18 @@ else if(question.questionType === 2){
                 <div className="question">
                   <h3>{question.questionText}</h3>
 
-                  {question.questionOptionList.map(option => (
+
                     <div>
-                      <input type="checkbox" name={question.surveyQuestionId} /> {option.option_text}
+                    <StarRatingComponent
+                      name="rate1"
+                      starCount={5}
+                      value={this.state.rating}
+                      onStarClick={this.onStarClick.bind(this)}
+                    />
+
+
                     </div>
-                  ))}
+
                 </div>
 
           );
@@ -264,4 +180,4 @@ else if(question.questionType === 2){
 
 }
 
-export default Survey;
+export default withRouter(Survey);
