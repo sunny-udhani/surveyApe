@@ -56,6 +56,7 @@ public class SurveyController {
             if (survey == null)
                 return new ResponseEntity<Object>("No such survey", HttpStatus.BAD_REQUEST);
 
+            return new ResponseEntity<Object>("{'survey_id' : '" + survey.getSurveyId() + "'}", HttpStatus.OK);
 
         } else if (surveyType == SurveyTypeEnum.GENERAL.getEnumCode()) {
 
