@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -61,6 +62,27 @@ public class SurveyController {
 
         } else if (surveyType == SurveyTypeEnum.CLOSED.getEnumCode()) {
 
+            SurveyResponse surveyResponse = surveyResponseService.getSurveyResponseEntityFromUrl(url);
+            if (surveyResponse == null)
+                return new ResponseEntity<Object>("No such survey", HttpStatus.BAD_REQUEST);
+
+            if (!surveyResponse.isSurveyURIValidInd())
+                return new ResponseEntity<Object>("Your URL is no longer valid", HttpStatus.FORBIDDEN);
+
+            Date now = new Date();
+            if (now.after(surveyResponse.getSurveyId().getEndDate())) {
+
+                Survey survey = closeSurveyBasedonEndDate(surveyResponse.getSurveyId());
+                if (survey.isSurveyCompletedInd())
+                    return new ResponseEntity<Object>("Survey has ended", HttpStatus.SERVICE_UNAVAILABLE);
+                else
+                    return new ResponseEntity<Object>("Survey has ended", HttpStatus.SERVICE_UNAVAILABLE);
+
+            }
+
+            return new ResponseEntity<Object>(surveyResponse, HttpStatus.OK);
+
+
         } else if (surveyType == SurveyTypeEnum.OPEN.getEnumCode()) {
 
         }
@@ -81,23 +103,14 @@ public class SurveyController {
     }
 
     //region utilities
-    public SurveyQuestion createNewQuestionWithOptions(String surveyId, String questionText, int questionType, String optionList) {
-        Survey survey = surveyService.findBySurveyId(surveyId);
 
-        if (survey == null) {
-            return null;
-        }
+    public Survey closeSurveyBasedonEndDate(Survey survey) {
 
-//        System.out.println("TEXT,TYPE:" + questionText + "," + questionType);
-        SurveyQuestion question = new SurveyQuestion(questionText, questionType);
-
-        boolean successFlag = createOptions(optionList, question);
-        addQuestionToSurveyEntity(question, survey);
-
-        questionService.addQuestion(question);
+        survey.setSurveyCompletedInd(true);
         surveyService.saveSurvey(survey);
-        return question;
+        return survey;
     }
+
 
     public SurveyResponse createNewSurveyeeResponseEntry(String surveyId, String attendeeEmail, String attendeeURI) {
         Survey survey = surveyService.findBySurveyId(surveyId);

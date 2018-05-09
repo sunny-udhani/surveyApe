@@ -33,7 +33,7 @@ public class SurveyResponseService {
         surveyResponseRepository.delete(response);
     }
 
-    public String surveyResponse(Survey surveyID , String userEmail,String surveyURI,boolean completeInd,boolean uriind) {
+    public String surveyResponse(Survey surveyID, String userEmail, String surveyURI, boolean completeInd, boolean uriind) {
 
         SurveyResponse s = new SurveyResponse();
 
@@ -47,15 +47,13 @@ public class SurveyResponseService {
         return sr.getSurveyResponseId();
     }
 
-    public Survey getSurvey(String id)
-    {
+    public Survey getSurvey(String id) {
         Optional<Survey> s = surveyRepository.findById(id);
 
         return s.get();
     }
 
-    public String getResponse(String id)
-    {
+    public String getResponse(String id) {
 
         Optional<SurveyResponse> st = surveyResponseRepository.findById(id);
 
@@ -65,11 +63,15 @@ public class SurveyResponseService {
         return response;
     }
 
-    public SurveyResponse getSurveyResponse(String id)
-    {
+    public SurveyResponse getSurveyResponse(String id) {
         Optional<SurveyResponse> t = surveyResponseRepository.findById(id);
 
         return t.get();
+    }
+
+    public SurveyResponse getSurveyResponseEntityFromUrl(String url) {
+
+        return surveyResponseRepository.findDistinctBySurveyURIEquals(url).orElse(null);
     }
 
 }
