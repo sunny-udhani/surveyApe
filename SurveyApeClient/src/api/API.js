@@ -1,37 +1,54 @@
+import axios from 'axios';
 const api = 'http://localhost:8080';
+
 
 const headers = {
     'Accept': 'application/json'
 };
 
-export const publishSurvey= (payload) =>{
-  fetch(`${api}/survey/publish`, {
+/*
+export const PublishSurvey1 = (id) =>{
+  fetch(`${api}/survey/publish/${id}`, {
       method: 'POST',
       headers: {
           ...headers,
           'Content-Type': 'application/json'
       },
       credentials: 'include',
-      body: JSON.stringify(payload)
+      body:JSON.stringify({surveyId:id,publish:true})
   }).then(res => {
       console.log(res);
+    //  callback(res.json());
       return res.json();
   }).catch(error => {
       console.log("This is error");
       return error;
   });
 }
+*/
+
+export const PublishSurvey1 = (id) =>{
+  axios.post(`${api}/survey/publish/${id}`, {
+    surveyId: id,
+    publish: true
+  })
+  .then(function (response) {
+    return response.body;
+  })
+  .catch(function (error) {
+    console.log(error);
+  });
+}
 
 
-export const endSurvey= (payload) =>{
-  fetch(`${api}/survey/end`, {
+export const endSurvey= (id) =>{
+  fetch(`${api}/survey/endSurvey/${id}`, {
       method: 'POST',
       headers: {
           ...headers,
           'Content-Type': 'application/json'
       },
       credentials: 'include',
-      body: JSON.stringify(payload)
   }).then(res => {
       console.log(res);
       return res.json();

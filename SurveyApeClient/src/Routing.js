@@ -355,25 +355,34 @@ class Routing extends Component {
         this.props.history.push('/createSurvey');
     }
 
-    EditSurvey= (id)=>{
+    EditSurvey = (id) =>{
       this.setState({surveyId:id},function(){
         this.props.history.push('/editSurvey');
       });
 
     }
-
-    PublishSurvey=(id)=>{
+/*
+    callback = (res) => {
+      this.props.history.push('/');
+      this.props.history.push('/mySurveys');
+    }*/
+    PublishSurvey = (id) =>{
+      console.log("Ithe ala "+id);
       //API call for publish survey
-      API.publishSurvey({surveyId:id}).
-      then((res)=>{
+      API.PublishSurvey1(id)
+      .then(res =>{
         this.props.history.push('/');
         this.props.history.push('/mySurveys');
-      });
+      })
+      .catch(err => {
+        console.error(err);
+      })
+
     }
 
     EndSurvey=(id)=>{
       //API call for end survey
-      API.endSurvey({surveyId:id}).
+      API.endSurvey(id).
       then((res)=>{
         this.props.history.push('/');
         this.props.history.push('/mySurveys');
