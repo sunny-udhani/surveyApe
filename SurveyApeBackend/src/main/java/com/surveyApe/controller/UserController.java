@@ -225,19 +225,20 @@ public class UserController {
 
         String surveyID = String.valueOf(jso.get("surveyId"));
         String surveyee_ID = (String)jso.get("surveyee_id");
-       // String email = (String)jso.get("email");
+        System.out.println(surveyee_ID);
+// String email = (String)jso.get("email");
         String surveyuri = "surveyuri";
         String uind = "complete_ind";
         String cind = "surveyurivalid_ind";
         String surveyur = "surveyuri";
-        String submit = (String)jso.get("submit");
+        boolean submit = jso.getBoolean("submit");
         Boolean uindicator = true;
         Boolean cindicator = false;
 
-        if(submit.equals("true"))
+        if(submit)
         {
             cindicator = true;
-            uindicator=false;
+            uindicator=true;
 
             mailServices.sendEmail(surveyee_ID, "Survey Submitted Successfully", "aviralkum@gmail.com", "Survey Submitted from SurveyApp");
 
@@ -265,7 +266,7 @@ public class UserController {
         // get the survey response id from survey_response table where email = current email
 
         SurveyResponse sr = surveyResponseService.getSurveyResponse(responseId);
-        SurveyQuestion sq = questionService.getSurveyQuestion(surveyID);
+        //SurveyQuestion sq = questionService.getSurveyQuestion(surveyID);
         // insert this response id
         JSONArray c = jso.getJSONArray("answerObj");
 

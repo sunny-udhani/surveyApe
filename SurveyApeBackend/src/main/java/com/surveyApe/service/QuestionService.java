@@ -53,6 +53,7 @@ public class  QuestionService {
 
     public SurveyQuestion getSurveyQuestion(String id)
     {
+        System.out.println(id);
         Optional<SurveyQuestion> s = surveyQuestionRepository.findById(id);
 
         return  s.get();
