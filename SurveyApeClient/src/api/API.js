@@ -232,7 +232,7 @@ export const registerUser = (payload) =>
                             body: JSON.stringify(data)
                         }).then(res => {
                             console.log(res.body);
-                            return res.json();
+                            return res;
                         }).catch(error => {
                             console.log("This is error");
                             return error;
