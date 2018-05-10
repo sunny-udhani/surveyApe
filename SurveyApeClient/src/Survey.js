@@ -73,6 +73,7 @@ componentWillMount()
                                       console.log(res);
 
                                       this.setState({
+                                        surveyResponse_id:res.surveyResponse_id,
                                         surveyId:res.surveyId,
                                         surveyTitle: res.surveyTitle,
                                         questionList: res.questionList,
@@ -88,7 +89,7 @@ componentWillMount()
 }
 
 submitResponses = (surveyId,answerObj,submit)=> {
-  var payload={surveyId:surveyId,answerObj:answerObj,submit:submit,surveyee_id:this.state.email};
+  var payload={surveyId:surveyId,answerObj:answerObj,submit:submit,surveyee_id:this.state.email,surveyResponse_id:this.state.surveyResponse_id};
 API.submitResponse(payload)
 .then((res) =>{
   console.log(res);
