@@ -343,7 +343,7 @@ class Routing extends Component {
             });
     }
 
-    submitResponses = (payload) => {
+    submitResponses = () => {
         if(this.state.surveyorEmail){
           this.props.history.push('/dashboard');
 

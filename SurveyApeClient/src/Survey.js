@@ -65,6 +65,7 @@ componentWillMount()
               .then((res) => {
                 console.log("surveyId Fetched for Non-General Surveys: ");
                     console.log(res);
+                    console.log("ZZZ "+res.surveyResponse_id);
                     this.setState({surveyId: res.survey_id,
                     email:res.email,surveyResponse_id:res.surveyResponse_id});
 
@@ -93,7 +94,7 @@ submitResponses = (surveyId,answerObj,submit)=> {
 API.submitResponse(payload)
 .then((res) =>{
   console.log(res);
-  this.props.submitResponses();
+  this.props.submitResponses;
 })
 .catch(err =>{
   console.log(err);
