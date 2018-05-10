@@ -44,7 +44,7 @@ componentWillMount()
                 .then((res) => {
                   console.log("surveyId Fetched: ");
                       console.log(res.survey_id);
-                  this.setState({surveyId: res.survey_id});
+                  this.setState({surveyId: res.survey_id,surveyResponse_id:res.surveyResponse_id});
 
                   API.getSurvey1(this.state.surveyId)
                             .then((res) => {
@@ -64,16 +64,16 @@ componentWillMount()
     API.getSurveyId(data)
               .then((res) => {
                 console.log("surveyId Fetched for Non-General Surveys: ");
-                    console.log(res.survey_id);
+                    console.log(res);
                     this.setState({surveyId: res.survey_id,
-                    email:res.email});
+                    email:res.email,surveyResponse_id:res.surveyResponse_id});
 
                     API.getSurvey1(this.state.surveyId)
                               .then((res) => {
                                       console.log(res);
 
                                       this.setState({
-                                        surveyResponse_id:res.surveyResponse_id,
+
                                         surveyId:res.surveyId,
                                         surveyTitle: res.surveyTitle,
                                         questionList: res.questionList,

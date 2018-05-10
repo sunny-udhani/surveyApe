@@ -116,11 +116,11 @@ public class UserController {
 
 
         JSONObject jso = new JSONObject(data);
-        //String email = (String) jso.get("email");
+        String email = (String) jso.get("email");
         String password = (String) jso.get("password");
-        int surveyType = Integer.parseInt(jso.getString("surveyType"));
-        String surveyTitle = jso.getString("surveyTitle");
-        String email = session.getAttribute("surveyorEmail").toString();
+        //int surveyType = Integer.parseInt(jso.getString("surveyType"));
+        //String surveyTitle = jso.getString("surveyTitle");
+        //String email = session.getAttribute("surveyorEmail").toString();
 
 
         System.out.println("Email id recieived " + email);

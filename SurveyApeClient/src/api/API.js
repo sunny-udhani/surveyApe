@@ -41,25 +41,24 @@ export const submitResponse = (data) =>
             return error;
         });
 
+        export const endSurvey = (data) =>
+            fetch(`${api}/survey/endSurvey/${data}`, {
+                method: 'POST',
+                headers: {
+                    ...headers,
+                    'Content-Type': 'application/json'
+                },
+                credentials: 'include',
+                body: JSON.stringify({surveyId:data,publish:false})
+            }).then(res => {
+                console.log(res.body);
+                return res.json();
+            }).catch(error => {
+                console.log("This is error");
+                return error;
+            });
 
 
-
-export const endSurvey= (id) =>{
-  fetch(`${api}/survey/endSurvey/${id}`, {
-      method: 'POST',
-      headers: {
-          ...headers,
-          'Content-Type': 'application/json'
-      },
-      credentials: 'include',
-  }).then(res => {
-      console.log(res);
-      return res.json();
-  }).catch(error => {
-      console.log("This is error");
-      return error;
-  });
-}
 
 export const getMySurveys = () =>
     fetch(`${api}/survey/surveyor/getAll`, {
