@@ -138,7 +138,7 @@ public class UserController {
             }
 
             if (u.getPassword() != password) {
-                return new ResponseEntity<Object>(HttpStatus.valueOf(900));
+                return new ResponseEntity<Object>(HttpStatus.FORBIDDEN);
             }
 
 
@@ -242,13 +242,13 @@ public class UserController {
 
         if (submit) {
             cindicator = true;
-            uindicator = true;
+            uindicator = false;
 
             mailServices.sendEmail(surveyee_ID, "Survey Submitted Successfully", "aviralkum@gmail.com", "Survey Submitted from SurveyApp");
 
         } else {
             cindicator = false;
-            uindicator = false;
+            uindicator = true;
         }
 
 
