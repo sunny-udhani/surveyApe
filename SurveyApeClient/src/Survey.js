@@ -292,7 +292,7 @@ class Survey extends Component {
                         temp.push({qid: question.surveyQuestionId, answer: event.target.value});
                         this.setState({answerObj: temp});
                     }}/>
-                    <button className="btn btn-primary" style={{marginLeft: 10}}>Save</button>
+                  
                 </div>
 
             );
@@ -304,10 +304,16 @@ class Survey extends Component {
             return (
 
                 <div className="question">
+                <div className="col-lg-12"
+                     style={{backgroundColor: "#157EFB", textAlign: "left", paddingLeft: 20, fontSize: 16}}>
                     <h3>{question.questionText}</h3>
+                </div>
 
 
                     <div>
+                    <div className="col-lg-12"
+                         style={{textAlign: "left", paddingLeft: 20, fontSize: 16}}>
+
                         <input type="date" onChange={(event) => {
                             var temp = this.state.answerObj;
                             for (var i = 0; i < temp.length; i++) {
@@ -319,7 +325,8 @@ class Survey extends Component {
                             temp.push({qid: question.surveyQuestionId, answer: event.target.value});
                             this.setState({answerObj: temp});
                         }} name={question.surveyQuestionId}/>
-                        <button className="btn btn-primary" style={{marginLeft: 10}}>Save</button>
+                        </div>
+
                     </div>
                 </div>
 
@@ -330,11 +337,15 @@ class Survey extends Component {
 
             return (
 
-                <div className="question">
+              <div className="question">
+                <div className="col-lg-12"
+                     style={{backgroundColor: "#157EFB", textAlign: "left", paddingLeft: 20, fontSize: 16}}>
                     <h3>{question.questionText}</h3>
+                </div>
 
-
-                    <div>
+                  <div style={{paddingLeft: 20}}>
+                    <div className="col-lg-12"
+                         style={{textAlign: "left", paddingLeft: 20, fontSize: 24}}>
                         <StarRatingComponent
                             name="rate1"
                             starCount={5}
@@ -353,9 +364,9 @@ class Survey extends Component {
                                 console.log(temp);
                                 this.setState({answerObj: temp});
                             }}
-
-
                             name={question.surveyQuestionId}/>
+                      </div>
+
                     </div>
 
                 </div>
