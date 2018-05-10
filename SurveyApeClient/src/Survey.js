@@ -93,6 +93,8 @@ class Survey extends Component {
                                 console.log("aaj");
                                 console.log(err);
                             });
+                    }else{
+                        this.props.submitResponses();
                     }
                 })
         }
@@ -110,6 +112,7 @@ class Survey extends Component {
         API.submitResponse(payload)
             .then((res) => {
                 console.log(res);
+
                 this.props.submitResponses();
             })
             .catch(err => {
