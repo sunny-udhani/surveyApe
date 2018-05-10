@@ -33,15 +33,24 @@ public class SurveyResponseService {
         surveyResponseRepository.delete(response);
     }
 
-    public String surveyResponse(Survey surveyID, String userEmail, String surveyURI, boolean completeInd, boolean uriind) {
+    public String surveyResponse(Survey surveyID, String userEmail, String surveyURI, boolean completeInd, boolean uriind, String surveyResponse_id) {
 
-        SurveyResponse s = new SurveyResponse();
+        SurveyResponse s = null;
+        if (!surveyResponse_id.equals("")) {
+            s = surveyResponseRepository.findBySurveyResponseIdEquals(surveyResponse_id).orElse(null);
+        } else {
+            s = new SurveyResponse();
+        }
+
+        if (s == null) {
+            return "";
+        }
 
         s.setCompleteInd(completeInd);
-        s.setSurveyURI(surveyURI);
+//        s.setSurveyURI(surveyURI);
         s.setUserEmail(userEmail);
         s.setSurveyURIValidInd(uriind);
-        s.setSurveyId(surveyID);
+//        s.setSurveyId(surveyID);
         SurveyResponse sr = surveyResponseRepository.save(s);
 
         return sr.getSurveyResponseId();
