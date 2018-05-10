@@ -63,7 +63,7 @@ class Survey extends Component {
             API.getSurveyId(data)
                 .then((aaj) => {
 
-                    if (res.status !== 403) {
+                    if (aaj.status !== 403) {
 
                         aaj.json().then(res => {
                             console.log("surveyId Fetched for Non-General Surveys: ");
