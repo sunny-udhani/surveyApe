@@ -24,25 +24,22 @@ export const submitResponse = (data) =>
     });
 
 
-
-export const PublishSurvey1 = (id) =>{
-  fetch(`${api}/survey/publish/${id}`, {
-      method: 'POST',
-      headers: {
-          ...headers,
-          'Content-Type': 'application/json'
-      },
-      credentials: 'include',
-      body:JSON.stringify({surveyId:id,publish:true})
-  }).then(res => {
-      console.log(res);
-    //  callback(res.json());
-      return res.json();
-  }).catch(error => {
-      console.log("This is error");
-      return error;
-  });
-}
+    export const PublishSurvey1 = (data) =>
+        fetch(`${api}/survey/publish/${data}`, {
+            method: 'POST',
+            headers: {
+                ...headers,
+                'Content-Type': 'application/json'
+            },
+            credentials: 'include',
+            body: JSON.stringify({surveyId:data,publish:true})
+        }).then(res => {
+            console.log(res.body);
+            return res.json();
+        }).catch(error => {
+            console.log("This is error");
+            return error;
+        });
 
 
 
