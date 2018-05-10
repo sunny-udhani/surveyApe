@@ -469,7 +469,7 @@ class Routing extends Component {
 
                 <Route exact path="/surveyee/takeSurvey/:surveyType/:randSurvey" render={() => (
                     <div>
-                        <Survey submitSurvey={this.submitSurvey}/>
+                        <Survey submitSurveys={this.submitSurveys} submitResponses={this.submitResponses}/>
                     </div>
                 )}/>
 

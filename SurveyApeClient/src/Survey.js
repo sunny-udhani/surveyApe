@@ -90,11 +90,12 @@ componentWillMount()
 }
 
 submitResponses = (surveyId,answerObj,submit)=> {
+  console.log(surveyId+","+answerObj+","+this.state.email+","+this.state.surveyResponse_id);
   var payload={surveyId:surveyId,answerObj:answerObj,submit:submit,surveyee_id:this.state.email,surveyResponse_id:this.state.surveyResponse_id};
 API.submitResponse(payload)
 .then((res) =>{
   console.log(res);
-  this.props.submitResponses;
+  this.props.submitResponses();
 })
 .catch(err =>{
   console.log(err);
