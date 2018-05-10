@@ -374,7 +374,7 @@ public class SurveyController {
 
         if (reqObj.has("publish")) {
             boolean publishInd = reqObj.getBoolean("publish");
-            survey.setPublishedInd(publishInd);
+            survey.setPublishedInd(!publishInd);
         }
 
         sendEmailtoAttendees(survey);
@@ -402,7 +402,7 @@ public class SurveyController {
 
         if (reqObj.has("publish")) {
             boolean publishInd = reqObj.getBoolean("publish");
-            survey.setPublishedInd(publishInd);
+            survey.setPublishedInd(!publishInd);
         }
 
         sendEmailtoAttendees(survey);
