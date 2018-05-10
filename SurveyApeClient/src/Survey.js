@@ -90,7 +90,8 @@ componentWillMount()
 submitResponses = (surveyId,answerObj,submit)=> {
   var payload={surveyId:surveyId,answerObj:answerObj,submit:submit,surveyee_id:this.state.email};
 API.submitResponse(payload)
-.then(res =>{
+.then((res) =>{
+  console.log(res);
   this.props.submitResponses();
 })
 .catch(err =>{
@@ -317,14 +318,13 @@ else if(question.questionType === 2){ { /* Radio */}
                              break;
                            }
                          }
-                         temp.push({qid:question.surveyQuestionId,answer:next});
+                         temp.push({qid:question.surveyQuestionId,answer:next.toString()});
                          console.log(temp);
                          this.setState({answerObj:temp});
                        }}
 
 
                        name={question.surveyQuestionId} />
-                    />
                     </div>
 
                 </div>
