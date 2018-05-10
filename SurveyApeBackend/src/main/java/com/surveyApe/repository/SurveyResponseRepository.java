@@ -10,4 +10,5 @@ public interface SurveyResponseRepository extends CrudRepository<SurveyResponse,
 
     Optional<SurveyResponse> findBySurveyIdEqualsAndUserEmailEquals(String surveyId, String email);
     Optional<SurveyResponse> findDistinctBySurveyURIEquals(String url);
+    Optional<SurveyResponse> findBySurveyResponseIdEquals(String id);
 }

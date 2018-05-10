@@ -138,7 +138,7 @@ public class UserController {
             }
 
             if (u.getPassword() != password) {
-                return new ResponseEntity<Object>(HttpStatus.valueOf(900));
+                return new ResponseEntity<Object>(HttpStatus.FORBIDDEN);
             }
 
 
@@ -205,7 +205,7 @@ public class UserController {
 
             //  javaMailSender.send(mail);
             userService.createUser(firstName, lastName, email, password, phone, uid, false);
-            mailServices.sendEmail(email, "Hello "+ firstName+ ","+'\n'+ "Confirmation Code: "+uid+'\n'+"Thanks & Regards ,"+'\n'+"SurveyApe Team", "aviralkum@gmail.com", "Please Confirm Your SurveyApe Account");
+            mailServices.sendEmail(email, "Hello " + firstName + "," + '\n' + "Confirmation Code: " + uid + '\n' + "Thanks & Regards ," + '\n' + "SurveyApe Team", "aviralkum@gmail.com", "Please Confirm Your SurveyApe Account");
 
 
         }
@@ -216,15 +216,20 @@ public class UserController {
         return new ResponseEntity<Object>(HttpStatus.OK);
 
     }
-    @PostMapping(value="/submitSurvey",consumes = MediaType.APPLICATION_JSON_VALUE)
-    public @ResponseBody ResponseEntity<?> surveySubmit(@RequestBody String data,HttpSession session )
-    {
+
+    @PostMapping(value = "/submitSurvey", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public @ResponseBody
+    ResponseEntity<?> surveySubmit(@RequestBody String data, HttpSession session) {
 
         System.out.println(data);
         JSONObject jso = new JSONObject(data);
 
         String surveyID = String.valueOf(jso.get("surveyId"));
-        String surveyee_ID = (String)jso.get("surveyee_id");
+        String surveyee_ID = (String) jso.get("surveyee_id");
+        String surveyResponse_id = "";
+        if (jso.has("surveyResponse_id")) {
+            surveyResponse_id = (String) jso.get("surveyResponse_id");
+        }
         System.out.println(surveyee_ID);
 // String email = (String)jso.get("email");
         String surveyuri = "surveyuri";
@@ -235,32 +240,28 @@ public class UserController {
         Boolean uindicator = true;
         Boolean cindicator = false;
 
-        if(submit)
-        {
+        if (submit) {
             cindicator = true;
-            uindicator=true;
+            uindicator = false;
 
             mailServices.sendEmail(surveyee_ID, "Survey Submitted Successfully", "aviralkum@gmail.com", "Survey Submitted from SurveyApp");
 
-        }
-        else
-        {
+        } else {
             cindicator = false;
             uindicator = true;
         }
 
 
-
         System.out.println(jso.get("surveyId"));
-     //   System.out.println(jso.get("surveyee_id"));
-     //   System.out.println(jso.get("responses"));
+        //   System.out.println(jso.get("surveyee_id"));
+        //   System.out.println(jso.get("responses"));
         //String res = (String)jso.get("response_text");
         //  JSONObject obj2 = new JSONObject("response_text");
         // Table 1 : Update :  complete_ind , surveuri, survey
         // fetch the survey id based on the given survey ud
         Survey s = surveyResponseService.getSurvey(surveyID);
 
-        String responseId = surveyResponseService.surveyResponse(s,surveyee_ID,surveyur,cindicator,uindicator);
+        String responseId = surveyResponseService.surveyResponse(s, surveyee_ID, surveyur, cindicator, uindicator, surveyResponse_id);
 
         // save in question_response table
         // get the survey response id from survey_response table where email = current email
@@ -270,32 +271,28 @@ public class UserController {
         // insert this response id
         JSONArray c = jso.getJSONArray("answerObj");
 
-        for(int i=0;i<c.length();i++)
-        {
+        for (int i = 0; i < c.length(); i++) {
             JSONObject n = c.getJSONObject(i);
             System.out.println(n.get("qid"));
             String ques = String.valueOf(n.get("qid"));
             String reste = String.valueOf((n.get("answer")));
-            String array="";
-            if(reste.charAt(0)=='[')
-            {
+            String array = "";
+            if (reste.charAt(0) == '[') {
                 int length = reste.length();
-                array = reste.substring(1,length-1);
+                array = reste.substring(1, length - 1);
 
-            }
-            else {
+            } else {
                 array = reste;
             }
             SurveyQuestion q = new SurveyQuestion();
             q.setSurveyQuestionId(ques);
 
-            questionService.createResponse(sr,array,q);
-
+            questionService.createResponse(sr, array, q);
 
 
         }
 
-        return new ResponseEntity<Object>(null,HttpStatus.OK);
+        return new ResponseEntity<Object>(null, HttpStatus.OK);
 
 
     }
