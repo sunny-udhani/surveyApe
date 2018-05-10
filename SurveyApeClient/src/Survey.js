@@ -368,53 +368,52 @@ class Survey extends Component {
 
     render() {
 
-        return (
-            <div>
-                <div className="row bar">
-                    <div className="col-lg-1 logo">
-                        <img src={Logo}/>
-                    </div>
-                    <div className="col-lg-3 textLogo">
-                        Survey Ape
-                    </div>
-                    <div className="col-lg-4">
-
-                    </div>
-
-                </div>
-                <h2> Survey Name: {this.state.surveyTitle}</h2>
-                <div className="row mainPageSurvey">
-                    {this.state.questionList.map(question => (
-
-                        this.renderOptions(question)
-
-                    ))}
-                </div>
-                <br/>
-                <div className="row">
-                    <div className="col-lg-4">
-                    </div>
-
-                    <div className="col-lg-1" style={{marginLeft: 80}}>
-                        <button className="btn btn-primary save"
-                                onClick={() => this.submitResponses(this.state.surveyId, this.state.answerObj, false)}>
-                            Save
-                        </button>
-                    </div>
-                    <div className="col-lg-1">
-                        <button className="btn btn-primary submit"
-                                onClick={() => this.submitResponses(this.state.surveyId, this.state.answerObj, true)}>
-                            Submit
-                        </button>
-                    </div>
-
-                </div>
-
+      return (
+        <div>
+        <div className="row bar">
+            <div className="col-lg-1 logo">
+                <img src={Logo} />
+            </div>
+            <div className="col-lg-3 textLogo">
+              Survey Ape
+            </div>
+            <div className="col-lg-4">
 
             </div>
-        );
 
-    }
+        </div>
+          <h2> Survey Name: {this.state.surveyTitle}</h2>
+          <div className="row mainPageSurvey">
+            {this.state.questionList.map(question => (
+
+                this.renderOptions(question)
+
+            ))}
+            </div>
+            <br/>
+            <div className="row">
+              <div className="col-lg-4">
+              </div>
+
+              <div className="col-lg-1" style={{marginLeft: 80}}>
+                <button className="btn btn-primary save" onClick={()=>this.submitResponses(this.state.surveyId,this.state.answerObj,false)}>
+                  Save
+                </button>
+              </div>
+              <div className="col-lg-1">
+                <button className="btn btn-primary submit" onClick={()=>this.submitResponses(this.state.surveyId,this.state.answerObj,true)}>
+                  Submit
+                </button>
+              </div>
+
+            </div>
+
+
+
+          </div>
+    );
+
+}
 
 }
 

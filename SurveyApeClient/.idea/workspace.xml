@@ -2,7 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="b6a651ca-bf56-4d2b-9bb1-e38e2d23bab6" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../SurveyApeBackend/src/main/java/com/surveyApe/controller/surveyor/SurveyController.java" beforeDir="false" afterPath="$PROJECT_DIR$/../SurveyApeBackend/src/main/java/com/surveyApe/controller/surveyor/SurveyController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/EditSurvey.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/EditSurvey.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Routing.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Routing.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Survey.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Survey.js" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
@@ -32,8 +34,8 @@
       <file leaf-file-name="Routing.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/Routing.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="204">
-              <caret line="471" column="64" lean-forward="true" selection-start-line="471" selection-start-column="64" selection-end-line="471" selection-end-column="64" />
+            <state relative-caret-position="15">
+              <caret line="345" column="4" selection-start-line="345" selection-start-column="4" selection-end-line="345" selection-end-column="4" />
             </state>
           </provider>
         </entry>
@@ -65,11 +67,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="API.js" pinned="false" current-in-tab="false">
+      <file leaf-file-name="API.js" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/api/API.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="216">
-              <caret line="234" column="38" selection-start-line="234" selection-start-column="38" selection-end-line="234" selection-end-column="38" />
+            <state relative-caret-position="-36">
+              <caret line="8" column="13" selection-start-line="8" selection-start-column="13" selection-end-line="8" selection-end-column="13" />
             </state>
           </provider>
         </entry>
@@ -107,16 +109,13 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Survey.js" pinned="false" current-in-tab="true">
+      <file leaf-file-name="Survey.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/Survey.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="129">
-              <caret line="64" lean-forward="true" selection-start-line="64" selection-end-line="64" />
+            <state relative-caret-position="10">
+              <caret line="111" column="22" selection-start-line="111" selection-start-column="22" selection-end-line="111" selection-end-column="22" />
               <folding>
                 <element signature="e#0#39#0" expanded="true" />
-                <element signature="e#2126#3438#0" />
-                <element signature="e#4032#4075#0" />
-                <element signature="e#4102#13168#0" />
               </folding>
             </state>
           </provider>
@@ -321,17 +320,24 @@
       <option name="project" value="LOCAL" />
       <updated>1525914329108</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="Merge remote-tracking branch 'remotes/origin/master' into sunny0426&#10;&#10;# Conflicts:&#10;#&#9;SurveyApeClient/src/Routing.js">
+      <created>1525914361966</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1525914361966</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="138891000" />
+    <option name="totallyTimeSpent" value="139559000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1382" height="744" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.17931548" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.17931548" />
       <window_info anchor="bottom" id="TODO" order="6" />
       <window_info anchor="bottom" id="Messages" />
       <window_info anchor="bottom" id="Docker" order="9" />
@@ -340,7 +346,7 @@
       <window_info anchor="bottom" id="Run" order="2" weight="0.3280255" />
       <window_info id="npm" order="2" side_tool="true" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
-      <window_info anchor="bottom" id="Terminal" order="8" sideWeight="0.48511904" visible="true" weight="0.36305732" />
+      <window_info active="true" anchor="bottom" id="Terminal" order="8" sideWeight="0.48511904" visible="true" weight="0.36305732" />
       <window_info id="Favorites" order="3" side_tool="true" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
@@ -568,30 +574,27 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/api/API.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="216">
-          <caret line="234" column="38" selection-start-line="234" selection-start-column="38" selection-end-line="234" selection-end-column="38" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/Routing.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="204">
-          <caret line="471" column="64" lean-forward="true" selection-start-line="471" selection-start-column="64" selection-end-line="471" selection-end-column="64" />
+        <state relative-caret-position="15">
+          <caret line="345" column="4" selection-start-line="345" selection-start-column="4" selection-end-line="345" selection-end-column="4" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/Survey.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="129">
-          <caret line="64" lean-forward="true" selection-start-line="64" selection-end-line="64" />
+        <state relative-caret-position="10">
+          <caret line="111" column="22" selection-start-line="111" selection-start-column="22" selection-end-line="111" selection-end-column="22" />
           <folding>
             <element signature="e#0#39#0" expanded="true" />
-            <element signature="e#2126#3438#0" />
-            <element signature="e#4032#4075#0" />
-            <element signature="e#4102#13168#0" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/api/API.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-36">
+          <caret line="8" column="13" selection-start-line="8" selection-start-column="13" selection-end-line="8" selection-end-column="13" />
         </state>
       </provider>
     </entry>

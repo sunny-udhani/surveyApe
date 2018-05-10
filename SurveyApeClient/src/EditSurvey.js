@@ -529,7 +529,7 @@ class EditSurvey extends Component{
                 var closedSurveyList=this.state.closedSurveyStr.split(",");
                 }
 
-                if(inviteeList.length>0){
+                if(inviteeList && inviteeList.length>0){
                   this.props.editSurvey({type:""+this.state.surveyType,questions:this.state.questions,name:this.state.surveyTitle,publish:true,oldInvitees:this.state.oldInvitees},[],inviteeList);
                 }
                 else if(closedSurveyList.length>0){
@@ -564,7 +564,7 @@ class EditSurvey extends Component{
               var closedSurveyList=this.state.closedSurveyStr.split(",");
               }
 
-              if(inviteeList.length>0){
+              if(inviteeList && inviteeList.length>0){
                 this.props.editSurvey({type:""+this.state.surveyType,questions:this.state.questions,name:this.state.surveyTitle,publish:false},[],inviteeList);
               }
               else if(closedSurveyList.length>0){
