@@ -395,10 +395,16 @@ class Routing extends Component {
     }
 
 
-    AddInvitees=(invitees)=>{
+    AddInvitees=(id,invitees)=>{
       //API call for add invitees
       var arr=invitees.split(',');
       //API
+      var payload={surveyId:id,inviteeList:arr};
+      API.addInvitees(payload).
+      then((res)=>{
+        this.props.history.push('/');
+        this.props.history.push('/mySurveys');
+      });
       alert('Invitees Successfully Added');
 
     }
