@@ -208,30 +208,35 @@ class EditSurvey extends Component{
 
   render(){
     return(
-      <div>
+      <div style={{marginLeft:"20%"}}>
 
-        SurveyName : <input type="text" value={this.state.surveyTitle} onChange={(event)=>this.setState({surveyTitle:event.target.value})}/><br/>
-      Survey Start Date: <input type="date" value={this.state.startDate} onChange={(event)=>this.setState({startDate:event.target.value})}/><br/>
-    Survey End Date: <input type="date" value={this.state.endDate} onChange={(event)=> this.setState({endDate:event.target.value})}/><br/>
+        <h4>SurveyName:</h4>
+        <input type="text" style={{width:"80%"}} value={this.state.surveyTitle} onChange={(event)=>this.setState({surveyTitle:event.target.value})}/><br/>
+      <h4>Survey Start Date:</h4>
+      <input type="date" style={{width:"80%"}} value={this.state.startDate} onChange={(event)=>this.setState({startDate:event.target.value})}/><br/>
+    <h4>Survey End Date:</h4>
+      <input type="date" style={{width:"80%"}} value={this.state.endDate} onChange={(event)=> this.setState({endDate:event.target.value})}/><br/>
   {this.state.surveyType===1?(<div>
-  Invitee List: <input type="text" value={this.state.inviteeStr} onChange={(event)=>this.setState({inviteeStr:event.target.value})}/> <br/>
+  <h4>Invitee List:</h4>
+    <input type="text" style={{width:"80%"}} value={this.state.inviteeStr} onChange={(event)=>this.setState({inviteeStr:event.target.value})}/> <br/>
   </div>):(<div>
   </div>)}
   {this.state.surveyType===3?(<div>
-  Closed survey List: <input type="text" value={this.state.closedSurveyStr} onChange={(event)=>this.setState({closedSurveyStr:event.target.value})}/> <br/>
+  <h4>Closed survey List:</h4>
+  <input type="text" style={{width:"80%"}} value={this.state.closedSurveyStr} onChange={(event)=>this.setState({closedSurveyStr:event.target.value})}/> <br/>
   </div>):(<div>
   </div>)}
     <div>
       {!this.state.type && this.state.surveyAnswers===0?(
 
 
-        <div className="row">
-            <div className="col-lg-6 survey-name">
-                <span className="labels">Select a Question Type :</span>
+        <div>
+            <div>
+                <h4>Select a Question Type :</h4>
 
-                <span className="inputs" style={{marginLeft: "3.3%"}}>
 
-                <select style={{width: "50%", height:30}} onChange={(event)=>{this.setState({type:event.target.value})}}>
+
+                <select style={{width:"80%",height:30}} onChange={(event)=>{this.setState({type:event.target.value})}}>
                   <option disabled selected value> -- select a question type-- </option>
                   <option value="MCQ">MCQ</option>
                   <option value="YN">Yes/No</option>
@@ -240,7 +245,7 @@ class EditSurvey extends Component{
                   <option value="STAR">Star Based</option>
                 </select>
 
-                </span>
+
             </div>
         </div>
 
@@ -249,58 +254,46 @@ class EditSurvey extends Component{
   {this.state.type==="MCQ"?(
     <div>
 
-    <div className="row">
-        <div className="col-lg-6 survey-name">
-            <span className="labels">Select a choice type: </span>
+    <div>
+        <div>
+            <h4>Select a choice type: </h4>
 
-            <span className="inputs" style={{marginLeft: "3.3%"}}>
 
-            <select onChange={(event)=>{this.setState({choice:event.target.value})}}>
+            <select style={{width:"80%"}} onChange={(event)=>{this.setState({choice:event.target.value})}}>
               <option disabled selected value> -- select a choice-- </option>
               <option value="TEXT">Text</option>
               <option value="IMAGE">Image</option>
             </select>
 
-            </span>
         </div>
     </div>
 
 
       <br/>
 
-      <div className="row">
-          <div className="col-lg-6 survey-name">
-              <span className="labels">Answer type: </span>
-
-              <span className="inputs" style={{marginLeft: "3.3%"}}>
-
-              <select onChange={(event)=>{this.setState({ans:event.target.value})}}>
+      <div>
+          <div>
+              <h4>Answer type: </h4>
+              <select style={{width:"80%"}} onChange={(event)=>{this.setState({ans:event.target.value})}}>
                 <option disabled selected value> -- select answer type-- </option>
                 <option value="SINGLE">Single Answer</option>
                 <option value="MULTIPLE">Multiple Answers</option>
               </select>
-
-              </span>
           </div>
       </div>
 
 
     <br/>
 
-    <div className="row">
-        <div className="col-lg-6 survey-name">
-            <span className="labels">Visual Style: </span>
-
-            <span className="inputs" style={{marginLeft: "3.3%"}}>
-
-            <select onChange={(event)=>{this.setState({style:event.target.value})}}>
+    <div>
+        <div >
+            <h4>Visual Style: </h4>
+            <select style={{width:"80%"}} onChange={(event)=>{this.setState({style:event.target.value})}}>
               <option disabled selected value> -- select answer type-- </option>
               <option value="DROP">Dropdown</option>
               <option value="RADIO">Radio button</option>
               <option value="CHECK">Checkbox</option>
             </select>
-
-            </span>
         </div>
     </div>
 
@@ -308,36 +301,34 @@ class EditSurvey extends Component{
     {(this.state.choice==="TEXT" && this.state.ans && this.state.style)?(
       <div>
 
-      <div className="row">
-            <div className="col-lg-6 survey-name">
-              <span className="labels">Question</span>
-              <span className="inputs">
-                <input type="text" value={this.state.question} onChange={(event)=>{
+      <div>
+            <div>
+              <h4>Question</h4>
+
+                <input type="text" style={{width:"80%"}} value={this.state.question} onChange={(event)=>{
                     this.setState({question:event.target.value});
                   }}/>
-              </span>
             </div>
       </div>
 
         <br/>
 
-        <div className="row">
-              <div className="col-lg-6 survey-name">
-                <span className="labels">Options (Give comma separated )</span>
-                <span className="inputs">
-                  <input type="text" value={this.state.options} onChange={(event)=>{
+        <div>
+              <div>
+                <h4>Options (Give comma separated )</h4>
+
+                  <input type="text" style={{width:"80%"}} value={this.state.options} onChange={(event)=>{
                       this.setState({options:event.target.value});
                     }}/>
-                </span>
+
               </div>
         </div>
 
 
-        <div className="row">
-              <div className="col-lg-6 survey-name">
-                <span className="inputs-add"><br/>
+        <div>
+              <div>
+                <br/>
                   <input type="button" className="btn btn-primary" onClick={()=>this.addQuestion(this.state.question,this.state.options)} value="Add Question"/>
-                </span>
               </div>
         </div>
 
@@ -346,37 +337,34 @@ class EditSurvey extends Component{
       <div>
 
 
-      <div className="row">
-            <div className="col-lg-6 survey-name">
-              <span className="labels">Question</span>
-              <span className="inputs">
-                <input type="text" value={this.state.question} onChange={(event)=>{
+      <div>
+            <div>
+              <h4>Question</h4>
+
+                <input type="text" style={{width:"80%"}} value={this.state.question} onChange={(event)=>{
                     this.setState({question:event.target.value});
                   }}/>
-              </span>
+
             </div>
       </div>
 
         <br/>
 
 
-        <div className="row">
-              <div className="col-lg-6 survey-name">
-                <span className="labels">Options (Give images )</span>
-                <span className="inputs">
-                    <input type="text" value={this.state.options} onChange={(event)=>{
+        <div>
+              <div>
+                <h4>Options (Give images )</h4>
+                    <input type="text" style={{width:"80%"}} value={this.state.options} onChange={(event)=>{
                         this.setState({options:event.target.value});
                       }}/>
-                </span>
               </div>
         </div>
 
 
-        <div className="row">
-              <div className="col-lg-6 survey-name">
-                <span className="inputs-add"><br/>
+        <div>
+              <div>
+                <br/>
                   <input type="button" className="btn btn-primary" onClick={()=>this.addQuestion(this.state.question,this.state.options)} value="Add Question"/>
-                </span>
               </div>
         </div>
 
@@ -388,14 +376,12 @@ class EditSurvey extends Component{
   ):this.state.type==="YN"?(
     <div>
 
-    <div className="row">
-          <div className="col-lg-6 survey-name">
-            <span className="labels">Question</span>
-            <span className="inputs">
-            <input type="text" value={this.state.question} onChange={(event)=>{
+    <div>
+          <div>
+            <h4>Question</h4>
+            <input type="text" style={{width:"80%"}} value={this.state.question} onChange={(event)=>{
                 this.setState({question:event.target.value});
               }}/>
-            </span>
           </div>
     </div>
 
@@ -403,11 +389,9 @@ class EditSurvey extends Component{
 
       <br/>
 
-      <div className="row">
-            <div className="col-lg-6 survey-name">
-              <span className="inputs-add"><br/>
+      <div>
+            <div><br/>
                 <input type="button" className="btn btn-primary" onClick={()=>this.addQuestion(this.state.question,"Yes,No")} value="Add Yes/No Question"/>
-              </span>
             </div>
       </div>
 
@@ -416,25 +400,21 @@ class EditSurvey extends Component{
     <div>
 
 
-    <div className="row">
-          <div className="col-lg-6 survey-name">
-            <span className="labels">Question</span>
-            <span className="inputs">
-            <input type="text" value={this.state.question} onChange={(event)=>{
+    <div>
+          <div>
+            <h4>Question</h4>
+            <input type="text" style={{width:"80%"}} value={this.state.question} onChange={(event)=>{
                 this.setState({question:event.target.value});
               }}/>
-            </span>
           </div>
     </div>
 
 
         <br/>
 
-        <div className="row">
-              <div className="col-lg-6 survey-name">
-                <span className="inputs-add"><br/>
+        <div>
+              <div><br/>
                   <input type="button" className="btn btn-primary" onClick={()=>this.addQuestion(this.state.question)} value="Add Short Answer Question"/>
-                </span>
               </div>
         </div>
 
@@ -443,24 +423,20 @@ class EditSurvey extends Component{
   ):this.state.type==="DATE"?(
     <div>
 
-    <div className="row">
-          <div className="col-lg-6 survey-name">
-            <span className="labels">Question</span>
-            <span className="inputs">
-            <input type="text" value={this.state.question} onChange={(event)=>{
+    <div>
+          <div>
+            <h4>Question</h4>
+            <input type="text" value={this.state.question} style={{width:"80%"}} onChange={(event)=>{
                 this.setState({question:event.target.value});
               }}/>
-            </span>
           </div>
     </div>
 
       <br/>
 
-      <div className="row">
-            <div className="col-lg-6 survey-name">
-              <span className="inputs-add"><br/>
+      <div>
+            <div><br/>
                 <input type="button" className="btn btn-primary" onClick={()=>this.addQuestion(this.state.question)} value="Add DateTime Question"/>
-              </span>
             </div>
       </div>
 
@@ -471,24 +447,20 @@ class EditSurvey extends Component{
 
 
 
-    <div className="row">
-          <div className="col-lg-6 survey-name">
-            <span className="labels">Question</span>
-            <span className="inputs">
-            <input type="text" value={this.state.question} onChange={(event)=>{
+    <div>
+          <div>
+            <h4>Question</h4>
+            <input type="text" style={{width:"80%"}} value={this.state.question} onChange={(event)=>{
                 this.setState({question:event.target.value});
               }}/>
-            </span>
           </div>
     </div>
 
       <br/>
 
-      <div className="row">
-            <div className="col-lg-6 survey-name">
-              <span className="inputs-add"><br/>
+      <div>
+            <div><br/>
                 <input type="button" className="btn btn-primary" onClick={()=>this.addQuestion(this.state.question,"0,1,2,3,4,5")} value="Add Star Rating Question"/>
-              </span>
             </div>
       </div>
 
@@ -500,28 +472,27 @@ class EditSurvey extends Component{
 
 
     </div>
-  QUESTIONS:
+  <div style={{marginLeft:"30%"}}>
+  <h4>QUESTIONS:</h4>
     <ul>
       {this.state.questions.map((item)=>{
-        return <div><li key={item.id}>{item.questionText}
+        return <div><li style={{listStyleType:"none",width:"80%"}} key={item.id}>Q: {item.questionText}
                 <ul>
               {item.optionList.map((option)=>{
-                return <li key={option}>{option}</li>
+                return <li style={{listStyleType:"none",width:"60%"}} key={option}> <input type="radio" value={option}/><label>{option}</label></li>
               })}
             </ul>
              </li>
-             {this.state.surveyAnswers<1?(<div><input type="button" className="btn btn-primary" onClick={()=>{this.deleteQuestion(item.id)}} value="Delete Question"/></div>):
-             (<div></div>)}
-
+             <input type="button" className="btn btn-primary" onClick={()=>{this.deleteQuestion(item.id)}} value="Delete Question"/>
            </div>
       })}
     </ul>
+  </div>
+  <br/>
+      <div>
 
-    <br/>
-      <div className="row">
-
-        <div className="col-lg-2">
-            <input type="button" className="btn btn-primary" value="Save and Publish" onClick={()=>{
+        <div>
+            <input type="button" style={{marginLeft:"10%"}} className="btn btn-primary" value="Save and Publish" onClick={()=>{
                 if(this.state.inviteeStr){
                 var inviteeList=this.state.inviteeStr.split(",");
                 }
@@ -548,41 +519,42 @@ class EditSurvey extends Component{
                   options:""
                 })
               }}/>
+
+            <input type="button" style={{marginLeft:"40%"}} className="btn btn-primary" value="Save" onClick={()=>{
+                if(this.state.inviteeStr){
+                var inviteeList=this.state.inviteeStr.split(",");
+                }
+                if(this.state.closedSurveyStr){
+                var closedSurveyList=this.state.closedSurveyStr.split(",");
+                }
+
+                if(inviteeList && inviteeList.length>0){
+                  this.props.editSurvey({type:""+this.state.surveyType,questions:this.state.questions,name:this.state.surveyTitle,publish:false},[],inviteeList);
+                }
+                else if(closedSurveyList.length>0){
+                  this.props.editSurvey({type:""+this.state.surveyType,questions:this.state.questions,name:this.state.surveyTitle,publish:false,oldInvitees:this.state.oldInvitees},closedSurveyList,[]);
+                }
+                else{
+                  this.props.editSurvey({type:""+this.state.surveyType,questions:this.state.questions,name:this.state.surveyTitle,publish:false,oldInvitees:this.state.oldInvitees},[],[]);
+                }
+                  this.setState({
+                    questions:[],
+                    type:null,
+                    choice:null,
+                    ans:null,
+                    style:null,
+                    question:"",
+                    options:""
+                  })
+                }}/>
         </div>
       </div>
-      <br/>
 
-      <div className="row">
+      <div>
 
-        <div className="col-lg-2">
+        <div>
 
-            <input type="button" className="btn btn-primary" value="Save" onClick={()=>{
-              if(this.state.inviteeStr){
-              var inviteeList=this.state.inviteeStr.split(",");
-              }
-              if(this.state.closedSurveyStr){
-              var closedSurveyList=this.state.closedSurveyStr.split(",");
-              }
 
-              if(inviteeList && inviteeList.length>0){
-                this.props.editSurvey({type:""+this.state.surveyType,questions:this.state.questions,name:this.state.surveyTitle,publish:false},[],inviteeList);
-              }
-              else if(closedSurveyList.length>0){
-                this.props.editSurvey({type:""+this.state.surveyType,questions:this.state.questions,name:this.state.surveyTitle,publish:false,oldInvitees:this.state.oldInvitees},closedSurveyList,[]);
-              }
-              else{
-                this.props.editSurvey({type:""+this.state.surveyType,questions:this.state.questions,name:this.state.surveyTitle,publish:false,oldInvitees:this.state.oldInvitees},[],[]);
-              }
-                this.setState({
-                  questions:[],
-                  type:null,
-                  choice:null,
-                  ans:null,
-                  style:null,
-                  question:"",
-                  options:""
-                })
-              }}/>
         </div>
       </div>
 

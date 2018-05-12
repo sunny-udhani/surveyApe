@@ -13,7 +13,7 @@ class SurveyDetails extends Component{
     }
 
 
-    API.getSurvey(this.props.surveyId)
+    API.getSurvey1(this.props.surveyId)
     .then((res)=>{
       console.log(res);
     })

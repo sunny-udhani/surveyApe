@@ -24,15 +24,15 @@ export const submitResponse = (data) =>
     });
 
 
-    export const PublishSurvey1 = (data) =>
-        fetch(`${api}/survey/publish/${data}`, {
+    export const PublishSurvey1 = (payload) =>
+        fetch(`${api}/survey/publish/${payload.surveyId}`, {
             method: 'POST',
             headers: {
                 ...headers,
                 'Content-Type': 'application/json'
             },
             credentials: 'include',
-            body: JSON.stringify({surveyId:data,publish:true})
+            body: JSON.stringify(payload)
         }).then(res => {
             console.log(res.body);
             return res.json();

@@ -372,9 +372,11 @@ public class SurveyController {
             return new ResponseEntity<Object>("No such survey", HttpStatus.BAD_REQUEST);
         }
 
-        if (reqObj.has("publish")) {
+        if (reqObj.has("publish")){
             boolean publishInd = reqObj.getBoolean("publish");
+
             survey.setPublishedInd(publishInd);
+            surveyService.saveSurvey(survey);
         }
 
         sendEmailtoAttendees(survey);
@@ -403,6 +405,7 @@ public class SurveyController {
         if (reqObj.has("publish")) {
             boolean publishInd = reqObj.getBoolean("publish");
             survey.setPublishedInd(publishInd);
+            surveyService.saveSurvey(survey);
         }
 
         sendEmailtoAttendees(survey);
