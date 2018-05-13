@@ -24,15 +24,15 @@ export const submitResponse = (data) =>
     });
 
 
-    export const PublishSurvey1 = (data) =>
-        fetch(`${api}/survey/publish/${data}`, {
+    export const PublishSurvey1 = (payload) =>
+        fetch(`${api}/survey/publish/${payload.surveyId}`, {
             method: 'POST',
             headers: {
                 ...headers,
                 'Content-Type': 'application/json'
             },
             credentials: 'include',
-            body: JSON.stringify({surveyId:data,publish:true})
+            body: JSON.stringify(payload)
         }).then(res => {
             console.log(res.body);
             return res.json();
@@ -237,3 +237,21 @@ export const registerUser = (payload) =>
                             console.log("This is error");
                             return error;
                         });
+
+
+                        export const addInvitees = (payload) =>
+                            fetch(`${api}/survey/inviteMore`, {
+                                method: 'POST',
+                                headers: {
+                                    ...headers,
+                                    'Content-Type': 'application/json'
+                                },
+                                credentials: 'include',
+                                body: JSON.stringify(payload)
+                            }).then(res => {
+                                console.log(res.body);
+                                return res;
+                            }).catch(error => {
+                                console.log("This is error");
+                                return error;
+                            });

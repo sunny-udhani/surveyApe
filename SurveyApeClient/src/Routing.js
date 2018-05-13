@@ -12,6 +12,7 @@ import OpenUniqueSurveyEmail from './OpenUniqueSurveyEmail';
 import SurveyDetails from './SurveyDetails';
 import EditSurvey from './EditSurvey';
 import MySurveys from './MySurveys';
+import Form1 from './Form1';
 import * as API from './api/API';
 
 var QRCode = require('qrcode.react');
@@ -372,7 +373,8 @@ class Routing extends Component {
     PublishSurvey = (id) =>{
       console.log("Ithe ala "+id);
       //API call for publish survey
-      API.PublishSurvey1(id)
+      var payload={surveyId:id,publish:true};
+      API.PublishSurvey1(payload)
       .then(res =>{
         this.props.history.push('/');
         this.props.history.push('/mySurveys');
@@ -393,10 +395,16 @@ class Routing extends Component {
     }
 
 
-    AddInvitees=(invitees)=>{
+    AddInvitees=(id,invitees)=>{
       //API call for add invitees
       var arr=invitees.split(',');
       //API
+      var payload={surveyId:id,inviteeList:arr};
+      API.addInvitees(payload).
+      then((res)=>{
+        this.props.history.push('/');
+        this.props.history.push('/mySurveys');
+      });
       alert('Invitees Successfully Added');
 
     }
@@ -482,6 +490,12 @@ class Routing extends Component {
                 <Route exact path="/openUniqueSurveyEmail" render={() => (
                     <div>
                         <OpenUniqueSurveyEmail redirectToSurvey={this.redirectToSurvey}/>
+                    </div>
+                )}/>
+
+              <Route exact path="/form" render={() => (
+                    <div>
+                        <Form1 createSurvey={this.createSurvey}/>
                     </div>
                 )}/>
 
