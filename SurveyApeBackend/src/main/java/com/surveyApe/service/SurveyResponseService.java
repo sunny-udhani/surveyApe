@@ -25,7 +25,11 @@ public class SurveyResponseService {
         surveyResponseRepository.save(response);
     }
 
-    public SurveyResponse findAttendee(String survey_id, String attendee_email) {
+    public SurveyResponse findAttendee(Survey survey_id, String attendee_email) {
+        return surveyResponseRepository.findBySurveyIdEqualsAndUserEmailEquals(survey_id, attendee_email).orElse(null);
+    }
+
+    public SurveyResponse findBySurveyIdAndEmail(Survey survey_id, String attendee_email) {
         return surveyResponseRepository.findBySurveyIdEqualsAndUserEmailEquals(survey_id, attendee_email).orElse(null);
     }
 
@@ -81,6 +85,11 @@ public class SurveyResponseService {
     public SurveyResponse getSurveyResponseEntityFromUrl(String url) {
 
         return surveyResponseRepository.findDistinctBySurveyURIEquals(url).orElse(null);
+    }
+
+    public SurveyResponse getSurveyResponseEntityFromId(String id) {
+
+        return surveyResponseRepository.findBySurveyResponseIdEquals(id).orElse(null);
     }
 
 }

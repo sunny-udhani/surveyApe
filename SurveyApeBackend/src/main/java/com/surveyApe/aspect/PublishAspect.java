@@ -78,6 +78,7 @@ public class PublishAspect {
 
                 if (methodName.contains("edit")) {
 
+                    //Todo: make generic, make it work for publish api
                     int surveyType = Integer.parseInt(reqObj.getString("surveyType"));
 
                     if (!surveyService.validSurveyType(surveyType)) {

@@ -1,5 +1,6 @@
 package com.surveyApe.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.GenericGenerator;
 
@@ -17,10 +18,12 @@ public class QuestionResponse {
     //TODO: yet to decide cardinality for this
 
     @ManyToOne
+    @JsonBackReference
     @JoinColumn(name = "QUESTION_ID")
     private SurveyQuestion questionId;
     private String response;        //  can be used to store option id or answer text in case of text box
     @ManyToOne
+    @JsonBackReference
     @JoinColumn(name = "SURVEY_RESPONSE_ID")
     private SurveyResponse surveyResponseId;
 
@@ -32,7 +35,6 @@ public class QuestionResponse {
         this.questionResponseId = questionResponseId;
     }
 
-    @JsonIgnore
     public SurveyQuestion getQuestionId() {
         return questionId;
     }

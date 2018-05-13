@@ -1,6 +1,7 @@
 package com.surveyApe.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
@@ -24,6 +25,7 @@ public class SurveyResponse {
     private boolean surveyURIValidInd; //case 3
 
     @OneToMany(mappedBy = "surveyResponseId")
+    @JsonManagedReference
     private List<QuestionResponse> questionResponseList;
 
     public List<QuestionResponse> getQuestionResponseList() {
