@@ -13,24 +13,26 @@ import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 import java.util.List;
+
 @Service
-public class  QuestionService {
+public class QuestionService {
 
     @Autowired
     private SurveyQuestionRepository surveyQuestionRepository;
     @Autowired
     private QuestionResponseRepository questionResponseRepository;
 
-    public void addQuestion(SurveyQuestion question){
+    public void addQuestion(SurveyQuestion question) {
         surveyQuestionRepository.save(question);
     }
 
-    public Survey getQuestion(String id)
-    {
+    public SurveyQuestion getQuestionById(String id) {
+        return surveyQuestionRepository.findBySurveyQuestionIdEquals(id).orElse(null);
 
+    }
 
-
-        return null;
+    public void deleteQuestion(SurveyQuestion question) {
+         surveyQuestionRepository.delete(question);
 
     }
 
@@ -51,12 +53,11 @@ public class  QuestionService {
 
     }
 
-    public SurveyQuestion getSurveyQuestion(String id)
-    {
+    public SurveyQuestion getSurveyQuestion(String id) {
         System.out.println(id);
         Optional<SurveyQuestion> s = surveyQuestionRepository.findById(id);
 
-        return  s.get();
+        return s.get();
     }
 
 }
