@@ -10,6 +10,7 @@ import org.aspectj.lang.annotation.Pointcut;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
@@ -19,6 +20,7 @@ import java.util.Map;
 
 @Aspect
 @Component
+//@Order(1)
 public class PublishAspect {
 
     @Autowired
@@ -64,37 +66,82 @@ public class PublishAspect {
 
         Object[] args = joinPoint.getArgs();
         String requestBody = (String) args[0];
-        Map<String, String> requestParams = (Map<String, String>) args[1];
+//        Map<String, String> requestParams = (Map<String, String>) args[1];
         JSONObject reqObj = new JSONObject(requestBody);
 
         String publishInd = (reqObj.has("publishInd")) ? reqObj.getString("publishInd") : "";
 
         if (publishInd.equals("")) {
-//            allow jointpoint to proceed, no error
+//            allow jointpoint to proceed, no error because no publishInd present
             return 0;
         } else {
             int intPublishInd = Integer.parseInt(publishInd);
+
             if (intPublishInd == 1) {
 
                 if (methodName.contains("edit")) {
 
-                    //Todo: make generic, make it work for publish api
-                    int surveyType = Integer.parseInt(reqObj.getString("surveyType"));
+                    int surveyType = 0;
+
+                    //if available, get it from req
+                    if(reqObj.has("surveyType")){
+                        surveyType = Integer.parseInt(reqObj.getString("surveyType"));
+                    }
 
                     if (!surveyService.validSurveyType(surveyType)) {
 //                        send error, invalid survey type
                         return 1;
                     }
+
+                    if (surveyType == SurveyTypeEnum.CLOSED.getEnumCode()) {
+
+                        if (!(reqObj.has("attendeesList")))
+//                            send error, no attendee added, so can't publish
+                            return 3;
+                        else {
+                            JSONArray attendeeList = reqObj.getJSONArray("attendeesList");
+                            if (attendeeList.length() == 0)
+//                            send error, no attendee added, so can't publish
+                                return 3;
+//                            allow jointpoint to proceed, no error
+                            return 0;
+//                        JSONArray attendeesArray = reqObj.getJSONArray("attendeesList");
+                        }
+                    }
+
+
+                } else {
+                    //Todo: make generic, make it work for publish api
+
+                    int surveyType = 0;
+
+                    //if available, get it from req, edit api can have updated one but rest will not have
+                    if(reqObj.has("surveyType")){
+                        surveyType = Integer.parseInt(reqObj.getString("surveyType"));
+                    }
+                    String surveyId = (String) args[2];
+
+                    Survey survey = surveyService.findBySurveyId(surveyId);
+
+                    if (survey == null) {
+//                                send error, no such survey found
+                        return 2;
+                    }
+
+                    //not available in req
+                    if(surveyType == 0){
+                        surveyType = survey.getSurveyType();
+                    }
+
+                    //check survey type, validation for survey type also
+                    if (!surveyService.validSurveyType(surveyType)) {
+//                        send error, invalid survey type
+                        return 1;
+                    }
+
                     if (surveyType == SurveyTypeEnum.CLOSED.getEnumCode()) {
 
                         if (!(reqObj.has("attendeesList"))) {
-                            String surveyId = (String) args[2];
-
-                            Survey survey = surveyService.findBySurveyId(surveyId);
-                            if (survey == null) {
-//                                send error, no such survey found
-                                return 2;
-                            }
 
                             if (survey.getResponseList() != null) {
                                 int numberOfAttendees = survey.getResponseList().size();
@@ -116,32 +163,10 @@ public class PublishAspect {
 //                        JSONArray attendeesArray = reqObj.getJSONArray("attendeesList");
                         }
                     }
-
-                } else {
-                    int surveyType = Integer.parseInt(reqObj.getString("surveyType"));
-
-                    if (!surveyService.validSurveyType(surveyType)) {
-//                        send error, invalid survey type
-                        return 1;
-                    }
-                    if (surveyType == SurveyTypeEnum.CLOSED.getEnumCode()) {
-
-                        if (!(reqObj.has("attendeesList")))
-//                            send error, no attendee added, so can't publish
-                            return 3;
-                        else {
-                            JSONArray attendeeList = reqObj.getJSONArray("attendeesList");
-                            if (attendeeList.length() == 0)
-//                            send error, no attendee added, so can't publish
-                                return 3;
-//                            allow jointpoint to proceed, no error
-                            return 0;
-//                        JSONArray attendeesArray = reqObj.getJSONArray("attendeesList");
-                        }
-                    }
                 }
 
             } else {
+                //not publishing, no problem
                 return 0;
             }
         }

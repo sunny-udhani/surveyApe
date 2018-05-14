@@ -50,19 +50,19 @@ public class SurveyController1 {
         String url = reqObj.getString("url");
 
         if (!surveyService.validSurveyType(surveyType)) {
-            response.append("message", "invalid survey type");
+            response.put("message", "invalid survey type");
             return new ResponseEntity<Object>(response.toString(), HttpStatus.BAD_REQUEST);
         }
 
         if (surveyType == SurveyTypeEnum.GENERAL.getEnumCode()) {
             Survey survey = surveyService.findSurveyByURL(url);
             if (survey == null) {
-                response.append("message", "No such survey");
+                response.put("message", "No such survey");
                 return new ResponseEntity<Object>(response.toString(), HttpStatus.BAD_REQUEST);
             }
 
             if (!survey.isPublishedInd()) {
-                response.append("message", "Survey not available");
+                response.put("message", "Survey not available");
                 return new ResponseEntity<Object>(response.toString(), HttpStatus.NOT_ACCEPTABLE);
             }
 
@@ -73,23 +73,23 @@ public class SurveyController1 {
 
                     closeSurveyBasedonEndDate(survey);
 
-                    response.append("message", "Survey has ended!");
+                    response.put("message", "Survey has ended!");
                     return new ResponseEntity<Object>(response.toString(), HttpStatus.SERVICE_UNAVAILABLE);
 
                 }
             }
 
             if (survey.isSurveyCompletedInd()) {
-                response.append("message", "The survey has been marked complete");
+                response.put("message", "The survey has been marked complete");
                 return new ResponseEntity<Object>(response.toString(), HttpStatus.SERVICE_UNAVAILABLE);
             }
 
             if (session != null) {
-                String user_email = session.getAttribute("email").toString();
+                String user_email = session.getAttribute("surveyorEmail").toString();
                 if (!user_email.isEmpty()) {
                     SurveyResponse surveyResponse = surveyResponseService.findBySurveyIdAndEmail(survey, user_email);
-                    response.append("surveyResponse_id", surveyResponse.getSurveyResponseId());
-                    response.append("email", surveyResponse.getUserEmail());
+                    response.put("surveyResponse_id", surveyResponse.getSurveyResponseId());
+                    response.put("email", surveyResponse.getUserEmail());
                 }
             }
 
@@ -100,17 +100,17 @@ public class SurveyController1 {
 
             SurveyResponse surveyResponse = surveyResponseService.getSurveyResponseEntityFromUrl(url);
             if (surveyResponse == null) {
-                response.append("message", "No such survey");
+                response.put("message", "No such survey");
                 return new ResponseEntity<Object>(response.toString(), HttpStatus.BAD_REQUEST);
             }
 
             if (!surveyResponse.getSurveyId().isPublishedInd()) {
-                response.append("message", "Survey not available");
+                response.put("message", "Survey not available");
                 return new ResponseEntity<Object>(response.toString(), HttpStatus.NOT_ACCEPTABLE);
             }
 
             if (!surveyResponse.isSurveyURIValidInd()) {
-                response.append("message", "Your URL is no longer valid");
+                response.put("message", "Your URL is no longer valid");
                 return new ResponseEntity<Object>(response.toString(), HttpStatus.FORBIDDEN);
             }
 
@@ -120,14 +120,14 @@ public class SurveyController1 {
 
                     Survey survey = closeSurveyBasedonEndDate(surveyResponse.getSurveyId());
 
-                    response.append("message", "Your survey has expired");
+                    response.put("message", "Your survey has expired");
                     return new ResponseEntity<Object>(response.toString(), HttpStatus.SERVICE_UNAVAILABLE);
 
                 }
             }
 
             if (surveyResponse.getSurveyId().isSurveyCompletedInd()) {
-                response.append("message", "The survey has been marked complete");
+                response.put("message", "The survey has been marked complete");
                 return new ResponseEntity<Object>(response.toString(), HttpStatus.SERVICE_UNAVAILABLE);
             }
 
@@ -140,7 +140,7 @@ public class SurveyController1 {
 
         } else {
             response = new JSONObject();
-            response.append("message", "invalid region");
+            response.put("message", "invalid region");
             return new ResponseEntity<Object>(response.toString(), HttpStatus.BAD_REQUEST);
 
         }
@@ -172,8 +172,8 @@ public class SurveyController1 {
 
             if (survey == null) {
                 JSONObject resp = new JSONObject();
-                resp.append("message", "No such survey");
-                return new ResponseEntity<Object>(resp, HttpStatus.BAD_REQUEST);
+                resp.put("message", "No such survey");
+                return new ResponseEntity<Object>(resp.toString(), HttpStatus.BAD_REQUEST);
             }
 
             for (SurveyQuestion ques : survey.getQuestionList()) {
@@ -206,11 +206,11 @@ public class SurveyController1 {
             JSONObject jsonObject = new JSONObject(responseJSON.writeValueAsString(survey));
             JSONObject resp = new JSONObject();
 
-            resp.append("survey", jsonObject);
+            resp.put("survey", jsonObject);
 
             if(!surveyResponseStr.isEmpty()) {
                 JSONArray jsonObject1 = new JSONArray(surveyResponseStr);
-                resp.append("responses", jsonObject1);
+                resp.put("responses", jsonObject1);
             }
 
             return new ResponseEntity<Object>(resp.toString(), HttpStatus.OK);

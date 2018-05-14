@@ -52,7 +52,7 @@ public class SurveyController {
         //String surveyorEmail = "aaj@aaj.com";
 
         if (!surveyService.validSurveyType(surveyType)) {
-            response.append("message", "Invalid Survey Type");
+            response.put("message", "Invalid Survey Type");
             return new ResponseEntity<Object>(response.toString(), HttpStatus.BAD_REQUEST);
         }
 
@@ -60,7 +60,7 @@ public class SurveyController {
         Survey surveyVO = new Survey();
         User userVO = userService.getUserById(surveyorEmail).orElse(null);
         if (userVO == null) {
-            response.append("message", "Invalid user / user id");
+            response.put("message", "Invalid user / user id");
             return new ResponseEntity<Object>(response.toString(), HttpStatus.FORBIDDEN);
         }
 
@@ -87,7 +87,7 @@ public class SurveyController {
                 if (endDate.after(new Date()))
                     surveyVO.setEndDate(endDate);
                 else
-                    response.append("message", "Invalid End Date");
+                    response.put("message", "Invalid End Date");
                 return new ResponseEntity<Object>(response.toString(), HttpStatus.BAD_REQUEST);
             }
         }
@@ -109,7 +109,7 @@ public class SurveyController {
             String questionType = questionOnj.getString("questionType");
             int questionTypeInt = Integer.parseInt(questionType);
             if (!validQuestionType(Integer.parseInt(questionType))) {
-                response.append("message", "Invalid Question Type");
+                response.put("message", "Invalid Question Type");
                 return new ResponseEntity<Object>(response.toString(), HttpStatus.BAD_REQUEST);
             }
 
@@ -119,7 +119,7 @@ public class SurveyController {
             SurveyQuestion surveyQuestion = createNewQuestionWithOptions(surveyVO.getSurveyId(), questionText, questionTypeInt, optionList);
 
             if (surveyQuestion == null) {
-                response.append("message", "Question Creation Exception");
+                response.put("message", "Question Creation Exception");
                 return new ResponseEntity<Object>(response.toString(), HttpStatus.BAD_REQUEST);
             }
 
@@ -140,7 +140,7 @@ public class SurveyController {
                 SurveyResponse newSurveyeeResponseEntry = createNewSurveyeeResponseEntry(surveyVO.getSurveyId(), surveyeeEmail, surveyeeURI);
 
                 if (newSurveyeeResponseEntry == null) {
-                    response.append("message", "response entity not created");
+                    response.put("message", "response entity not created");
                     return new ResponseEntity<Object>(response.toString(), HttpStatus.BAD_REQUEST);
                 }
 
@@ -159,7 +159,7 @@ public class SurveyController {
                 SurveyResponse newSurveyeeResponseEntry = createNewSurveyeeResponseEntry(surveyVO.getSurveyId(), surveyeeEmail, "");
 
                 if (newSurveyeeResponseEntry == null) {
-                    response.append("message", "response entity not created");
+                    response.put("message", "response entity not created");
                     return new ResponseEntity<Object>(response.toString(), HttpStatus.BAD_REQUEST);
                 }
 
@@ -190,13 +190,13 @@ public class SurveyController {
         String surveyId = id;
         User userVO = userService.getUserById(surveyorEmail).orElse(null);
         if (userVO == null) {
-            response.append("message", "Invalid user / user id");
+            response.put("message", "Invalid user / user id");
             return new ResponseEntity<Object>(response.toString(), HttpStatus.BAD_REQUEST);
         }
 
         Survey survey = surveyService.findBySurveyIdAndSurveyorEmail(surveyId, userVO);
         if (survey == null) {
-            response.append("message", "No such survey");
+            response.put("message", "No such survey");
             return new ResponseEntity<Object>(response.toString(), HttpStatus.BAD_REQUEST);
         }
         survey.setSurveyTitle(surveyTitle);
@@ -221,7 +221,7 @@ public class SurveyController {
                 if (endDate.after(new Date()))
                     survey.setEndDate(endDate);
                 else
-                    response.append("message", "Invalid End Date");
+                    response.put("message", "Invalid End Date");
                 return new ResponseEntity<Object>(response.toString(), HttpStatus.BAD_REQUEST);
             }
         }
@@ -246,8 +246,7 @@ public class SurveyController {
             String questionType = questionOnj.getString("questionType");
             int questionTypeInt = Integer.parseInt(questionType);
             if (!validQuestionType(Integer.parseInt(questionType))) {
-                response.append("message", "Invalid Question Type");
-                return new ResponseEntity<Object>(response.toString(), HttpStatus.BAD_REQUEST);
+                return new ResponseEntity<Object>("Invalid Question Type", HttpStatus.BAD_REQUEST);
             }
 
             String optionList = questionOnj.getString("optionList");
@@ -255,16 +254,15 @@ public class SurveyController {
             SurveyQuestion surveyQuestion = createNewQuestionWithOptions(survey.getSurveyId(), questionText, questionTypeInt, optionList);
 
             if (surveyQuestion == null) {
-                response.append("message","question not created");
-                return new ResponseEntity<Object>(response.toString(), HttpStatus.BAD_REQUEST);
+                return new ResponseEntity<Object>("question not created", HttpStatus.BAD_REQUEST);
             }
 
         }
 
-        if (reqObj.has("attendeesList")) {
-            survey.getResponseList().clear();
-            surveyService.saveSurvey(survey);
-            JSONArray attendeesArray = reqObj.getJSONArray("attendeesList");
+        if (reqObj.has("addAttendeesList")) {
+            //            survey.getResponseList().clear();
+            //            surveyService.saveSurvey(survey);
+            JSONArray attendeesArray = reqObj.getJSONArray("addAttendeesList");
 
             for (int i = 0; i < attendeesArray.length(); i++) {
                 JSONObject attendeesObj = attendeesArray.getJSONObject(i);
@@ -275,18 +273,35 @@ public class SurveyController {
                 SurveyResponse newSurveyeeResponseEntry = createNewSurveyeeResponseEntry(survey.getSurveyId(), surveyeeEmail, surveyeeURI);
 
                 if (newSurveyeeResponseEntry == null) {
-                    response.append("message","response entity not created");
-                    return new ResponseEntity<Object>(response.toString(), HttpStatus.BAD_REQUEST);
+                    return new ResponseEntity<Object>("response entity not created", HttpStatus.BAD_REQUEST);
+                }
+
+            }
+        }
+        if (reqObj.has("removeAttendeesList")) {
+            //            survey.getResponseList().clear();
+            //            surveyService.saveSurvey(survey);
+            JSONArray attendeesArray = reqObj.getJSONArray("removeAttendeesList");
+
+            for (int i = 0; i < attendeesArray.length(); i++) {
+                JSONObject attendeesObj = attendeesArray.getJSONObject(i);
+
+                String surveyeeEmail = attendeesObj.getString("email");
+
+                boolean flag = removeAttendeeFromSurvey(survey.getSurveyId(), surveyeeEmail);
+
+                if (flag == false) {
+                    return new ResponseEntity<Object>("response entity not created", HttpStatus.BAD_REQUEST);
                 }
 
             }
         }
 
-        if (reqObj.has("inviteeList")) {
-            survey.getResponseList().clear();
-            surveyService.saveSurvey(survey);
+        if (reqObj.has("addInviteeList")) {
+            //            survey.getResponseList().clear();
+            //            surveyService.saveSurvey(survey);
 
-            JSONArray invitedEmailsArray = reqObj.getJSONArray("inviteeList");
+            JSONArray invitedEmailsArray = reqObj.getJSONArray("addInviteeList");
 
             for (int i = 0; i < invitedEmailsArray.length(); i++) {
                 JSONObject attendeesObj = invitedEmailsArray.getJSONObject(i);
@@ -296,8 +311,26 @@ public class SurveyController {
                 SurveyResponse newSurveyeeResponseEntry = createNewSurveyeeResponseEntry(survey.getSurveyId(), surveyeeEmail, "");
 
                 if (newSurveyeeResponseEntry == null) {
-                    response.append("message","response entity not created");
-                    return new ResponseEntity<Object>(response.toString(), HttpStatus.BAD_REQUEST);
+                    return new ResponseEntity<Object>("response entity not created", HttpStatus.BAD_REQUEST);
+                }
+
+            }
+        }
+
+        if (reqObj.has("removeInviteeList")) {
+            //            survey.getResponseList().clear();
+            //            surveyService.saveSurvey(survey);
+            JSONArray attendeesArray = reqObj.getJSONArray("removeInviteeList");
+
+            for (int i = 0; i < attendeesArray.length(); i++) {
+                JSONObject attendeesObj = attendeesArray.getJSONObject(i);
+
+                String surveyeeEmail = attendeesObj.getString("email");
+
+                boolean flag = removeAttendeeFromSurvey(survey.getSurveyId(), surveyeeEmail);
+
+                if (flag == false) {
+                    return new ResponseEntity<Object>("response entity not created", HttpStatus.BAD_REQUEST);
                 }
 
             }
@@ -319,13 +352,13 @@ public class SurveyController {
         String surveyId = id;
         User userVO = userService.getUserById(surveyorEmail).orElse(null);
         if (userVO == null) {
-            response.append("message","Invalid user / user id");
+            response.put("message", "Invalid user / user id");
             return new ResponseEntity<Object>(response.toString(), HttpStatus.BAD_REQUEST);
         }
 
         Survey survey = surveyService.findBySurveyIdAndSurveyorEmail(surveyId, userVO);
         if (survey == null) {
-            response.append("message","No such survey");
+            response.put("message", "No such survey");
             return new ResponseEntity<Object>(response.toString(), HttpStatus.BAD_REQUEST);
         }
 
@@ -344,7 +377,7 @@ public class SurveyController {
                 SurveyResponse newSurveyeeResponseEntry = createNewSurveyeeResponseEntry(survey.getSurveyId(), surveyeeEmail, surveyeeURI);
 
                 if (newSurveyeeResponseEntry == null) {
-                    response.append("message","response entity not created");
+                    response.put("message", "response entity not created");
                     return new ResponseEntity<Object>(response.toString(), HttpStatus.BAD_REQUEST);
                 }
 
@@ -364,7 +397,7 @@ public class SurveyController {
                 SurveyResponse newSurveyeeResponseEntry = createNewSurveyeeResponseEntry(survey.getSurveyId(), surveyeeEmail, "");
 
                 if (newSurveyeeResponseEntry == null) {
-                    response.append("message","response entity not created");
+                    response.put("message", "response entity not created");
                     return new ResponseEntity<Object>(response.toString(), HttpStatus.BAD_REQUEST);
                 }
 
@@ -386,18 +419,18 @@ public class SurveyController {
         String surveyId = id;
         User userVO = userService.getUserById(surveyorEmail).orElse(null);
         if (userVO == null) {
-            response.append("message","Invalid user / user id");
+            response.put("message", "Invalid user / user id");
             return new ResponseEntity<Object>(response.toString(), HttpStatus.BAD_REQUEST);
         }
 
         Survey survey = surveyService.findBySurveyIdAndSurveyorEmail(surveyId, userVO);
         if (survey == null) {
-            response.append("message","No such survey");
+            response.put("message", "No such survey");
             return new ResponseEntity<Object>(response.toString(), HttpStatus.BAD_REQUEST);
         }
 
-        if (reqObj.has("publish")){
-            boolean publishInd = reqObj.getBoolean("publish");
+        if (reqObj.has("publishInd")) {
+            boolean publishInd = reqObj.getBoolean("publishInd");
 
             survey.setPublishedInd(publishInd);
             surveyService.saveSurvey(survey);
@@ -421,23 +454,24 @@ public class SurveyController {
         String surveyId = id;
         User userVO = userService.getUserById(surveyorEmail).orElse(null);
         if (userVO == null) {
-            response.append("message","Invalid user / user id");
+            response.put("message", "Invalid user / user id");
             return new ResponseEntity<Object>(response.toString(), HttpStatus.BAD_REQUEST);
         }
 
         Survey survey = surveyService.findBySurveyIdAndSurveyorEmail(surveyId, userVO);
         if (survey == null) {
-            response.append("message","No such survey");
+            response.put("message", "No such survey");
             return new ResponseEntity<Object>(response.toString(), HttpStatus.BAD_REQUEST);
         }
 
-        if (reqObj.has("publish")) {
-            boolean publishInd = reqObj.getBoolean("publish");
-            survey.setPublishedInd(publishInd);
+        if (reqObj.has("endSurvey")) {
+            boolean endSurvey = reqObj.getBoolean("endSurvey");
+            survey.setSurveyCompletedInd(endSurvey);
+            survey.setEndDate(new Date());
             surveyService.saveSurvey(survey);
         }
 
-        sendEmailtoAttendees(survey);
+//        sendEmailtoAttendees(survey);
 
         return new ResponseEntity<Object>(survey, HttpStatus.OK);
     }
@@ -449,20 +483,20 @@ public class SurveyController {
     public @ResponseBody
     ResponseEntity<?> retrieveAllSurveys(@RequestParam Map<String, String> params, HttpSession session) {
         System.out.println(params);
-        JSONObject response  = new JSONObject();
+        JSONObject response = new JSONObject();
 
         String surveyorEmail = session.getAttribute("surveyorEmail").toString();
         //String surveyorEmail="chandan.paranjape@gmail.com";
         User userVO = userService.getUserById(surveyorEmail).orElse(null);
         if (userVO == null) {
-            response.append("message","Invalid user / user id");
+            response.put("message", "Invalid user / user id");
             return new ResponseEntity<Object>(response.toString(), HttpStatus.BAD_REQUEST);
         }
 
         List<Survey> surveyList = surveyService.findBySurveyorEmail(userVO);
         if (surveyList.size() == 0) {
-            response.append("message","No survey");
-            return new ResponseEntity<Object>( response.toString(), HttpStatus.OK);
+            response.put("message", "No survey");
+            return new ResponseEntity<Object>(response.toString(), HttpStatus.OK);
         }
 
         return new ResponseEntity<Object>(surveyList, HttpStatus.OK);
@@ -471,11 +505,11 @@ public class SurveyController {
     @GetMapping(path = "surveyor/getSurvey/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public @ResponseBody
     ResponseEntity<?> retrieveASurvey(@PathVariable String id, @RequestParam Map<String, String> params, HttpSession session) {
-        JSONObject response  = new JSONObject();
+        JSONObject response = new JSONObject();
 
         Survey survey = surveyService.findBySurveyId(id);
         if (survey == null) {
-            response.append("message","No such survey");
+            response.put("message", "No such survey");
             return new ResponseEntity<Object>(response.toString(), HttpStatus.BAD_REQUEST);
         }
         return new ResponseEntity<Object>(survey, HttpStatus.OK);
@@ -529,6 +563,28 @@ public class SurveyController {
         return attendeeResponseEntity;
     }
 
+    public boolean removeAttendeeFromSurvey(String surveyId, String attendeeEmail) {
+        Survey survey = surveyService.findBySurveyId(surveyId);
+
+        if (survey == null) {
+            return false;
+        }
+
+        SurveyResponse attendeeResponseEntity = surveyResponseService.findAttendee(survey, attendeeEmail);
+
+        if (attendeeResponseEntity == null) {
+            return false;
+        }
+
+        //remove attendee response entity to survey for two way binding
+        removeAttendeeFromSurveyEntity(attendeeResponseEntity, survey);
+
+        //save each entity
+        surveyResponseService.deleteAttendee(attendeeResponseEntity);
+        surveyService.saveSurvey(survey);
+        return true;
+    }
+
     public void addQuestionToSurveyEntity(SurveyQuestion question, Survey survey) {
         survey.getQuestionList().add(question);
         question.setSurveyId(survey);
@@ -553,6 +609,11 @@ public class SurveyController {
     public void removeQuestionFromSurveyEntity(SurveyQuestion question, Survey survey) {
         survey.getQuestionList().remove(question);
         question.setSurveyId(null);
+    }
+
+    public void removeAttendeeFromSurveyEntity(SurveyResponse surveyResponse, Survey survey) {
+        survey.getResponseList().remove(surveyResponse);
+        surveyResponse.setSurveyId(null);
     }
 
     public boolean createOptions(String optionList, SurveyQuestion question) {
@@ -614,6 +675,60 @@ public class SurveyController {
         }
         return 0;
     }
+    //endregion
+
+    //region add/delete questions
+//    survey.getQuestionList().clear();
+//        surveyService.saveSurvey(survey);
+
+    //add new questions if available
+//        if(reqObj.has("newQuestions")){
+//        JSONArray questionArray = reqObj.getJSONArray("newQuestions");
+//
+//        for (int i = 0; i < questionArray.length(); i++) {
+//            JSONObject questionOnj = questionArray.getJSONObject(i);
+//
+//            String questionText = questionOnj.getString("questionText");
+//            String questionType = questionOnj.getString("questionType");
+//            int questionTypeInt = Integer.parseInt(questionType);
+//            if (!validQuestionType(Integer.parseInt(questionType))) {
+//                response.put("message", "Invalid Question Type");
+//                return new ResponseEntity<Object>(response.toString(), HttpStatus.BAD_REQUEST);
+//            }
+//
+//            String optionList = questionOnj.getString("optionList");
+//
+//            SurveyQuestion surveyQuestion = createNewQuestionWithOptions(survey.getSurveyId(), questionText, questionTypeInt, optionList);
+//
+//            if (surveyQuestion == null) {
+//                response.put("message", "question not created");
+//                return new ResponseEntity<Object>(response.toString(), HttpStatus.BAD_REQUEST);
+//            }
+//
+//        }
+//    }
+//
+//    //remove questions if available
+//        if(reqObj.has("deletedQuestions")){
+//        JSONArray questionArray = reqObj.getJSONArray("deletedQuestions");
+//
+//        for (int i = 0; i < questionArray.length(); i++) {
+//            JSONObject questionOnj = questionArray.getJSONObject(i);
+//
+//            String questionId = questionOnj.getString("questionId");
+//            SurveyQuestion question = questionService.getQuestionById(questionId);
+//
+//            if (question == null) {
+//                response.put("message", "No question with id: "+questionId);
+//                return new ResponseEntity<Object>(response.toString(), HttpStatus.BAD_REQUEST);
+//            }
+//
+//            removeQuestionFromSurveyEntity(question,survey);
+//            questionService.deleteQuestion(question);
+//            surveyService.saveSurvey(survey);
+//
+//        }
+//    }
     //endregion
 
 }
