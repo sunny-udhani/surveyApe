@@ -1,6 +1,8 @@
 package com.surveyApe.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import org.hibernate.annotations.GenericGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -20,16 +22,19 @@ public class SurveyQuestion {
     private int questionType; //numbers would be better to play around with...
     @Column(nullable = true)
     private int questionOrderNumber;
-    @JsonIgnore
+//    @JsonIgnore
     @ManyToOne
+    @JsonBackReference
     @JoinColumn(name = "SURVEY_ID")
     private Survey surveyId;
 
 
     @OneToMany(mappedBy = "questionId", cascade = CascadeType.REMOVE, fetch = FetchType.EAGER)
-    private List<QuestionOption> questionOptionList=new ArrayList<QuestionOption>();
+    @JsonManagedReference
+    private List<QuestionOption> questionOptionList = new ArrayList<QuestionOption>();
 
     @OneToMany(mappedBy = "questionId", cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
+    @JsonManagedReference
     private List<QuestionResponse> questionResponseList;
 
     public List<QuestionOption> getQuestionOptionList() {
@@ -45,7 +50,7 @@ public class SurveyQuestion {
     }
 
     public void setQuestionResponseList(List<QuestionResponse> questionResponseList) {
-        this.questionResponseList =questionResponseList;
+        this.questionResponseList = questionResponseList;
     }
 
     public String getSurveyQuestionId() {

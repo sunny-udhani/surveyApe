@@ -109,11 +109,6 @@ public class SurveyController1 {
                 return new ResponseEntity<Object>(response.toString(), HttpStatus.NOT_ACCEPTABLE);
             }
 
-            if (!surveyResponse.isSurveyURIValidInd()) {
-                response.put("message", "Your URL is no longer valid");
-                return new ResponseEntity<Object>(response.toString(), HttpStatus.FORBIDDEN);
-            }
-
             if (surveyResponse.getSurveyId().getEndDate() != null) {
                 Date now = new Date();
                 if (now.after(surveyResponse.getSurveyId().getEndDate())) {
@@ -129,6 +124,11 @@ public class SurveyController1 {
             if (surveyResponse.getSurveyId().isSurveyCompletedInd()) {
                 response.put("message", "The survey has been marked complete");
                 return new ResponseEntity<Object>(response.toString(), HttpStatus.SERVICE_UNAVAILABLE);
+            }
+
+            if (!surveyResponse.isSurveyURIValidInd()) {
+                response.put("message", "Your URL is no longer valid");
+                return new ResponseEntity<Object>(response.toString(), HttpStatus.FORBIDDEN);
             }
 
             response.put("surveyResponse_id", surveyResponse.getSurveyResponseId());
@@ -174,6 +174,19 @@ public class SurveyController1 {
                 JSONObject resp = new JSONObject();
                 resp.put("message", "No such survey");
                 return new ResponseEntity<Object>(resp.toString(), HttpStatus.BAD_REQUEST);
+            }
+
+            if (survey.getEndDate() != null) {
+                Date now = new Date();
+                if (now.after(survey.getEndDate())) {
+
+                    survey = closeSurveyBasedonEndDate(survey);
+                    JSONObject resp = new JSONObject();
+
+                    resp.put("message", "Your survey has expired");
+                    return new ResponseEntity<Object>(resp.toString(), HttpStatus.SERVICE_UNAVAILABLE);
+
+                }
             }
 
             for (SurveyQuestion ques : survey.getQuestionList()) {

@@ -1,6 +1,8 @@
 package com.surveyApe.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
@@ -15,6 +17,7 @@ public class QuestionOption {
     private String questionOptionId;
 
     @ManyToOne(cascade = CascadeType.ALL)
+    @JsonBackReference
     @JoinColumn(name = "QUESTION_ID")
     private SurveyQuestion questionId;
 
@@ -30,7 +33,7 @@ public class QuestionOption {
         this.questionOptionId = questionOptionId;
     }
 
-    @JsonIgnore
+//    @JsonIgnore
     public SurveyQuestion getQuestionId() {
         return questionId;
     }
