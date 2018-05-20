@@ -237,23 +237,41 @@ export const registerUser = (payload) =>
                             return error;
                         });
 
-                    export const getSurveyId = (data) =>
-                        fetch(`${api}/surveyee/getSurvey/uri`, {
-                            method: 'POST',
-                            headers: {
-                                ...headers,
-                                'Content-Type': 'application/json'
-                            },
-                            credentials: 'include',
-                            body: JSON.stringify(data)
-                        }).then(res => {
-                            console.log(res.body);
-                            return res;
-                        }).catch(error => {
-                            console.log("This is error");
-                            return error;
-                        });
 
+                        export const getSurveyId = (payload) =>
+                            fetch(`${api}/surveyee/getSurvey/uri`, {
+                                method: 'POST',
+                                headers: {
+                                    ...headers,
+                                    'Content-Type': 'application/json'
+                                },
+                                credentials: 'include',
+                                body: JSON.stringify(payload)
+                            }).then(res => {
+                                console.log(res.body);
+                                return res.json();
+                            }).catch(error => {
+                                console.log("This is error");
+                                return error;
+                            });
+
+
+
+                            export const getSurveyAndResp = (payload) =>
+                                fetch(`${api}/surveyee/getSurvey/id`, {
+                                    method: 'POST',
+                                    headers: {
+                                        ...headers,
+                                        'Content-Type': 'application/json'
+                                    },
+                                    credentials: 'include',
+                                    body: JSON.stringify(payload)
+                                }).then(res => {
+                                    return res.json();
+                                }).catch(error => {
+                                    console.log("This is error");
+                                    return error;
+                                });
 
                         export const addInvitees = (payload) =>
                             fetch(`${api}/survey/addAttendees/`+payload.surveyId, {

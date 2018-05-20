@@ -136,7 +136,7 @@ public class SurveyController1 {
 
             response.put("surveyResponse_id", surveyResponse.getSurveyResponseId());
             response.put("email", surveyResponse.getUserEmail());
-            response.put("survey_id", surveyResponse.getSurveyId().getSurveyId());
+            response.put("survey_id", surveyResponse.getSurveyId());
 
             return new ResponseEntity<Object>(response.toString(), HttpStatus.OK);
 
@@ -230,6 +230,9 @@ public class SurveyController1 {
 
             return new ResponseEntity<Object>(resp.toString(), HttpStatus.OK);
         } catch (Exception ex) {
+            System.out.println("---------------------------------------");
+            System.out.println(ex.toString());
+            System.out.println("---------------------------------------");
             return new ResponseEntity<Object>(ex.toString(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
