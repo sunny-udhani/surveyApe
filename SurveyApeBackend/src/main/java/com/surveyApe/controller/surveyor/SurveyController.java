@@ -305,7 +305,7 @@ public class SurveyController {
 
                 String surveyeeEmail = attendeesObj.getString("email");
 
-                SurveyResponse newSurveyeeResponseEntry = createNewSurveyeeResponseEntry(survey.getSurveyId(), surveyeeEmail, "");
+                SurveyResponse newSurveyeeResponseEntry = createNewSurveyeeResponseEntry(survey.getSurveyId(), surveyeeEmail, survey.getSurveyURI());
 
                 if (newSurveyeeResponseEntry == null) {
                     return new ResponseEntity<Object>("response entity not created", HttpStatus.BAD_REQUEST);
@@ -783,7 +783,7 @@ public class SurveyController {
                         String attendeeEmail = response.getUserEmail();
                         String attendeeURL = response.getSurveyURI();
 
-                        mailServices.sendEmail(attendeeEmail, "You must fill this survey: " + attendeeURL, "aviralkum@gmail.com", "Survey Filling request");
+                        mailServices.sendEmail(attendeeEmail, "You must fill this survey: " + attendeeURL, "aviralkum@gmail.com", "Survey Filling request",attendeeURL,true);
 
                         return 0;
                     }
@@ -794,7 +794,7 @@ public class SurveyController {
                     for (SurveyResponse response : surveyResponseList) {
 
                         String attendeeEmail = response.getUserEmail();
-                        mailServices.sendEmail(attendeeEmail, "You are invited to take this survey: " + surveyURL, "aviralkum@gmail.com", "Survey Filling request");
+                        mailServices.sendEmail(attendeeEmail, "You are invited to take this survey: " + surveyURL, "aviralkum@gmail.com", "Survey Filling request",surveyURL,true);
 
                         return 0;
                     }
