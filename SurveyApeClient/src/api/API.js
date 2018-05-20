@@ -181,11 +181,7 @@ export const registerUser = (payload) =>
                 credentials: 'include',
                 body: JSON.stringify(data)
             }).then(res => {
-                console.log("Inside res of SignIn--API");
                 console.log(res);
-                console.log("whether data accessible:");
-                console.log(data);
-                res.dataOpen = data.dataOpen;
                 return res;
             }).catch(error => {
                 console.log("This is error");
@@ -242,23 +238,41 @@ export const registerUser = (payload) =>
                             return error;
                         });
 
-                    export const getSurveyId = (data) =>
-                        fetch(`${api}/surveyee/getSurvey/uri`, {
-                            method: 'POST',
-                            headers: {
-                                ...headers,
-                                'Content-Type': 'application/json'
-                            },
-                            credentials: 'include',
-                            body: JSON.stringify(data)
-                        }).then(res => {
-                            console.log(res.body);
-                            return res;
-                        }).catch(error => {
-                            console.log("This is error");
-                            return error;
-                        });
 
+                        export const getSurveyId = (payload) =>
+                            fetch(`${api}/surveyee/getSurvey/uri`, {
+                                method: 'POST',
+                                headers: {
+                                    ...headers,
+                                    'Content-Type': 'application/json'
+                                },
+                                credentials: 'include',
+                                body: JSON.stringify(payload)
+                            }).then(res => {
+                                console.log(res.body);
+                                return res.json();
+                            }).catch(error => {
+                                console.log("This is error");
+                                return error;
+                            });
+
+
+
+                            export const getSurveyAndResp = (payload) =>
+                                fetch(`${api}/surveyee/getSurvey/id`, {
+                                    method: 'POST',
+                                    headers: {
+                                        ...headers,
+                                        'Content-Type': 'application/json'
+                                    },
+                                    credentials: 'include',
+                                    body: JSON.stringify(payload)
+                                }).then(res => {
+                                    return res.json();
+                                }).catch(error => {
+                                    console.log("This is error");
+                                    return error;
+                                });
 
                         export const addInvitees = (payload) =>
                             fetch(`${api}/survey/addAttendees/`+payload.surveyId, {
@@ -277,8 +291,11 @@ export const registerUser = (payload) =>
                                 return error;
                             });
 
-                            export const fetchSurveyIdOpen = (payload) =>
-                                fetch(`${api}/surveyee/open/getSurvey/uri`, {
+
+
+
+                            export const sendOneResp = (payload) =>
+                                fetch(`${api}/surveyee/responses/question/answer`, {
                                     method: 'POST',
                                     headers: {
                                         ...headers,
@@ -287,31 +304,9 @@ export const registerUser = (payload) =>
                                     credentials: 'include',
                                     body: JSON.stringify(payload)
                                 }).then(res => {
-                                  console.log("Data fetched after calling fetchSurveyIdOpen: ");
-
                                     console.log(res.body);
-                                    res.surveyId = "297ee401637bac7c01637bae82f40000";
                                     return res;
                                 }).catch(error => {
                                     console.log("This is error");
                                     return error;
                                 });
-
-                                export const sendEmailUrlSurveyId = (payload) =>
-                                    fetch(`${api}/surveyee/open/create/surveyResponse/`, {
-                                        method: 'POST',
-                                        headers: {
-                                            ...headers,
-                                            'Content-Type': 'application/json'
-                                        },
-                                        credentials: 'include',
-                                        body: JSON.stringify(payload)
-                                    }).then(res => {
-                                      console.log("Data fetched after calling sendEmailUrlSurveyId: ");
-
-                                        console.log(res);
-
-                                    }).catch(error => {
-                                        console.log("This is error");
-                                        return error;
-                                    });
