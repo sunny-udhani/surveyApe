@@ -79,7 +79,7 @@ class MySurveys extends Component{
 
       <div className="row" style={{marginTop: 10, marginBottom: 20, fontSize: 18, fontWeight: 500}}>
 
-            <div className="col-lg-6"><input type="button" style={{width: 160}} className="butt2" value="Get Survey Stats" onClick={()=>this.props.EndSurvey(item.surveyId)}/></div>
+            <div className="col-lg-6"><input type="button" style={{width: 160}} className="butt2" value="Get Survey Stats" onClick={()=>this.props.GetSurveyStats(item.surveyId)}/></div>
 
             <div className="col-lg-6"> <label>Invite people: &nbsp;</label> <input type="text" onFocus={(event)=>{event.target.value=this.state.inviteMore}} onChange={(event)=>this.setState({inviteMore:event.target.value})}/>
               <input type="button" className="butt2" value="Send Invite" style={{marginLeft: 10}} onClick={()=>{
