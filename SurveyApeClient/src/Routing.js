@@ -522,6 +522,15 @@ class Routing extends Component {
 
     }
 
+    GetSurveyStats=(id)=>{
+      var payload={surveyId:id};
+      API.getSurvey1(id).
+      then((res)=>{
+        this.setState({surveyId:id,res:res},function(){this.props.history.push('/surveyDetails')});
+
+      });
+    }
+
 
 
     render() {
@@ -535,13 +544,13 @@ class Routing extends Component {
 
               <Route exact path="/mySurveys" render={() => (
                     <div>
-                        <MySurveys EditSurvey={this.EditSurvey} PublishSurvey={this.PublishSurvey} EndSurvey={this.EndSurvey} AddInvitees={this.AddInvitees}/>
+                        <MySurveys GetSurveyStats={this.GetSurveyStats} EditSurvey={this.EditSurvey} PublishSurvey={this.PublishSurvey} EndSurvey={this.EndSurvey} AddInvitees={this.AddInvitees}/>
                     </div>
                 )}/>
 
                 <Route exact path="/surveyDetails" render={() => (
                     <div>
-                        <SurveyDetails surveyId={this.state.surveyId}/>
+                        <SurveyDetails response={this.state.res} surveyId={this.state.surveyId}/>
                     </div>
                 )}/>
                 <Route exact path="/qr" render={() => (

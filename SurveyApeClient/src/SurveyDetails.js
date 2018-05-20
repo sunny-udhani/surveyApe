@@ -11,15 +11,10 @@ class SurveyDetails extends Component{
       submittedCount:10,
       totalCount:100
     }
-
-
-    API.getSurvey1(this.props.surveyId)
-    .then((res)=>{
-      console.log(res);
-    })
-
   }
-
+  componentWillMount(){
+    console.log(this.props.response);
+  }
   render(){
     return (
       <div>

@@ -276,6 +276,8 @@ export const registerUser = (payload) =>
                                         return error;
                                     });
 
+                              
+
                         export const addInvitees = (payload) =>
                             fetch(`${api}/survey/addAttendees/`+payload.surveyId, {
                                 method: 'POST',
