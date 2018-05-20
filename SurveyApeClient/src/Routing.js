@@ -457,6 +457,33 @@ class Routing extends Component {
 
     }
 
+    gotoEmailOpen = (data) => {
+     console.log("Inside gotoEmailOpen");
+     console.log("Props received:");
+     console.log(this.props);
+
+     console.log("Data received:");
+     console.log(data);
+
+
+
+     var data1 = {
+       surveyId: data.surveyIdOpen,
+       email: data.email,
+       url: data.openUrl
+     }
+
+     API.sendEmailUrlSurveyId(data1)
+     .then(res =>{
+         console.log(res);
+     })
+     .catch(err => {
+       console.error(err);
+     })
+
+
+   }
+
     gotoMySurveys = () =>{
       this.props.history.push('/mySurveys');
     }
@@ -483,7 +510,7 @@ class Routing extends Component {
     PublishSurvey = (id) =>{
       console.log("Ithe ala "+id);
       //API call for publish survey
-      var payload={surveyId:id,publishInd:true};
+      var payload={surveyId:id,publish:true};
       API.PublishSurvey1(payload)
       .then(res =>{
         this.props.history.push('/');
@@ -605,7 +632,7 @@ class Routing extends Component {
 
                 <Route exact path="/surveyee/register/:surveyType/:randSurvey" render={() => (
                     <div>
-                        <OpenUniqueSurvey gotoSigninOpen={this.gotoSigninOpen} gotoSignupOpen={this.gotoSignupOpen}/>
+                        <OpenUniqueSurvey gotoSigninOpen={this.gotoSigninOpen} gotoSignupOpen={this.gotoSignupOpen} gotoEmailOpen={this.gotoEmailOpen}/>
                     </div>
                 )}/>
 
