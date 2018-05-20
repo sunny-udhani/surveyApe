@@ -91,7 +91,7 @@ render() {
 
 
           <div className="row">
-            <button className="btn btn-primary" onClick={() => {this.props.redirectToSurvey()}}> SignUp </button>
+            <button className="btn btn-primary" onClick={() => {this.props.gotoSignupOpen({surveyIdOpen: this.state.surveyIdOpen, openUrl: this.state.url})}}> SignUp </button>
           </div>
 
           <br/>

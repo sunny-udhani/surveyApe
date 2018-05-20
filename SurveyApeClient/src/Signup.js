@@ -4,12 +4,24 @@ import './Signup.css';
 
 class Signup extends Component {
 
-state={
-  firstName:'',
-  lastName:'',
-  email:'',
-  password:''
+constructor(props){
+  super(props);
+
+    this.state={
+      firstName:'',
+      lastName:'',
+      email:'',
+      password:''
+    }
+
 }
+
+componentWillMount() {
+  console.log("Inside will Mount of SignUp");
+  console.log("Checking props received");
+  console.log(this.props);
+}
+
 
 render() {
   return (
@@ -96,7 +108,7 @@ render() {
 
 
             <div style={{marginTop: "2%",float: "left"}}>
-              <button className="btm btn-primary" onClick={()=>{this.props.registerUser({firstName:this.state.firstName, lastName:this.state.lastName, email: this.state.email, password: this.state.password, phone: "234133333"})}}>Sign Up</button>
+              <button className="btm btn-primary" onClick={()=>{this.props.registerUser({firstName:this.state.firstName, lastName:this.state.lastName, email: this.state.email, password: this.state.password, phone: "234133333", dataOpen: this.props.dataOpen})}}>Sign Up</button>
             </div>
 
             <div style={{marginTop: "4%", float: "left", marginLeft: "24%"}}>

@@ -252,12 +252,34 @@ class Routing extends Component {
     }
 
     verifyUser = (data) => {
-
+        console.log("Inside VerifyUser");
+        console.log(data);
         API.verifyUser(data)
             .then((res) => {
-                console.log(res.msg);
+
+                console.log("Data received for Open Survey Data: ");
+                console.log(res);
                 if (res.status == 200) {
-                    alert("User verified successfully!");
+
+
+                  var temp = (Math.random() * 100000);
+                  var  url1 = "http://localhost:3000/surveyee/takeSurvey/2/" + temp;
+
+                  var data1 = {
+                    surveyId: data.dataOpen.surveyIdOpen,
+                    email: data.email,
+                    url: url1
+                  }
+
+                  API.sendEmailUrlSurveyId(data1)
+                  .then(res =>{
+                      console.log(res);
+                  })
+                  .catch(err => {
+                    console.error(err);
+                  })
+
+                    alert("User verified successfully! You will receive an Email with Url to open the Survey..");
                     this.props.history.push("/signin");
                 }
                 else if (res.status == 401) {
@@ -306,12 +328,36 @@ class Routing extends Component {
       this.props.history.push('/signin');
     }
 
+    gotoSignupOpen = (data) => {
+      console.log("Inside gotoSignupOpen");
+      console.log("Props received:");
+      console.log(this.props);
+
+      console.log("Data received:");
+      console.log(data);
+
+      this.setState({
+        dataOpen: data
+      });
+
+      this.props.history.push('/signup');
+    }
+
+
 
 
     registerUser = (payload) => {
+      console.log("Payload Received inside registerUser: ");
+      console.log(payload);
         API.registerUser(payload)
             .then((res) => {
-                console.log(res.msg);
+              console.log("Data received for Open Survey Data in registerUser: ");
+              console.log(res);
+
+              this.setState({
+                dataOpen: res.dataOpen
+              });
+
                 if (res.status == 200) {
                     alert("User registration is successful!");
                     this.props.history.push("/confirmation");
@@ -371,9 +417,6 @@ class Routing extends Component {
                       surveyIdOpen: res.dataOpen.surveyIdOpen,
                       openUrl: res.dataOpen.openUrl
                     })
-
-
-
 
                     this.props.history.push("/dashboard");
                 }
@@ -518,7 +561,7 @@ class Routing extends Component {
 
                 <Route exact path="/signup" render={() => (
                     <div>
-                        <Signup gotoSignin={this.gotoSignin} registerUser={this.registerUser}/>
+                        <Signup gotoSignin={this.gotoSignin} registerUser={this.registerUser} dataOpen={this.state.dataOpen}/>
                     </div>
                 )}/>
 
@@ -531,7 +574,7 @@ class Routing extends Component {
 
                 <Route exact path="/confirmation" render={() => (
                     <div>
-                        <Confirmation verifyUser={this.verifyUser}/>
+                        <Confirmation verifyUser={this.verifyUser} dataOpen={this.state.dataOpen}/>
                     </div>
                 )}/>
 
@@ -549,7 +592,7 @@ class Routing extends Component {
 
                 <Route exact path="/surveyee/register/:surveyType/:randSurvey" render={() => (
                     <div>
-                        <OpenUniqueSurvey gotoSigninOpen={this.gotoSigninOpen}/>
+                        <OpenUniqueSurvey gotoSigninOpen={this.gotoSigninOpen} gotoSignupOpen={this.gotoSignupOpen}/>
                     </div>
                 )}/>
 

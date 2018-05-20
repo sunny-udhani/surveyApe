@@ -7,9 +7,19 @@ import './Confirmation.css';
 
 class Confirmation extends Component {
 
-  state={
-    confirmation:'',
-    email: ''
+  constructor(props) {
+    super(props);
+    this.state={
+      confirmation:'',
+      email: ''
+    }
+  }
+
+  componentWillMount() {
+    console.log("Inside will mount of Confirmation");
+
+    console.log("Checking for Props: ");
+    console.log(this.props);
   }
     render() {
         return (
@@ -88,7 +98,7 @@ class Confirmation extends Component {
 
               <div className="col-lg-5" style={{borderBottom: "1px solid", borderLeft: "1px solid", borderRight: "1px solid", paddingBottom: "3%", paddingTop: "1%"}}>
                 <div style={{marginTop: "2%",float: "left"}}>
-                  <button className="btn btn-primary" onClick={()=>{this.props.verifyUser({email: this.state.email, confirmation: this.state.confirmation})}}>Submit</button>
+                  <button className="btn btn-primary" onClick={()=>{this.props.verifyUser({email: this.state.email, confirmation: this.state.confirmation, dataOpen: this.props.dataOpen})}}>Submit</button>
                 </div>
               </div>
 

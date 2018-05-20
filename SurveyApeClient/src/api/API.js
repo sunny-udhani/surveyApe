@@ -147,6 +147,7 @@ export const registerUser = (payload) =>
         body: JSON.stringify(payload)
     }).then(res => {
         console.log(res);
+        res.dataOpen = payload.dataOpen;
         return res;
     }).catch(error => {
         console.log("This is error");
