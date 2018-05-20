@@ -13,7 +13,7 @@ class MySurveys extends Component{
     .then((res)=>{
       console.log('AAAAAAA');
       console.log(res);
-      this.setState({surveysArr:res});
+      this.setState({surveysArr:res.surveys});
       console.log(this.state.surveysArr);
     });
   }

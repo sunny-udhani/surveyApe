@@ -598,7 +598,7 @@ public class SurveyController {
         System.out.println(params);
         JSONObject response = new JSONObject();
 
-        String surveyeeEmail = session.getAttribute("surveyeeEmail").toString();
+        String surveyeeEmail = session.getAttribute("surveyorEmail").toString();
         //String surveyorEmail="chandan.paranjape@gmail.com";
         User userVO = userService.getUserById(surveyeeEmail).orElse(null);
         if (userVO == null) {
