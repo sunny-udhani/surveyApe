@@ -653,7 +653,7 @@ public class SurveyController {
                         String attendeeEmail = response.getUserEmail();
                         String attendeeURL = response.getSurveyURI();
 
-                        mailServices.sendEmail(attendeeEmail, "You must fill this survey: " + attendeeURL, "aviralkum@gmail.com", "Survey Filling request");
+                        mailServices.sendEmail(attendeeEmail, "You must fill this survey: " + attendeeURL, "aviralkum@gmail.com", "Survey Filling request",attendeeURL,true);
 
                         return 0;
                     }
@@ -664,7 +664,7 @@ public class SurveyController {
                     for (SurveyResponse response : surveyResponseList) {
 
                         String attendeeEmail = response.getUserEmail();
-                        mailServices.sendEmail(attendeeEmail, "You are invited to take this survey: " + surveyURL, "aviralkum@gmail.com", "Survey Filling request");
+                        mailServices.sendEmail(attendeeEmail, "You are invited to take this survey: " + surveyURL, "aviralkum@gmail.com", "Survey Filling request",surveyURL,true);
 
                         return 0;
                     }
