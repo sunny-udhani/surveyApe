@@ -31,11 +31,11 @@ class Dashboard extends Component {
 
               <div className="row survey-pane">
 
-                      <div className="col-lg-3 col-sm-1 box" onClick={() => {
-                        this.props.gotoCreateSurvey()
-                      }}>
+                      <div className="col-lg-3 col-sm-1 box" >
                           <div className="row first">
-                              <div className="imgBox">
+                              <div className="imgBox" onClick={() => {
+                                this.props.gotoCreateSurvey()
+                              }}>
                                   <i className="fas fa-plus-circle fa-5x imgBox1"></i>
                                   <br/>
                                   <br />
@@ -47,7 +47,9 @@ class Dashboard extends Component {
                       </div>
                       <div className="col-lg-3 col-sm-1 box">
                           <div className="row first">
-                              <div className="imgBox">
+                              <div className="imgBox"  onClick={() => {
+                                this.props.gotoMySurveys()
+                              }}>
                                   <i className="fab fa-wpforms fa-5x imgBox1"></i>
                                   <br/>
                                   <br />
@@ -57,7 +59,9 @@ class Dashboard extends Component {
                       </div>
                       <div className="col-lg-3 col-sm-1 box">
                           <div className="row first">
-                              <div className="imgBox">
+                              <div className="imgBox" onClick={() => {
+                                this.props.gotoSurveysToTake()
+                              }}>
                                   <i className="fas fa-clipboard-list fa-5x imgBox1"></i>
                                   <br/>
                                   <br/>

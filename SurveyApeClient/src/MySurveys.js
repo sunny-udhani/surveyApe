@@ -60,7 +60,7 @@ class MySurveys extends Component{
     <th>{item.publishedInd==0?(<div><input type="button" value="Publish" onClick={()=>this.props.PublishSurvey(item.surveyId)}/></div>):(<div>Already Published</div>)}</th>
     <th>{item.publishedInd==1?(<div><input type="button" value="End" onClick={()=>this.props.EndSurvey(item.surveyId)}/></div>):(<div>Survey Inactive</div>)}</th>
     <th><input type="button" value="Get Survey Stats" onClick={()=>this.props.EndSurvey(item.surveyId)}/></th>
-    <th><input type="text" value={this.state.inviteMore}/>
+    <th><input type="text" value={this.state.inviteMore} onChange={(event)=> this.setState({inviteMore:event.target.value})}/>
     <input type="button" value="Send Invite" onClick={()=>{
         this.props.AddInvitees(item.surveyId,this.state.inviteMore);
         this.setState({inviteMore:""});

@@ -502,6 +502,29 @@ public class SurveyController {
         return new ResponseEntity<Object>(surveyList, HttpStatus.OK);
     }
 
+    @GetMapping(path = "surveyee/getAll", produces = MediaType.APPLICATION_JSON_VALUE)
+    public @ResponseBody
+    ResponseEntity<?> retrieveMySurveys(@RequestParam Map<String, String> params, HttpSession session) {
+        System.out.println(params);
+        JSONObject response = new JSONObject();
+
+        String surveyeeEmail = session.getAttribute("surveyeeEmail").toString();
+        //String surveyorEmail="chandan.paranjape@gmail.com";
+        User userVO = userService.getUserById(surveyeeEmail).orElse(null);
+        if (userVO == null) {
+            response.put("message", "Invalid user / user id");
+            return new ResponseEntity<Object>(response.toString(), HttpStatus.BAD_REQUEST);
+        }
+
+        List<Survey> surveyList = surveyService.findBySurveyorEmail(userVO);
+        if (surveyList.size() == 0) {
+            response.put("message", "No survey");
+            return new ResponseEntity<Object>(response.toString(), HttpStatus.OK);
+        }
+
+        return new ResponseEntity<Object>(surveyList, HttpStatus.OK);
+    }
+
     @GetMapping(path = "surveyor/getSurvey/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public @ResponseBody
     ResponseEntity<?> retrieveASurvey(@PathVariable String id, @RequestParam Map<String, String> params, HttpSession session) {

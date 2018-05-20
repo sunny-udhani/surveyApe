@@ -13,6 +13,7 @@ import SurveyDetails from './SurveyDetails';
 import EditSurvey from './EditSurvey';
 import MySurveys from './MySurveys';
 import Form1 from './Form1';
+import SurveysToTake from './SurveysToTake';
 import * as API from './api/API';
 
 var QRCode = require('qrcode.react');
@@ -99,7 +100,7 @@ class Routing extends Component {
                 console.log(res);
                 if(res.surveyId){
                   this.setState({surveyId:res.surveyId});
-                  this.props.history.push("/editSurvey");
+                  this.props.history.push("/dashboard");
                 }
 
 
@@ -223,7 +224,7 @@ class Routing extends Component {
             .then((res) => {
                 console.log(res);
                 if(res.surveyId){
-                  this.props.history.push("/surveyDetails");
+                  this.props.history.push("/dashboard");
                 }
 
 
@@ -355,8 +356,16 @@ class Routing extends Component {
 
     }
 
+    gotoMySurveys = () =>{
+      this.props.history.push('/mySurveys');
+    }
+
     gotoCreateSurvey = () => {
-        this.props.history.push('/createSurvey');
+        this.props.history.push('/form');
+    }
+
+    gotoSurveysToTake = () => {
+        this.props.history.push('/takeSurvey');
     }
 
     EditSurvey = (id) =>{
@@ -445,7 +454,7 @@ class Routing extends Component {
 
                 <Route exact path="/dashboard" render={() => (
                     <div>
-                        <Dashboard submitResponses={this.submitResponses} gotoCreateSurvey={this.gotoCreateSurvey}/>
+                        <Dashboard submitResponses={this.submitResponses} gotoCreateSurvey={this.gotoCreateSurvey} gotoMySurveys={this.gotoMySurveys} gotoSurveysToTake={this.gotoSurveysToTake}/>
                     </div>
                 )}/>
 
@@ -486,6 +495,15 @@ class Routing extends Component {
                         <OpenUniqueSurvey redirectToSurvey={this.redirectToSurvey}/>
                     </div>
                 )}/>
+
+
+              <Route exact path="/takeSurvey" render={() => (
+                    <div>
+                        <SurveysToTake surveyorEmail={this.state.surveyorEmail}/>
+                    </div>
+                )}/>
+
+
 
                 <Route exact path="/openUniqueSurveyEmail" render={() => (
                     <div>
