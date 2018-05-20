@@ -512,14 +512,14 @@ public class SurveyController {
         if (count > 0) {
             response.put("message", "Cannot unpublish, survey has been completed by " + count + " attendees");
             return new ResponseEntity<Object>(response.toString(), HttpStatus.BAD_REQUEST);
-        }else if(count == 0){
+        } else if (count == 0) {
             survey.setPublishedInd(false);
             surveyService.saveSurvey(survey);
 
             List<String> userEmails = surveyResponseService.findSurveyResponseEmails(survey);
-            userEmails.stream().forEach(emailId ->{
-                if(!emailId.isEmpty()){
-                    mailServices.sendEmail(emailId,"The survey: "+survey.getSurveyTitle()+" has been unpublished","aviralkum@gmail.com","Survey Unpublish notification");
+            userEmails.stream().forEach(emailId -> {
+                if (!emailId.isEmpty()) {
+                    mailServices.sendEmail(emailId, "The survey: " + survey.getSurveyTitle() + " has been unpublished", "aviralkum@gmail.com", "Survey Unpublish notification");
                 }
             });
         }
@@ -595,14 +595,29 @@ public class SurveyController {
     @GetMapping(path = "surveyor/getSurvey/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public @ResponseBody
     ResponseEntity<?> retrieveASurvey(@PathVariable String id, @RequestParam Map<String, String> params, HttpSession session) {
-        JSONObject response = new JSONObject();
+        try {
+            JSONObject response = new JSONObject();
+            ObjectMapper responseJSON = new ObjectMapper();
 
-        Survey survey = surveyService.findBySurveyId(id);
-        if (survey == null) {
-            response.put("message", "No such survey");
-            return new ResponseEntity<Object>(response.toString(), HttpStatus.BAD_REQUEST);
+            Survey survey = surveyService.findBySurveyId(id);
+            if (survey == null) {
+                response.put("message", "No such survey");
+                return new ResponseEntity<Object>(response.toString(), HttpStatus.BAD_REQUEST);
+            }
+
+            JSONObject jsonObject = new JSONObject(responseJSON.writeValueAsString(survey));
+            JSONObject resp = new JSONObject();
+
+            resp.put("survey", jsonObject);
+
+            int competedResponses = surveyResponseService.countCompletedSurveyResponses(survey);
+            resp.put("competedResponses", competedResponses);
+
+            return new ResponseEntity<Object>(resp.toString(), HttpStatus.OK);
+        } catch (Exception ex) {
+            return new ResponseEntity<Object>(ex.toString(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
-        return new ResponseEntity<Object>(survey, HttpStatus.OK);
+
     }
 
     //region utilities
