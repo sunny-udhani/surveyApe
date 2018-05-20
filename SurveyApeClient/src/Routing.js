@@ -483,7 +483,7 @@ class Routing extends Component {
     PublishSurvey = (id) =>{
       console.log("Ithe ala "+id);
       //API call for publish survey
-      var payload={surveyId:id,publish:true};
+      var payload={surveyId:id,publishInd:true};
       API.PublishSurvey1(payload)
       .then(res =>{
         this.props.history.push('/');

@@ -49,7 +49,7 @@ export const submitResponse = (data) =>
                     'Content-Type': 'application/json'
                 },
                 credentials: 'include',
-                body: JSON.stringify({surveyId:data,publish:false})
+                body: JSON.stringify({surveyId:data,publishInd:false})
             }).then(res => {
                 console.log(res.body);
                 return res.json();
@@ -276,7 +276,7 @@ export const registerUser = (payload) =>
                                         return error;
                                     });
 
-                              
+
 
                         export const addInvitees = (payload) =>
                             fetch(`${api}/survey/addAttendees/`+payload.surveyId, {

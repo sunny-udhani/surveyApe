@@ -34,7 +34,7 @@ public class ResponseController {
     ResponseEntity<?> fillResponseForQuestion(@RequestBody String req, @RequestParam Map<String, String> params, HttpSession session) {
         JSONObject reqObj = new JSONObject(req);
         JSONObject response = new JSONObject();
-        System.out.println("ALA ithe");
+
         if (!reqObj.has("survey_id")) {
             response.put("message", "please specify which survey");
             return new ResponseEntity<Object>(response.toString(), HttpStatus.BAD_REQUEST);
@@ -57,7 +57,7 @@ public class ResponseController {
         String response1 = reqObj.getString("response");
         Survey survey = surveyService.findBySurveyId(reqObj.getString("survey_id"));
 
-
+        System.out.println("ALA ithe");
 
         if (survey == null) {
             response.put("message", "invalid survey id");
