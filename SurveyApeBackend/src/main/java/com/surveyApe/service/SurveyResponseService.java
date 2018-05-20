@@ -9,6 +9,7 @@ import com.surveyApe.repository.SurveyResponseRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -90,6 +91,20 @@ public class SurveyResponseService {
     public SurveyResponse getSurveyResponseEntityFromId(String id) {
 
         return surveyResponseRepository.findBySurveyResponseIdEquals(id).orElse(null);
+    }
+
+    public int countIncompleteResponses(Survey survey) {
+
+        return surveyResponseRepository.countIncompleteResponses(survey, false);
+    }
+
+    public int countCompletedSurveyResponses(Survey survey) {
+
+        return surveyResponseRepository.countSurveyResponsesBySurveyIdEqualsAndCompleteInd(survey, true);
+    }
+
+    public List<String> findSurveyResponseEmails(Survey survey){
+        return surveyResponseRepository.findUserEmailsForSurveyResponses(survey);
     }
 
 }
