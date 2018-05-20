@@ -32,10 +32,6 @@ public class SurveyController1 {
     @Autowired
     private UserService userService;
     @Autowired
-    private QuestionService questionService;
-    @Autowired
-    private QuestionOptionService questionOptionService;
-    @Autowired
     private SurveyResponseService surveyResponseService;
     @Autowired
     private MailServices mailServices;
