@@ -176,7 +176,7 @@ class Form1 extends Component{
               <h4>Select Recipients:</h4><input type="text" style={{width:"80%",height:30}}  value={this.state.closedSurveyStr} onChange={(event)=>this.setState({closedSurveyStr:event.target.value})}/>
             </div>):(<div>
 
-            {this.state.formType==="General"?(<div style={{marginLeft:"20%"}}>
+            {this.state.formType==="General" || this.state.formType==="Open"?(<div style={{marginLeft:"20%"}}>
             <br/>
               <h4>Select Invitees:</h4><input type="text" value={this.state.inviteeStr} style={{width:"80%",height:30}} onChange={(event)=>this.setState({inviteeStr:event.target.value})}/>
             </div>):(<div>

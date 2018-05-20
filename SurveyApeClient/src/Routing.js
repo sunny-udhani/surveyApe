@@ -59,6 +59,10 @@ class Routing extends Component {
         var self = this;
         var url = "http://localhost:3000/surveyee/takeSurvey/" + surveyType + "/" + Math.random() * 10000000;
         var qr = url + "?qr=true";
+        if(surveyType=="2" || surveyType=="Open"){
+          url="http://localhost:3000/surveyee/register/" + surveyType + "/" + Math.random() * 10000000;
+          qr= url + "?qr=true";
+        }
         console.log(url);
         var attendeesList = [];
         if (closedSurveyList.length > 0 && surveyType === "3") {
@@ -407,8 +411,11 @@ class Routing extends Component {
     AddInvitees=(id,invitees)=>{
       //API call for add invitees
       var arr=invitees.split(',');
+      for(var i=0;i<arr.length;i++){
+        arr[i]={email:arr[i]};
+      }
       //API
-      var payload={surveyId:id,inviteeList:arr};
+      var payload={surveyId:id,addInviteeList:arr};
       API.addInvitees(payload).
       then((res)=>{
         this.props.history.push('/');

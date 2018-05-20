@@ -12,6 +12,9 @@ class SurveysToTake extends Component{
   componentWillMount(){
     API.assignedSurveys().
     then((res)=>{
+      if(res.length>0){
+        this.setState({surveys:res});
+      }
       console.log(res);
     })
   }
@@ -21,13 +24,13 @@ class SurveysToTake extends Component{
       <div style={{textAlign:"center"}}>
           <div>
             <h3>Surveys Assigned To You</h3>
-            <ul>
+            =
               {this.state.surveys.map((item)=>{
-                 return <li>item.surveyId</li>;
+                 return <li>{item.surveyId}</li>;
               }
               //
               )}
-            </ul>
+
             <br/><br/>
           </div>
 

@@ -81,7 +81,7 @@ class MySurveys extends Component{
 
             <div className="col-lg-6"><input type="button" style={{width: 160}} className="butt2" value="Get Survey Stats" onClick={()=>this.props.EndSurvey(item.surveyId)}/></div>
 
-            <div className="col-lg-6"> <label>Invite people: &nbsp;</label> <input type="text" value={this.state.inviteMore}/>
+            <div className="col-lg-6"> <label>Invite people: &nbsp;</label> <input type="text" onFocus={(event)=>{event.target.value=this.state.inviteMore}} onChange={(event)=>this.setState({inviteMore:event.target.value})}/>
               <input type="button" className="butt2" value="Send Invite" style={{marginLeft: 10}} onClick={()=>{
                   this.props.AddInvitees(item.surveyId,this.state.inviteMore);
                   this.setState({inviteMore:""});

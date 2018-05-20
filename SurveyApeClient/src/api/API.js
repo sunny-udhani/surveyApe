@@ -256,7 +256,7 @@ export const registerUser = (payload) =>
 
 
                         export const addInvitees = (payload) =>
-                            fetch(`${api}/survey/inviteMore`, {
+                            fetch(`${api}/survey/addAttendees/`+payload.surveyId, {
                                 method: 'POST',
                                 headers: {
                                     ...headers,
