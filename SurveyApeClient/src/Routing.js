@@ -88,6 +88,8 @@ class Routing extends Component {
         if (attendeesList.length > 0) {
             payload.attendeesList = attendeesList;
         }
+        console.log("sdbhjfknasdnlkasd");
+        console.log(inviteeList);
         if (inviteeList.length > 0) {
           var temp=[];
           for(var i=0;i<inviteeList.length;i++){
