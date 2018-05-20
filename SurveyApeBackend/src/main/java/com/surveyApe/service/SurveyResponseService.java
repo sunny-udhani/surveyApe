@@ -86,7 +86,7 @@ public class SurveyResponseService {
 
     public SurveyResponse getSurveyResponseEntityFromUrl(String url) {
 
-        return surveyResponseRepository.findDistinctBySurveyURIEquals(url).orElse(null);
+        return surveyResponseRepository.findFirstBySurveyURIEquals(url).orElse(null);
     }
 
     public SurveyResponse getSurveyResponseEntityFromId(String id) {
