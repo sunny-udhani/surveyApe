@@ -305,7 +305,7 @@ public class SurveyController {
 
                 String surveyeeEmail = attendeesObj.getString("email");
 
-                SurveyResponse newSurveyeeResponseEntry = createNewSurveyeeResponseEntry(survey.getSurveyId(), surveyeeEmail, "");
+                SurveyResponse newSurveyeeResponseEntry = createNewSurveyeeResponseEntry(survey.getSurveyId(), surveyeeEmail, survey.getSurveyURI());
 
                 if (newSurveyeeResponseEntry == null) {
                     return new ResponseEntity<Object>("response entity not created", HttpStatus.BAD_REQUEST);
