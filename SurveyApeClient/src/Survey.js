@@ -151,7 +151,7 @@ class Survey extends Component {
                         }
                         temp.push({qid: question.surveyQuestionId, answer: event.target.value});
                         this.setState({answerObj: temp});
-                        var payload={qid:question.surveyQuestionId,answer:event.target.value,surveyId:this.state.surveyId,surveyResponse_id:this.state.surveyResponse_id};
+                        var payload={question_id:question.surveyQuestionId,answer:event.target.value,survey_id:this.state.surveyId,survey_response_id:this.state.surveyResponse_id};
                         API.sendOneResp(payload);
                     }}>
                         {question.questionOptionList.map(option => (
@@ -178,7 +178,7 @@ class Survey extends Component {
                     {question.questionOptionList.map(option => (
                         <div>
                             <input type="radio" name="a" onChange={(event)=>{
-                              var payload={qid:question.surveyQuestionId,answer:event.target.value,surveyId:this.state.surveyId,surveyResponse_id:this.state.surveyResponse_id};
+                              var payload={question_id:question.surveyQuestionId,answer:event.target.value,survey_id:this.state.surveyId,survey_response_id:this.state.surveyResponse_id};
                               API.sendOneResp(payload);
                               }} onClick={(event) => {
                                 var temp = this.state.answerObj;
@@ -213,7 +213,7 @@ class Survey extends Component {
                     {question.questionOptionList.map(option => (
                         <div>
                             <input type="checkbox" onChange={(event)=>{
-                              var payload={qid:question.surveyQuestionId,answer:event.target.value,surveyId:this.state.surveyId,surveyResponse_id:this.state.surveyResponse_id};
+                              var payload={question_id:question.surveyQuestionId,answer:event.target.value,survey_id:this.state.surveyId,survey_response_id:this.state.surveyResponse_id};
                               API.sendOneResp(payload);
                               }} onClick={(event) => {
                                 var temp = this.state.answerObj;
@@ -273,7 +273,7 @@ class Survey extends Component {
                     {question.questionOptionList.map(option => (
                         <div style={{textAlign: "left", paddingLeft: 20}}>
                             <input type="radio" onChange={(event)=>{
-                              var payload={qid:question.surveyQuestionId,answer:event.target.value,surveyId:this.state.surveyId,surveyResponse_id:this.state.surveyResponse_id};
+                              var payload={question_id:question.surveyQuestionId,answer:event.target.value,survey_id:this.state.surveyId,survey_response_id:this.state.surveyResponse_id};
                               API.sendOneResp(payload);
                               }} name="yn" onClick={(event) => {
                                 var temp = this.state.answerObj;
@@ -302,8 +302,8 @@ class Survey extends Component {
                     <h3>{question.questionText}</h3>
 
                     <input type="text" onBlur={(event)=>{
-                        var payload={qid:question.surveyQuestionId,answer:event.target.value,surveyId:this.state.surveyId,surveyResponse_id:this.state.surveyResponse_id};
-                        API.sendOneResp(payload);
+                      var payload={question_id:question.surveyQuestionId,answer:event.target.value,survey_id:this.state.surveyId,survey_response_id:this.state.surveyResponse_id};
+                      API.sendOneResp(payload);
                       }}  name={question.surveyQuestionId} onChange={(event) => {
 
                         var temp = this.state.answerObj;
@@ -348,8 +348,8 @@ class Survey extends Component {
                             }
                             temp.push({qid: question.surveyQuestionId, answer: event.target.value});
                             this.setState({answerObj: temp});
-                                var payload={qid:question.surveyQuestionId,answer:event.target.value,surveyId:this.state.surveyId,surveyResponse_id:this.state.surveyResponse_id};
-                                API.sendOneResp(payload);
+                            var payload={question_id:question.surveyQuestionId,answer:event.target.value,survey_id:this.state.surveyId,survey_response_id:this.state.surveyResponse_id};
+                            API.sendOneResp(payload);
                         }} name={question.surveyQuestionId}/>
                         </div>
 
@@ -389,7 +389,7 @@ class Survey extends Component {
                                 temp.push({qid: question.surveyQuestionId, answer: next.toString()});
                                 console.log(temp);
                                 this.setState({answerObj: temp});
-                                var payload={qid:question.surveyQuestionId,answer:next.toString(),surveyId:this.state.surveyId,surveyResponse_id:this.state.surveyResponse_id};
+                                var payload={question_id:question.surveyQuestionId,answer:next.toString(),survey_id:this.state.surveyId,survey_response_id:this.state.surveyResponse_id};
                                 API.sendOneResp(payload);
                             }}
                             name={question.surveyQuestionId}/>
