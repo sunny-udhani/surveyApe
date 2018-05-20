@@ -1,6 +1,7 @@
 package com.surveyApe.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.surveyApe.config.Config;
 import com.surveyApe.entity.*;
 import com.surveyApe.service.*;
 import net.glxn.qrgen.core.image.ImageType;
@@ -26,6 +27,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
+import java.util.Date;
 import java.util.Map;
 import java.util.UUID;
 
@@ -234,76 +236,61 @@ public class UserController {
         JSONObject response = new JSONObject();
 
         String surveyID = jso.getString("surveyId");
-        Survey survey = surveyResponseService.getSurvey(surveyID);
+        Survey survey = surveyService.findBySurveyId(surveyID);
         if (survey == null) {
             response.put("message", "No such survey");
             return new ResponseEntity<Object>(response.toString(), HttpStatus.BAD_REQUEST);
         }
 
-        String surveyee_ID = "";
-        if (jso.has("surveyee_id")) {
-            surveyee_ID = (String) jso.get("surveyee_id");
-        }
-        String surveyResponse_id = "";
+        String surveyResponse_id;
         if (jso.has("surveyResponse_id")) {
-            surveyResponse_id = (String) jso.get("surveyResponse_id");
-        }
-
-        String surveyuri = "surveyuri";
-        String uind = "complete_ind";
-        String cind = "surveyurivalid_ind";
-        String surveyur = "surveyuri";
-        boolean submit = jso.getBoolean("submit");
-        Boolean uindicator = true;
-        Boolean cindicator = false;
-
-        if (submit) {
-            cindicator = true;
-            uindicator = false;
-
-            mailServices.sendEmail(surveyee_ID, "Survey Submitted Successfully", "survayape.noreply@gmail.com", "Survey Submitted from SurveyApp", "", false);
-
+            surveyResponse_id = jso.getString("surveyResponse_id");
         } else {
-            cindicator = false;
-            uindicator = true;
+            response.put("message", "invalid submission");
+            return new ResponseEntity<Object>(response.toString(), HttpStatus.BAD_REQUEST);
         }
 
+        String userEmail = "";
+        boolean sendEmail = false;
 
-        String responseId = surveyResponseService.surveyResponse(survey, surveyee_ID, surveyur, cindicator, uindicator, surveyResponse_id);
+        SurveyResponse surveyResponse = survey.getResponseList().stream()
+                .filter(r -> r.getSurveyResponseId().equals(surveyResponse_id))
+                .findAny()
+                .orElse(null);
 
-        // save in question_response table
-        // get the survey response id from survey_response table where email = current email
-
-        SurveyResponse sr = surveyResponseService.getSurveyResponse(responseId);
-        //SurveyQuestion sq = questionService.getSurveyQuestion(surveyID);
-        // insert this response id
-        JSONArray c = jso.getJSONArray("answerObj");
-
-        for (int i = 0; i < c.length(); i++) {
-            JSONObject n = c.getJSONObject(i);
-            System.out.println(n.get("qid"));
-            String ques = String.valueOf(n.get("qid"));
-            String reste = String.valueOf((n.get("answer")));
-            String array = "";
-            if (reste.charAt(0) == '[') {
-                int length = reste.length();
-                array = reste.substring(1, length - 1);
-
-            } else {
-                array = reste;
-            }
-            SurveyQuestion q = new SurveyQuestion();
-            q.setSurveyQuestionId(ques);
-
-            questionService.createResponse(sr, array, q);
-
-
+        if (surveyResponse == null) {
+            response.put("message", "invalid response id");
+            return new ResponseEntity<Object>(response.toString(), HttpStatus.BAD_REQUEST);
         }
 
-        return new ResponseEntity<Object>(null, HttpStatus.OK);
+        if (!surveyResponse.getUserEmail().isEmpty() && !surveyResponse.getUserEmail().equals("anonymous")) {
+            userEmail = surveyResponse.getUserEmail();
+        }
 
+        if (jso.has("userEmail")) {
+            userEmail = jso.getString("userEmail");
+        }
+        if (jso.has("sendEmail")) {
+            sendEmail = jso.getBoolean("sendEmail");
+        }
+
+        Date now = new Date();
+        if (now.after(survey.getEndDate())) {
+            response.put("message", "Survey has ended!");
+            return new ResponseEntity<Object>(response.toString(), HttpStatus.SERVICE_UNAVAILABLE);
+        }
+
+        surveyResponse.setSurveyURIValidInd(false);
+        surveyResponse.setCompleteInd(true);
+        surveyResponseService.saveResponseEntity(surveyResponse);
+
+        if (sendEmail && !userEmail.isEmpty()) {
+            mailServices.sendEmail(userEmail, "Survey: " + survey.getSurveyTitle() + " has been successfully submitted", Config.EMAIL_NOREPLY, "Survey Submission", "", false);
+        }
+
+        response.put("message", "Survey submitted successfully");
+        return new ResponseEntity<Object>(response.toString(), HttpStatus.OK);
 
     }
-
 
 }
