@@ -27,4 +27,6 @@ public interface SurveyResponseRepository extends CrudRepository<SurveyResponse,
 
     @Query("select sr.userEmail from SurveyResponse sr where sr.surveyId=:survey and sr.userEmail <> 'anonymous'")
     List<String> findUserEmailsForSurveyResponses(Survey survey);
+
+    List<SurveyResponse> findAllByUserEmailEquals(String email);
 }

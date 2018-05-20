@@ -85,9 +85,10 @@ public class SurveyController {
             String endTime = reqObj.getString("endTime");
             if (!endTime.equals("")) {
                 Date endDate = new Date(Long.getLong(endTime));
-                if (endDate.after(new Date()))
+                if (endDate.after(new Date())) {
                     surveyVO.setEndDate(endDate);
-                else
+//                    surveyVO.setSurveyCompletedInd(true);
+                } else
                     response.put("message", "Invalid End Date");
                 return new ResponseEntity<Object>(response.toString(), HttpStatus.BAD_REQUEST);
             }
@@ -219,9 +220,10 @@ public class SurveyController {
             String endTime = reqObj.getString("endTime");
             if (!endTime.equals("")) {
                 Date endDate = new Date(Long.getLong(endTime));
-                if (endDate.after(new Date()))
+                if (endDate.after(new Date())) {
                     survey.setEndDate(endDate);
-                else
+//                    survey.setSurveyCompletedInd(true);
+                } else
                     response.put("message", "Invalid End Date");
                 return new ResponseEntity<Object>(response.toString(), HttpStatus.BAD_REQUEST);
             }

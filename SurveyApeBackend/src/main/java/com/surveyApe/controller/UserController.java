@@ -154,7 +154,6 @@ public class UserController {
     @PostMapping(value = "/verify", consumes = MediaType.APPLICATION_JSON_VALUE)
     public @ResponseBody
     ResponseEntity<?> verifyUser(@RequestBody String data)
-
     {
 
         JSONObject jso = new JSONObject(data);
