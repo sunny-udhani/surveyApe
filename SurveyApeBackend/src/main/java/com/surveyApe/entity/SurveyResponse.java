@@ -1,5 +1,6 @@
 package com.surveyApe.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import org.hibernate.annotations.GenericGenerator;
@@ -17,6 +18,7 @@ public class SurveyResponse {
     private String surveyResponseId;
 
     @ManyToOne
+    @JsonBackReference
     @JoinColumn(name = "SURVEY_ID")
     private Survey surveyId;
     private String userEmail; //not a foreign key as per case 3

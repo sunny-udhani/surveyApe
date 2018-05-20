@@ -1,5 +1,6 @@
 package com.surveyApe.entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
@@ -31,9 +32,11 @@ public class Survey {
     private boolean surveyCompletedInd;
 
     @OneToMany(mappedBy = "surveyId", cascade = CascadeType.REMOVE, fetch = FetchType.EAGER)
+    @JsonManagedReference
     private List<SurveyQuestion> questionList=new ArrayList<SurveyQuestion>();
 
     @OneToMany(mappedBy = "surveyId", cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
+    @JsonManagedReference
     private List<SurveyResponse> responseList=new ArrayList<SurveyResponse>();
 
     public List<SurveyQuestion> getQuestionList() {
