@@ -97,7 +97,15 @@ render() {
           <br/>
 
           <div className="row">
-            <a href="/OpenUniqueSurveyEmail"><button className="btn btn-primary"> Use Your email Instead.. </button></a>
+          <div className="col-lg-12">
+            <span> Use Your email Instead.. </span><input placeholder="email" className="inputBox" value={this.state.email} onChange={(event) => {
+          this.setState({
+              email: event.target.value
+          });}}/>
+          </div>
+          <div className="col-lg-12">
+            <button className="btn btn-primary" onClick={() => {this.props.gotoEmailOpen({surveyIdOpen: this.state.surveyIdOpen, openUrl: this.state.url, email: this.state.email})}}> Use Your email Instead.. </button>
+          </div>
           </div>
       </div>
     </div>
