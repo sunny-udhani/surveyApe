@@ -51,7 +51,7 @@ class Survey extends Component {
                     }
                     API.getSurveyAndResp(payload)
                         .then((res) => {
-
+                            console.log(res.responses);
                             this.setState({
                                 surveyId: res.survey.surveyId,
 
@@ -59,6 +59,23 @@ class Survey extends Component {
                                 questionList: res.survey.questionList,
                                 responseList: res.responses,
                                 answerObj: []
+                            },function(){
+                              if(this.state.responseList.length>0){
+                                console.log('a');
+                                for(var i=0;i<this.state.responseList.length;i++){
+                                  for(var j=0;j<this.state.questionList.length;j++){
+                                    if(this.state.responseList[i].questionId===this.state.questionList[j].surveyQuestionId){
+                                      console.log('ala');
+                                      this.state.questionList[j].response=JSON.parse(JSON.stringify(this.state.responseList[i].response));
+
+                                    }
+                                  }
+                                }
+                              }
+
+                              for(var i=0;i<this.state.questionList.length;i++){
+                                console.log(this.state.questionList[i]);
+                              }
                             })
                         });
                 });
@@ -90,6 +107,22 @@ class Survey extends Component {
                                         questionList: res.survey.questionList,
                                         responseList: res.responses,
                                         answerObj: []
+                                    },function(){
+                                      console.log('a');
+                                      if(this.state.responseList.length>0){
+                                        for(var i=0;i<this.state.responseList.length;i++){
+                                          for(var j=0;j<this.state.questionList.length;j++){
+                                            if(this.state.responseList[i].questionId===this.state.questionList[j].surveyQuestionId){
+                                              console.log('ala');
+                                              this.state.questionList[j].response=JSON.parse(JSON.stringify(this.state.responseList[i].response));
+                                            }
+                                          }
+                                        }
+                                      }
+
+                                      for(var i=0;i<this.state.questionList.length;i++){
+                                        console.log(this.state.questionList[i]);
+                                      }
                                     })
                                 });
 
@@ -277,7 +310,11 @@ class Survey extends Component {
 
                     {question.questionOptionList.map(option => (
                         <div style={{textAlign: "left", paddingLeft: 20}}>
-                            <input type="radio" onChange={(event)=>{
+                            <input type="radio" onload={(event)=>{this.state.responseList.map((item)=>{
+                                if(item.questionId===question.surveyQuestionId){
+                                  event.target.value=item.response;
+                                }
+                              })}} onChange={(event)=>{
                               var payload={question_id:question.surveyQuestionId,response:event.target.value,survey_id:this.state.surveyId,survey_response_id:this.state.surveyResponse_id};
                               console.log(payload);
                               API.sendOneResp(payload);
@@ -307,7 +344,7 @@ class Survey extends Component {
                 <div className="question">
                     <h3>{question.questionText}</h3>
 
-                    <input type="text" onBlur={(event)=>{
+                    <input value={JSON.stringify(question)} type="text" onBlur={(event)=>{
                       var payload={question_id:question.surveyQuestionId,response:event.target.value,survey_id:this.state.surveyId,survey_response_id:this.state.surveyResponse_id};
                       console.log(payload);
                       API.sendOneResp(payload);
@@ -441,12 +478,6 @@ class Survey extends Component {
             <br/>
             <div className="row">
               <div className="col-lg-4">
-              </div>
-
-              <div className="col-lg-1" style={{marginLeft: 80}}>
-                <button className="btn btn-primary save" onClick={()=>this.submitResponses(this.state.surveyId,this.state.answerObj,false)}>
-                  Save
-                </button>
               </div>
               <div className="col-lg-1">
                 <button className="btn btn-primary submit" onClick={()=>this.submitResponses(this.state.surveyId,this.state.answerObj,true)}>

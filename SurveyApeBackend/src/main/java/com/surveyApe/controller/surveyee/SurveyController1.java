@@ -196,12 +196,33 @@ public class SurveyController1 {
                 if (!surveyResponse_id.isEmpty()) {
                     SurveyResponse surveyResponse = surveyResponseService.getSurveyResponseEntityFromId(surveyResponse_id);
                     if (surveyResponse != null) {
-                        surveyResponseStr = responseJSON.writeValueAsString(surveyResponse.getQuestionResponseList());
+
+                        JSONObject responses = new JSONObject();
+                        JSONArray resp = new JSONArray();
+                        surveyResponse.getQuestionResponseList().stream().forEach( sr -> {
+                            JSONObject ne = new JSONObject();
+                            ne.put("questionId", sr.getQuestionId().getSurveyQuestionId());
+                            ne.put("response", sr.getResponse());
+                            resp.put(ne);
+                        });
+
+                        surveyResponseStr = resp.toString();
+//                        surveyResponseStr = responseJSON.writeValueAsString(surveyResponse.getQuestionResponseList());
                     }
                 } else {
                     SurveyResponse surveyResponse = surveyResponseService.findBySurveyIdAndEmail(survey, userEmail);
                     if (surveyResponse != null) {
-                        surveyResponseStr = responseJSON.writeValueAsString(surveyResponse.getQuestionResponseList());
+                        JSONArray resp = new JSONArray();
+                        surveyResponse.getQuestionResponseList().stream().forEach( sr -> {
+                            JSONObject ne = new JSONObject();
+                            ne.put("questionId", sr.getQuestionId().getSurveyQuestionId());
+                            ne.put("response", sr.getResponse());
+                            resp.put(ne);
+                        });
+
+                        surveyResponseStr = resp.toString();
+//
+//                        surveyResponseStr = responseJSON.writeValueAsString(surveyResponse.getQuestionResponseList());
                     }
                 }
 
