@@ -35,12 +35,12 @@ import java.util.Map;
 import java.util.UUID;
 
 @Service
-public class MailServices {
+public class  MailServices {
 
     @Autowired
     private JavaMailSender javaMailSender;
 
-    public void sendEmail(String to, String Message, String from, String subject, String URL, Boolean indicator) {
+    public void sendEmail(String to, String Message, String from, String subject,String URL,Boolean indicator) {
 
 
         if (!indicator) {
