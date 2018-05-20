@@ -512,7 +512,7 @@ class Form1 extends Component{
                 }}/>
 
               <input type="button" className="btn btn-primary" style={{marginLeft:"15%"}} value="Save" onClick={()=>{
-                  this.createS({type:this.formType,questions:this.state.questions,name:this.state.surveyName,publish:false});
+                  this.createS({type:this.state.formType,questions:this.state.questions,name:this.state.surveyName,publish:false});
                   this.setState({
                     questions:[],
                     type:null,
