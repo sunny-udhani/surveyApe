@@ -221,6 +221,22 @@ export const registerUser = (payload) =>
                         return error;
                     });
 
+                    export const assignedSurveys = (id) =>
+                        fetch(`${api}/survey/surveyee/getAll`, {
+                            method: 'GET',
+                            headers: {
+                                ...headers,
+                                'Content-Type': 'application/json'
+                            },
+                            credentials: 'include'
+                        }).then(res => {
+                            console.log(res);
+                            return res.json();
+                        }).catch(error => {
+                            console.log("This is error");
+                            return error;
+                        });
+
                     export const getSurveyId = (data) =>
                         fetch(`${api}/surveyee/getSurvey/uri`, {
                             method: 'POST',
@@ -240,7 +256,7 @@ export const registerUser = (payload) =>
 
 
                         export const addInvitees = (payload) =>
-                            fetch(`${api}/survey/inviteMore`, {
+                            fetch(`${api}/survey/addAttendees/`+payload.surveyId, {
                                 method: 'POST',
                                 headers: {
                                     ...headers,

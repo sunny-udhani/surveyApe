@@ -24,13 +24,24 @@ class Form1 extends Component{
   }
 
   createS = (survey) =>{
-    if(this.state.inviteeStr!==""){
-      this.addInvitees();
+    if(this.state.inviteeStr!=""){
+      //this.addInvitees();
+      var temp=this.state.inviteeStr.split(",");
+      console.log("TEMP: "+temp);
+      this.setState({inviteeList:temp,inviteeStr:""},function(){
+        this.props.createSurvey(survey,this.state.closedSurveyList,this.state.inviteeList);
+      });
     }
-    if(this.state.closedSurveyStr!==""){
-      this.addRecipients();
+    else if(this.state.closedSurveyStr!=""){
+      var temp=this.state.closedSurveyStr.split(",");
+      this.setState({closedSurveyList:temp,closedSurveyStr:""},function(){
+        this.props.createSurvey(survey,this.state.closedSurveyList,this.state.inviteeList);
+      });
     }
-    this.props.createSurvey(survey,this.state.closedSurveyList,this.state.inviteeList);
+    else{
+      this.props.createSurvey(survey,this.state.closedSurveyList,this.state.inviteeList);
+    }
+
     this.setState({closedSurveyList:[],formType:null,
     surveyName:null,
     closedSurveyStr:"",});
@@ -44,6 +55,7 @@ class Form1 extends Component{
 
   addInvitees= () =>{
     var temp=this.state.inviteeStr.split(",");
+    console.log("TEMP: "+temp);
     this.setState({inviteeList:temp,inviteeStr:""});
     console.log(this.state.inviteeStr);
   }
@@ -176,7 +188,7 @@ class Form1 extends Component{
               <h4>Select Recipients:</h4><input type="text" style={{width:"80%",height:30}}  value={this.state.closedSurveyStr} onChange={(event)=>this.setState({closedSurveyStr:event.target.value})}/>
             </div>):(<div>
 
-            {this.state.formType==="General"?(<div style={{marginLeft:"20%"}}>
+            {this.state.formType==="General" || this.state.formType==="Open"?(<div style={{marginLeft:"20%"}}>
             <br/>
               <h4>Select Invitees:</h4><input type="text" value={this.state.inviteeStr} style={{width:"80%",height:30}} onChange={(event)=>this.setState({inviteeStr:event.target.value})}/>
             </div>):(<div>

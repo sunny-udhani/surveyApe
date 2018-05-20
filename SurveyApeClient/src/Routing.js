@@ -13,6 +13,7 @@ import SurveyDetails from './SurveyDetails';
 import EditSurvey from './EditSurvey';
 import MySurveys from './MySurveys';
 import Form1 from './Form1';
+import SurveysToTake from './SurveysToTake';
 import * as API from './api/API';
 
 var QRCode = require('qrcode.react');
@@ -58,6 +59,10 @@ class Routing extends Component {
         var self = this;
         var url = "http://localhost:3000/surveyee/takeSurvey/" + surveyType + "/" + Math.random() * 10000000;
         var qr = url + "?qr=true";
+        if(surveyType=="2" || surveyType=="Open"){
+          url="http://localhost:3000/surveyee/register/" + surveyType + "/" + Math.random() * 10000000;
+          qr= url + "?qr=true";
+        }
         console.log(url);
         var attendeesList = [];
         if (closedSurveyList.length > 0 && surveyType === "3") {
@@ -83,6 +88,8 @@ class Routing extends Component {
         if (attendeesList.length > 0) {
             payload.attendeesList = attendeesList;
         }
+        console.log("sdbhjfknasdnlkasd");
+        console.log(inviteeList);
         if (inviteeList.length > 0) {
           var temp=[];
           for(var i=0;i<inviteeList.length;i++){
@@ -99,7 +106,7 @@ class Routing extends Component {
                 console.log(res);
                 if(res.surveyId){
                   this.setState({surveyId:res.surveyId});
-                  this.props.history.push("/editSurvey");
+                  this.props.history.push("/dashboard");
                 }
 
 
@@ -223,7 +230,7 @@ class Routing extends Component {
             .then((res) => {
                 console.log(res);
                 if(res.surveyId){
-                  this.props.history.push("/surveyDetails");
+                  this.props.history.push("/dashboard");
                 }
 
 
@@ -355,8 +362,16 @@ class Routing extends Component {
 
     }
 
+    gotoMySurveys = () =>{
+      this.props.history.push('/mySurveys');
+    }
+
     gotoCreateSurvey = () => {
-        this.props.history.push('/createSurvey');
+        this.props.history.push('/form');
+    }
+
+    gotoSurveysToTake = () => {
+        this.props.history.push('/takeSurvey');
     }
 
     EditSurvey = (id) =>{
@@ -398,8 +413,11 @@ class Routing extends Component {
     AddInvitees=(id,invitees)=>{
       //API call for add invitees
       var arr=invitees.split(',');
+      for(var i=0;i<arr.length;i++){
+        arr[i]={email:arr[i]};
+      }
       //API
-      var payload={surveyId:id,inviteeList:arr};
+      var payload={surveyId:id,addInviteeList:arr};
       API.addInvitees(payload).
       then((res)=>{
         this.props.history.push('/');
@@ -445,7 +463,7 @@ class Routing extends Component {
 
                 <Route exact path="/dashboard" render={() => (
                     <div>
-                        <Dashboard submitResponses={this.submitResponses} gotoCreateSurvey={this.gotoCreateSurvey}/>
+                        <Dashboard submitResponses={this.submitResponses} gotoCreateSurvey={this.gotoCreateSurvey} gotoMySurveys={this.gotoMySurveys} gotoSurveysToTake={this.gotoSurveysToTake}/>
                     </div>
                 )}/>
 
@@ -486,6 +504,15 @@ class Routing extends Component {
                         <OpenUniqueSurvey redirectToSurvey={this.redirectToSurvey}/>
                     </div>
                 )}/>
+
+
+              <Route exact path="/takeSurvey" render={() => (
+                    <div>
+                        <SurveysToTake surveyorEmail={this.state.surveyorEmail}/>
+                    </div>
+                )}/>
+
+
 
                 <Route exact path="/openUniqueSurveyEmail" render={() => (
                     <div>

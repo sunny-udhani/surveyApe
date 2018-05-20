@@ -1,5 +1,6 @@
 package com.surveyApe.controller.surveyor;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.surveyApe.config.QuestionTypeEnum;
 import com.surveyApe.config.SurveyTypeEnum;
 import com.surveyApe.entity.*;
@@ -84,9 +85,10 @@ public class SurveyController {
             String endTime = reqObj.getString("endTime");
             if (!endTime.equals("")) {
                 Date endDate = new Date(Long.getLong(endTime));
-                if (endDate.after(new Date()))
+                if (endDate.after(new Date())) {
                     surveyVO.setEndDate(endDate);
-                else
+//                    surveyVO.setSurveyCompletedInd(true);
+                } else
                     response.put("message", "Invalid End Date");
                 return new ResponseEntity<Object>(response.toString(), HttpStatus.BAD_REQUEST);
             }
@@ -218,20 +220,15 @@ public class SurveyController {
             String endTime = reqObj.getString("endTime");
             if (!endTime.equals("")) {
                 Date endDate = new Date(Long.getLong(endTime));
-                if (endDate.after(new Date()))
+                if (endDate.after(new Date())) {
                     survey.setEndDate(endDate);
-                else
+//                    survey.setSurveyCompletedInd(true);
+                } else
                     response.put("message", "Invalid End Date");
                 return new ResponseEntity<Object>(response.toString(), HttpStatus.BAD_REQUEST);
             }
         }
 
-        if (reqObj.has("publish")) {
-            boolean publishInd = reqObj.getBoolean("publish");
-            survey.setPublishedInd(publishInd);
-        }
-
-        surveyService.saveSurvey(survey);
 
         survey.getQuestionList().clear();
         surveyService.saveSurvey(survey);
@@ -335,6 +332,13 @@ public class SurveyController {
 
             }
         }
+
+        if (reqObj.has("publish")) {
+            boolean publishInd = reqObj.getBoolean("publish");
+            survey.setPublishedInd(publishInd);
+        }
+
+        surveyService.saveSurvey(survey);
 
         sendEmailtoAttendees(survey);
 
@@ -476,6 +480,80 @@ public class SurveyController {
         return new ResponseEntity<Object>(survey, HttpStatus.OK);
     }
 
+    @PostMapping(path = "/unpublish/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public @ResponseBody
+    ResponseEntity<?> unPublishSurvey(@RequestBody String req, @RequestParam Map<String, String> params, @PathVariable String id, HttpSession session) {
+
+        //Todo: validations for ending survey
+
+        JSONObject reqObj = new JSONObject(req);
+        JSONObject response = new JSONObject();
+
+        String surveyorEmail = session.getAttribute("surveyorEmail").toString();
+        String surveyId = id;
+        User userVO = userService.getUserById(surveyorEmail).orElse(null);
+        //Check user first
+        if (userVO == null) {
+            response.put("message", "Invalid user / user id");
+            return new ResponseEntity<Object>(response.toString(), HttpStatus.BAD_REQUEST);
+        }
+
+        Survey survey = surveyService.findBySurveyIdAndSurveyorEmail(surveyId, userVO);
+        //check survey id
+        if (survey == null) {
+            response.put("message", "No such survey");
+            return new ResponseEntity<Object>(response.toString(), HttpStatus.BAD_REQUEST);
+        }
+
+        if (!survey.isPublishedInd()) {
+            response.put("message", "Survey not yet published");
+            return new ResponseEntity<Object>(response.toString(), HttpStatus.BAD_REQUEST);
+        }
+
+        int count = surveyResponseService.countCompletedSurveyResponses(survey);
+        if (count > 0) {
+            response.put("message", "Cannot unpublish, survey has been completed by " + count + " attendees");
+            return new ResponseEntity<Object>(response.toString(), HttpStatus.BAD_REQUEST);
+        } else if (count == 0) {
+            survey.setPublishedInd(false);
+            surveyService.saveSurvey(survey);
+
+            List<String> userEmails = surveyResponseService.findSurveyResponseEmails(survey);
+            userEmails.stream().forEach(emailId -> {
+                if (!emailId.isEmpty()) {
+                    mailServices.sendEmail(emailId, "The survey: " + survey.getSurveyTitle() + " has been unpublished", "aviralkum@gmail.com", "Survey Unpublish notification");
+                }
+            });
+        }
+
+//        sendEmailtoAttendees(survey);
+
+        return new ResponseEntity<Object>(survey, HttpStatus.OK);
+    }
+
+    @GetMapping(path = "/endSurvey/info/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public @ResponseBody
+    ResponseEntity<?> infoBeforeEndSurvey(@RequestParam Map<String, String> params, @PathVariable String id, HttpSession session) {
+        JSONObject response = new JSONObject();
+
+        Survey survey = surveyService.findBySurveyId(id);
+        if (survey == null) {
+            response.put("message", "No such survey");
+            return new ResponseEntity<Object>(response.toString(), HttpStatus.BAD_REQUEST);
+        }
+
+        int countRemaining = countIncompleteResponses(survey);
+        if (countRemaining == -1) {
+            response.put("message", "Survey not yet published");
+            return new ResponseEntity<Object>(response.toString(), HttpStatus.BAD_REQUEST);
+        } else {
+            response.put("count", countRemaining);
+            return new ResponseEntity<Object>(response.toString(), HttpStatus.OK);
+        }
+//        return new ResponseEntity<Object>(survey, HttpStatus.OK);
+
+    }
+
     /**
      * Get all surveys for a surveyor
      */
@@ -495,6 +573,43 @@ public class SurveyController {
 
         List<Survey> surveyList = surveyService.findBySurveyorEmail(userVO);
         if (surveyList.size() == 0) {
+            response.put("surveys", new JSONArray());
+            return new ResponseEntity<Object>(response.toString(), HttpStatus.OK);
+        }
+
+        surveyList.stream().forEach(s -> {
+            if (s.getEndDate() != null && new Date().after(s.getEndDate())) {
+                s.setSurveyCompletedInd(true);
+                surveyService.saveSurvey(s);
+            }
+        });
+
+        try {
+            JSONArray list = new JSONArray(new ObjectMapper().writeValueAsString(surveyList));
+            response.put("surveys", list);
+            return new ResponseEntity<Object>(response.toString(), HttpStatus.OK);
+        } catch (Exception ex) {
+            response.put("message", ex.getMessage());
+            return new ResponseEntity<Object>(response.toString(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping(path = "surveyee/getAll", produces = MediaType.APPLICATION_JSON_VALUE)
+    public @ResponseBody
+    ResponseEntity<?> retrieveMySurveys(@RequestParam Map<String, String> params, HttpSession session) {
+        System.out.println(params);
+        JSONObject response = new JSONObject();
+
+        String surveyeeEmail = session.getAttribute("surveyorEmail").toString();
+        //String surveyorEmail="chandan.paranjape@gmail.com";
+        User userVO = userService.getUserById(surveyeeEmail).orElse(null);
+        if (userVO == null) {
+            response.put("message", "Invalid user / user id");
+            return new ResponseEntity<Object>(response.toString(), HttpStatus.BAD_REQUEST);
+        }
+
+        List<Survey> surveyList = surveyService.findBySurveyorEmail(userVO);
+        if (surveyList.size() == 0) {
             response.put("message", "No survey");
             return new ResponseEntity<Object>(response.toString(), HttpStatus.OK);
         }
@@ -505,14 +620,29 @@ public class SurveyController {
     @GetMapping(path = "surveyor/getSurvey/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public @ResponseBody
     ResponseEntity<?> retrieveASurvey(@PathVariable String id, @RequestParam Map<String, String> params, HttpSession session) {
-        JSONObject response = new JSONObject();
+        try {
+            JSONObject response = new JSONObject();
+            ObjectMapper responseJSON = new ObjectMapper();
 
-        Survey survey = surveyService.findBySurveyId(id);
-        if (survey == null) {
-            response.put("message", "No such survey");
-            return new ResponseEntity<Object>(response.toString(), HttpStatus.BAD_REQUEST);
+            Survey survey = surveyService.findBySurveyId(id);
+            if (survey == null) {
+                response.put("message", "No such survey");
+                return new ResponseEntity<Object>(response.toString(), HttpStatus.BAD_REQUEST);
+            }
+
+            JSONObject jsonObject = new JSONObject(responseJSON.writeValueAsString(survey));
+            JSONObject resp = new JSONObject();
+
+            resp.put("survey", jsonObject);
+
+            int competedResponses = surveyResponseService.countCompletedSurveyResponses(survey);
+            resp.put("competedResponses", competedResponses);
+
+            return new ResponseEntity<Object>(resp.toString(), HttpStatus.OK);
+        } catch (Exception ex) {
+            return new ResponseEntity<Object>(ex.toString(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
-        return new ResponseEntity<Object>(survey, HttpStatus.OK);
+
     }
 
     //region utilities
@@ -674,6 +804,15 @@ public class SurveyController {
             return 0;
         }
         return 0;
+    }
+
+    public int countIncompleteResponses(Survey survey) {
+        boolean publishInd = survey.isPublishedInd();
+
+        if (publishInd) {
+            return surveyResponseService.countIncompleteResponses(survey);
+        }
+        return -1;
     }
     //endregion
 

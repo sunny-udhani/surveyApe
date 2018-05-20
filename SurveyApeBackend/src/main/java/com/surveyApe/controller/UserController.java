@@ -165,7 +165,6 @@ public class UserController {
     @PostMapping(value = "/verify", consumes = MediaType.APPLICATION_JSON_VALUE)
     public @ResponseBody
     ResponseEntity<?> verifyUser(@RequestBody String data)
-
     {
 
         JSONObject jso = new JSONObject(data);
@@ -232,17 +231,26 @@ public class UserController {
     public @ResponseBody
     ResponseEntity<?> surveySubmit(@RequestBody String data, HttpSession session) {
 
-        System.out.println(data);
+//        System.out.println(data);
         JSONObject jso = new JSONObject(data);
+        JSONObject response = new JSONObject();
 
-        String surveyID = String.valueOf(jso.get("surveyId"));
-        String surveyee_ID = (String) jso.get("surveyee_id");
+        String surveyID = jso.getString("surveyId");
+        Survey survey = surveyResponseService.getSurvey(surveyID);
+        if (survey == null) {
+            response.put("message", "No such survey");
+            return new ResponseEntity<Object>(response.toString(), HttpStatus.BAD_REQUEST);
+        }
+
+        String surveyee_ID = "";
+        if (jso.has("surveyee_id")) {
+            surveyee_ID = (String) jso.get("surveyee_id");
+        }
         String surveyResponse_id = "";
         if (jso.has("surveyResponse_id")) {
             surveyResponse_id = (String) jso.get("surveyResponse_id");
         }
-        System.out.println(surveyee_ID);
-// String email = (String)jso.get("email");
+
         String surveyuri = "surveyuri";
         String uind = "complete_ind";
         String cind = "surveyurivalid_ind";
@@ -263,16 +271,7 @@ public class UserController {
         }
 
 
-        System.out.println(jso.get("surveyId"));
-        //   System.out.println(jso.get("surveyee_id"));
-        //   System.out.println(jso.get("responses"));
-        //String res = (String)jso.get("response_text");
-        //  JSONObject obj2 = new JSONObject("response_text");
-        // Table 1 : Update :  complete_ind , surveuri, survey
-        // fetch the survey id based on the given survey ud
-        Survey s = surveyResponseService.getSurvey(surveyID);
-
-        String responseId = surveyResponseService.surveyResponse(s, surveyee_ID, surveyur, cindicator, uindicator, surveyResponse_id);
+        String responseId = surveyResponseService.surveyResponse(survey, surveyee_ID, surveyur, cindicator, uindicator, surveyResponse_id);
 
         // save in question_response table
         // get the survey response id from survey_response table where email = current email
