@@ -5,10 +5,20 @@ import './Signin.css';
 
 class Signin extends Component {
 
-  state={
-    email:'',
-    password:''
+  constructor(props){
+    super(props);
+    this.state={
+      email:'',
+      password:''
+    }
   }
+
+  componentWillMount() {
+    console.log("indise Will mount of Signin");
+    console.log("data received for Data open:");
+    console.log(this.props);
+  }
+
   render() {
     return (
       <div style={{backgroundColor: "white"}}>
@@ -62,7 +72,7 @@ class Signin extends Component {
 
 
             <div style={{marginTop: "2%",float: "left"}}>
-              <button className="btm btn-primary" onClick={()=>{this.props.signIn({email:this.state.email,password:this.state.password})}}>Sign In</button>
+              <button className="btm btn-primary" onClick={()=>{this.props.signIn({email:this.state.email,password:this.state.password, dataOpen: this.props.dataOpen})}}>Sign In</button>
             </div>
 
             <div style={{marginTop: "4%", float: "left", marginLeft: "24%"}}>
