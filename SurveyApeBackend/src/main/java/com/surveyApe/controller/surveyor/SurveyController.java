@@ -521,7 +521,7 @@ public class SurveyController {
             List<String> userEmails = surveyResponseService.findSurveyResponseEmails(survey);
             userEmails.stream().forEach(emailId -> {
                 if (!emailId.isEmpty()) {
-                    mailServices.sendEmail(emailId, "The survey: " + survey.getSurveyTitle() + " has been unpublished", "aviralkum@gmail.com", "Survey Unpublish notification");
+                    mailServices.sendEmail(emailId, "The survey: " + survey.getSurveyTitle() + " has been unpublished", "survayape.noreply@gmail.com", "Survey Unpublish notification", "", false);
                 }
             });
         }
@@ -783,7 +783,7 @@ public class SurveyController {
                         String attendeeEmail = response.getUserEmail();
                         String attendeeURL = response.getSurveyURI();
 
-                        mailServices.sendEmail(attendeeEmail, "You must fill this survey: " + attendeeURL, "aviralkum@gmail.com", "Survey Filling request",attendeeURL,true);
+                        mailServices.sendEmail(attendeeEmail, "You must fill this survey: " + attendeeURL, "survayape.noreply@gmail.com", "Survey Filling request",attendeeURL,true);
 
                         return 0;
                     }
@@ -794,7 +794,7 @@ public class SurveyController {
                     for (SurveyResponse response : surveyResponseList) {
 
                         String attendeeEmail = response.getUserEmail();
-                        mailServices.sendEmail(attendeeEmail, "You are invited to take this survey: " + surveyURL, "aviralkum@gmail.com", "Survey Filling request",surveyURL,true);
+                        mailServices.sendEmail(attendeeEmail, "You are invited to take this survey: " + surveyURL, "survayape.noreply@gmail.com", "Survey Filling request",surveyURL,true);
 
                         return 0;
                     }

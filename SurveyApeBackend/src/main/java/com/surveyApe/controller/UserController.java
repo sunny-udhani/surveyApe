@@ -54,7 +54,6 @@ public class UserController {
     private JavaMailSender javaMailSender;
 
 
-
     @GetMapping(path = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     @Produces(MediaType.APPLICATION_JSON_VALUE)
     public @ResponseBody
@@ -164,8 +163,7 @@ public class UserController {
 
     @PostMapping(value = "/verify", consumes = MediaType.APPLICATION_JSON_VALUE)
     public @ResponseBody
-    ResponseEntity<?> verifyUser(@RequestBody String data)
-    {
+    ResponseEntity<?> verifyUser(@RequestBody String data) {
 
         JSONObject jso = new JSONObject(data);
         String email = (String) jso.get("email");
@@ -215,7 +213,7 @@ public class UserController {
 
             //  javaMailSender.send(mail);
             userService.createUser(firstName, lastName, email, password, phone, uid, false);
-            mailServices.sendEmail(email, "Hello " + firstName + "," + '\n' + "Confirmation Code: " + uid + '\n' + "Thanks & Regards ," + '\n' + "SurveyApe Team", "aviralkum@gmail.com", "Please Confirm Your SurveyApe Account","",false);
+            mailServices.sendEmail(email, "Hello " + firstName + "," + '\n' + "Confirmation Code: " + uid + '\n' + "Thanks & Regards ," + '\n' + "SurveyApe Team", "survayape.noreply@gmail.com", "Please Confirm Your SurveyApe Account", "", false);
 
 
         }
@@ -263,7 +261,7 @@ public class UserController {
             cindicator = true;
             uindicator = false;
 
-            mailServices.sendEmail(surveyee_ID, "Survey Submitted Successfully", "aviralkum@gmail.com", "Survey Submitted from SurveyApp","",false);
+            mailServices.sendEmail(surveyee_ID, "Survey Submitted Successfully", "survayape.noreply@gmail.com", "Survey Submitted from SurveyApp", "", false);
 
         } else {
             cindicator = false;
@@ -306,8 +304,6 @@ public class UserController {
 
 
     }
-
-
 
 
 }
