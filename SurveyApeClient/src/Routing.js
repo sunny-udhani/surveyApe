@@ -290,6 +290,24 @@ class Routing extends Component {
         this.props.history.push('/signin');
     };
 
+
+    gotoSigninOpen = (data) => {
+      console.log("Inside gotoSigninOpen");
+      console.log("Props received:");
+      console.log(this.props);
+
+      console.log("Data received:");
+      console.log(data);
+
+      this.setState({
+        dataOpen: data
+      });
+
+      this.props.history.push('/signin');
+    }
+
+
+
     registerUser = (payload) => {
         API.registerUser(payload)
             .then((res) => {
@@ -323,10 +341,40 @@ class Routing extends Component {
     signIn = (payload) => {
         API.signIn(payload)
             .then((res) => {
+                console.log("Data received for Open Survey Data: ");
+                console.log(res);
                 console.log(res.msg);
                 if (res.status == 200) {
+
+
+                  var temp = (Math.random() * 100000);
+                var  url1 = "http://localhost:3000/surveyee/takeSurvey/2/" + temp;
+
+                  var data = {
+                    surveyId: res.dataOpen.surveyIdOpen,
+                    email: payload.email,
+                    url: url1
+                  }
+
+                  API.sendEmailUrlSurveyId(data)
+                  .then(res =>{
+                      console.log(res);
+                  })
+                  .catch(err => {
+                    console.error(err);
+                  })
+
+
                     alert("User Signed In Successfully");
-                    this.setState({surveyorEmail: payload.email})
+                    this.setState({
+                      surveyorEmail: payload.email,
+                      surveyIdOpen: res.dataOpen.surveyIdOpen,
+                      openUrl: res.dataOpen.openUrl
+                    })
+
+
+
+
                     this.props.history.push("/dashboard");
                 }
                 else if (res.status == 401) {
@@ -477,7 +525,7 @@ class Routing extends Component {
 
                 <Route exact path="/signin" render={() => (
                     <div>
-                        <Signin signIn={this.signIn} gotoSignup={this.gotoSignup}/>
+                        <Signin signIn={this.signIn} gotoSignup={this.gotoSignup} dataOpen={this.state.dataOpen}/>
                     </div>
                 )}/>
 
@@ -499,9 +547,9 @@ class Routing extends Component {
                     </div>
                 )}/>
 
-                <Route exact path="/openUniqueSurvey" render={() => (
+                <Route exact path="/surveyee/register/:surveyType/:randSurvey" render={() => (
                     <div>
-                        <OpenUniqueSurvey redirectToSurvey={this.redirectToSurvey}/>
+                        <OpenUniqueSurvey gotoSigninOpen={this.gotoSigninOpen}/>
                     </div>
                 )}/>
 

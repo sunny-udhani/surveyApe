@@ -3,24 +3,31 @@ package com.surveyApe.controller;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.surveyApe.entity.*;
 import com.surveyApe.service.*;
+import net.glxn.qrgen.core.image.ImageType;
+import net.glxn.qrgen.javase.QRCode;
 import org.json.JSONArray;
+import net.*;
 import org.json.JSONException;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.mail.SimpleMailMessage;
 
+import javax.mail.internet.MimeMessage;
 import javax.servlet.http.HttpSession;
-import javax.servlet.http.HttpSessionListener;
 import javax.ws.rs.Produces;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.OutputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.Map;
 import java.util.UUID;
-
-import org.json.JSONObject;
 
 @Controller
 //requires you to run react server on port 3000
@@ -42,6 +49,10 @@ public class UserController {
 
     @Autowired
     private SurveyResponseService surveyResponseService;
+
+    @Autowired
+    private JavaMailSender javaMailSender;
+
 
 
     @GetMapping(path = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -204,7 +215,7 @@ public class UserController {
 
             //  javaMailSender.send(mail);
             userService.createUser(firstName, lastName, email, password, phone, uid, false);
-            mailServices.sendEmail(email, "Hello " + firstName + "," + '\n' + "Confirmation Code: " + uid + '\n' + "Thanks & Regards ," + '\n' + "SurveyApe Team", "aviralkum@gmail.com", "Please Confirm Your SurveyApe Account");
+            mailServices.sendEmail(email, "Hello " + firstName + "," + '\n' + "Confirmation Code: " + uid + '\n' + "Thanks & Regards ," + '\n' + "SurveyApe Team", "aviralkum@gmail.com", "Please Confirm Your SurveyApe Account","",false);
 
 
         }
@@ -252,7 +263,7 @@ public class UserController {
             cindicator = true;
             uindicator = false;
 
-            mailServices.sendEmail(surveyee_ID, "Survey Submitted Successfully", "aviralkum@gmail.com", "Survey Submitted from SurveyApp");
+            mailServices.sendEmail(surveyee_ID, "Survey Submitted Successfully", "aviralkum@gmail.com", "Survey Submitted from SurveyApp","",false);
 
         } else {
             cindicator = false;
@@ -295,6 +306,8 @@ public class UserController {
 
 
     }
+
+
 
 
 }
