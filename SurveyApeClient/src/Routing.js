@@ -395,30 +395,34 @@ class Routing extends Component {
 
                   var temp = (Math.random() * 100000);
                 var  url1 = "http://localhost:3000/surveyee/takeSurvey/2/" + temp;
-
-                  var data = {
-                    surveyId: res.dataOpen.surveyIdOpen,
-                    email: payload.email,
-                    url: url1
+                  if(res.dataOpen){
+                    var data = {
+                      surveyId: res.dataOpen.surveyIdOpen,
+                      email: payload.email,
+                      url: url1
+                    }
+                    API.sendEmailUrlSurveyId(data)
+                    .then(res =>{
+                        console.log(res);
+                    })
+                    .catch(err => {
+                      console.error(err);
+                    })
                   }
-
-                  API.sendEmailUrlSurveyId(data)
-                  .then(res =>{
-                      console.log(res);
-                  })
-                  .catch(err => {
-                    console.error(err);
-                  })
-
-
+                  else{
                     alert("User Signed In Successfully");
                     this.setState({
-                      surveyorEmail: payload.email,
-                      surveyIdOpen: res.dataOpen.surveyIdOpen,
-                      openUrl: res.dataOpen.openUrl
+                      surveyorEmail: payload.email
                     })
 
                     this.props.history.push("/dashboard");
+                  }
+
+
+
+
+
+
                 }
                 else if (res.status == 401) {
                     alert("User with this email id already exists. Please use another email id!");
