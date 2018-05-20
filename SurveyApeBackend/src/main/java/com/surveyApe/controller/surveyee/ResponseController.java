@@ -1,6 +1,7 @@
 package com.surveyApe.controller.surveyee;
 
 import com.surveyApe.config.SurveyTypeEnum;
+import com.surveyApe.entity.QuestionResponse;
 import com.surveyApe.entity.Survey;
 import com.surveyApe.entity.SurveyQuestion;
 import com.surveyApe.entity.SurveyResponse;
@@ -26,15 +27,7 @@ public class ResponseController {
     @Autowired
     private SurveyService surveyService;
     @Autowired
-    private UserService userService;
-    @Autowired
-    private QuestionService questionService;
-    @Autowired
-    private QuestionOptionService questionOptionService;
-    @Autowired
-    private SurveyResponseService surveyResponseService;
-    @Autowired
-    private MailServices mailServices;
+    private QuestionResponseService questionResponseService;
 
     @PostMapping(path = "/question/answer", produces = MediaType.APPLICATION_JSON_VALUE)
     public @ResponseBody
@@ -54,9 +47,14 @@ public class ResponseController {
             response.put("message", "please specify which question");
             return new ResponseEntity<Object>(response.toString(), HttpStatus.BAD_REQUEST);
         }
+        if (!reqObj.has("response")) {
+            response.put("message", "please specify which response");
+            return new ResponseEntity<Object>(response.toString(), HttpStatus.BAD_REQUEST);
+        }
 
         String responseId = reqObj.getString("survey_response_id");
         String questionId = reqObj.getString("question_id");
+        String response1 = reqObj.getString("response");
         Survey survey = surveyService.findBySurveyId(reqObj.getString("survey_id"));
 
         if (survey == null) {
@@ -69,7 +67,7 @@ public class ResponseController {
                 .findAny()
                 .orElse(null);
 
-        if(userResponseEntity == null){
+        if (userResponseEntity == null) {
             response.put("message", "invalid survey response id");
             return new ResponseEntity<Object>(response.toString(), HttpStatus.BAD_REQUEST);
         }
@@ -79,12 +77,26 @@ public class ResponseController {
                 .findAny()
                 .orElse(null);
 
-        if(questionEntity == null){
+        if (questionEntity == null) {
             response.put("message", "invalid survey question id");
             return new ResponseEntity<Object>(response.toString(), HttpStatus.BAD_REQUEST);
         }
 
+        QuestionResponse questionResponse = questionEntity.getQuestionResponseList().stream()
+                .filter(r -> r.getSurveyResponseId().equals(userResponseEntity.getSurveyResponseId()))
+                .findAny()
+                .orElse(null);
 
+        if (questionResponse == null) {
+            QuestionResponse newAnswer = new QuestionResponse();
+            newAnswer.setQuestionId(questionEntity);
+            newAnswer.setSurveyResponseId(userResponseEntity);
+            newAnswer.setResponse(response1);
+            questionResponseService.saveResponse(questionResponse);
+        } else {
+            questionResponse.setResponse(response1);
+            questionResponseService.saveResponse(questionResponse);
+        }
 
         response.put("message", "invalid request");
         return new ResponseEntity<>(response.toString(), HttpStatus.BAD_REQUEST);
