@@ -20,9 +20,9 @@ class MySurveys extends Component {
             });
     }
 
-  componentWillMount(){
+    componentWillMount() {
 
-  }
+    }
 
     exportAsJson(surveyId) {
 
@@ -39,7 +39,8 @@ class MySurveys extends Component {
         })
 
     }
-     base64ToArrayBuffer (base64) {
+
+    base64ToArrayBuffer(base64) {
         var binaryString = window.atob(base64);
         var binaryLen = binaryString.length;
         var bytes = new Uint8Array(binaryLen);
@@ -50,7 +51,7 @@ class MySurveys extends Component {
         return bytes;
     }
 
-     saveByteArray(reportName, byte) {
+    saveByteArray(reportName, byte) {
         var blob = new Blob([byte]);
         var link = document.createElement('a');
         link.href = window.URL.createObjectURL(blob);
@@ -78,20 +79,24 @@ class MySurveys extends Component {
         return (
             <div>
 
-      <div className="row bar">
-          <div className="col-lg-1 logo">
-              <img src={Logo} />
-          </div>
-          <div className="col-lg-2 textLogo">
-            Survey Ape
-          </div>
-          <div className="col-lg-2" style={{paddingTop: 38}}>
-            <h5  style={{color: "#268D5D", fontWeight: 700}} onClick={()=>{this.props.gotoDashboard()}}>Dashboard</h5>
-          </div>
+                <div className="row bar">
+                    <div className="col-lg-1 logo">
+                        <img src={Logo}/>
+                    </div>
+                    <div className="col-lg-2 textLogo">
+                        Survey Ape
+                    </div>
+                    <div className="col-lg-2" style={{paddingTop: 38}}>
+                        <h5 style={{color: "#268D5D", fontWeight: 700}} onClick={() => {
+                            this.props.gotoDashboard()
+                        }}>Dashboard</h5>
+                    </div>
 
-          <div className="col-lg-2" style={{paddingTop: 38}}>
-            <h5  style={{color: "#268D5D", fontWeight: 700}} onClick={()=>{this.props.logout()}}>Logout</h5>
-          </div>
+                    <div className="col-lg-2" style={{paddingTop: 38}}>
+                        <h5 style={{color: "#268D5D", fontWeight: 700}} onClick={() => {
+                            this.props.logout()
+                        }}>Logout</h5>
+                    </div>
 
                 </div>
 
@@ -135,10 +140,14 @@ class MySurveys extends Component {
                                                                                    value="End Survey"
                                                                                    onClick={() => this.props.EndSurvey(item.surveyId)}/>
                                             </div>) : (<div>Survey Inactive</div>)}</div>
+
+                                        <div className="col-lg-4">{item.surveyCompletedInd == 0 ? (
+                                            <div style={{paddingLeft: 117}}><input type="button" className="butt2"
+                                                                                   value="End Survey"
+                                                                                   onClick={() => this.props.EndSurvey(item.surveyId)}/>
+                                            </div>) : (<div>Survey Complete</div>)}</div>
                                     </div>
 
-            <div className="col-lg-4">{item.surveyCompletedInd==0?(<div style={{paddingLeft: 117}}><input type="button" className="butt2" value="End Survey" onClick={()=>this.props.EndSurvey(item.surveyId)}/></div>):(<div>Survey Complete</div>)}</div>
-      </div>
                                     <div className="row"
                                          style={{marginTop: 10, marginBottom: 20, fontSize: 18, fontWeight: 500}}>
 
@@ -164,7 +173,8 @@ class MySurveys extends Component {
 
 
                                         <div className="col-lg-6"><label>Export as JSON File&nbsp;</label>
-                                            <input type="button" style={{width: 120}} onClick={(event) => this.exportAsJson(item.surveyId)}/>
+                                            <input type="button" style={{width: 120}}
+                                                   onClick={(event) => this.exportAsJson(item.surveyId)}/>
                                             <div className="col-lg-6"><label>Filename &nbsp;</label> <input
                                                 type="text" onChange={(event) => this.filename = event.target.value}/>
                                             </div>
