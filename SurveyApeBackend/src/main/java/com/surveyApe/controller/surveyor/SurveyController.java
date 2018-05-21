@@ -158,7 +158,7 @@ public class SurveyController {
 
                 String surveyeeEmail = attendeesObj.getString("email");
 
-                SurveyResponse newSurveyeeResponseEntry = createNewSurveyeeResponseEntry(surveyVO.getSurveyId(), surveyeeEmail, "");
+                SurveyResponse newSurveyeeResponseEntry = createNewSurveyeeResponseEntry(surveyVO.getSurveyId(), surveyeeEmail, surveyVO.getSurveyURI());
 
                 if (newSurveyeeResponseEntry == null) {
                     response.put("message", "response entity not created");
@@ -385,12 +385,12 @@ public class SurveyController {
                     return new ResponseEntity<Object>(response.toString(), HttpStatus.BAD_REQUEST);
                 }
 
+                if (survey.isPublishedInd())
+                    mailServices.sendEmail(surveyeeEmail, "You are invited to take this survey: " + survey.getSurveyTitle() + " at " + surveyeeURI, "aviralkum@gmail.com", "Survey filling request", surveyeeURI, true);
+
             }
         }
         if (reqObj.has("addInviteeList")) {
-//            survey.getResponseList().clear();
-//            surveyService.saveSurvey(survey);
-
             JSONArray invitedEmailsArray = reqObj.getJSONArray("addInviteeList");
 
             for (int i = 0; i < invitedEmailsArray.length(); i++) {
@@ -398,16 +398,18 @@ public class SurveyController {
 
                 String surveyeeEmail = attendeesObj.getString("email");
 
-                SurveyResponse newSurveyeeResponseEntry = createNewSurveyeeResponseEntry(survey.getSurveyId(), surveyeeEmail, "");
+                SurveyResponse newSurveyeeResponseEntry = createNewSurveyeeResponseEntry(survey.getSurveyId(), surveyeeEmail, survey.getSurveyURI());
 
                 if (newSurveyeeResponseEntry == null) {
                     response.put("message", "response entity not created");
                     return new ResponseEntity<Object>(response.toString(), HttpStatus.BAD_REQUEST);
                 }
 
+                if (survey.isPublishedInd())
+                    mailServices.sendEmail(surveyeeEmail, "You are invited to take this survey: " + survey.getSurveyTitle() + " at " + survey.getSurveyURI(), "aviralkum@gmail.com", "Survey filling request", survey.getSurveyURI(), true);
+
             }
         }
-        sendEmailtoAttendees(survey);
 
         return new ResponseEntity<Object>(survey, HttpStatus.OK);
     }
@@ -433,8 +435,8 @@ public class SurveyController {
             return new ResponseEntity<Object>(response.toString(), HttpStatus.BAD_REQUEST);
         }
 
-        if (reqObj.has("publishInd")) {
-            boolean publishInd = reqObj.getBoolean("publishInd");
+        if (reqObj.has("publish")) {
+            boolean publishInd = reqObj.getBoolean("publish");
 
             survey.setPublishedInd(publishInd);
             surveyService.saveSurvey(survey);
@@ -594,29 +596,6 @@ public class SurveyController {
         }
     }
 
-    @GetMapping(path = "surveyee/getAll", produces = MediaType.APPLICATION_JSON_VALUE)
-    public @ResponseBody
-    ResponseEntity<?> retrieveMySurveys(@RequestParam Map<String, String> params, HttpSession session) {
-        System.out.println(params);
-        JSONObject response = new JSONObject();
-
-        String surveyeeEmail = session.getAttribute("surveyorEmail").toString();
-        //String surveyorEmail="chandan.paranjape@gmail.com";
-        User userVO = userService.getUserById(surveyeeEmail).orElse(null);
-        if (userVO == null) {
-            response.put("message", "Invalid user / user id");
-            return new ResponseEntity<Object>(response.toString(), HttpStatus.BAD_REQUEST);
-        }
-
-        List<Survey> surveyList = surveyService.findBySurveyorEmail(userVO);
-        if (surveyList.size() == 0) {
-            response.put("message", "No survey");
-            return new ResponseEntity<Object>(response.toString(), HttpStatus.OK);
-        }
-
-        return new ResponseEntity<Object>(surveyList, HttpStatus.OK);
-    }
-
     @GetMapping(path = "surveyor/getSurvey/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public @ResponseBody
     ResponseEntity<?> retrieveASurvey(@PathVariable String id, @RequestParam Map<String, String> params, HttpSession session) {
@@ -680,7 +659,7 @@ public class SurveyController {
         // no check for email in user table as only survey type closed requires users to be preregistered
         attendeeResponseEntity.setUserEmail(attendeeEmail);
 
-        if (!(attendeeURI.equals(""))) {
+        if (!attendeeURI.isEmpty()) {
             attendeeResponseEntity.setSurveyURI(attendeeURI);
             attendeeResponseEntity.setSurveyURIValidInd(true);
         }
@@ -783,9 +762,9 @@ public class SurveyController {
                         String attendeeEmail = response.getUserEmail();
                         String attendeeURL = response.getSurveyURI();
 
-                        mailServices.sendEmail(attendeeEmail, "You must fill this survey: " + attendeeURL, "survayape.noreply@gmail.com", "Survey Filling request",attendeeURL,true);
+                        mailServices.sendEmail(attendeeEmail, "You must fill this survey: " + attendeeURL, "survayape.noreply@gmail.com", "Survey Filling request", attendeeURL, true);
 
-                        return 0;
+//                        return 0;
                     }
 
                 } else {
@@ -794,9 +773,9 @@ public class SurveyController {
                     for (SurveyResponse response : surveyResponseList) {
 
                         String attendeeEmail = response.getUserEmail();
-                        mailServices.sendEmail(attendeeEmail, "You are invited to take this survey: " + surveyURL, "survayape.noreply@gmail.com", "Survey Filling request",surveyURL,true);
+                        mailServices.sendEmail(attendeeEmail, "You are invited to take this survey: " + surveyURL, "survayape.noreply@gmail.com", "Survey Filling request", surveyURL, true);
 
-                        return 0;
+//                        return 0;
                     }
                 }
             }
