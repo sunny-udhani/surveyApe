@@ -132,7 +132,7 @@ public class SurveyController1 {
 
             response.put("surveyResponse_id", surveyResponse.getSurveyResponseId());
             response.put("email", surveyResponse.getUserEmail());
-            response.put("survey_id", surveyResponse.getSurveyId());
+            response.put("survey_id", surveyResponse.getSurveyId().getSurveyId());
 
             return new ResponseEntity<Object>(response.toString(), HttpStatus.OK);
 

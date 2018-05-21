@@ -277,7 +277,6 @@ export const registerUser = (payload) =>
                                     });
 
 
-
                         export const addInvitees = (payload) =>
                             fetch(`${api}/survey/addAttendees/`+payload.surveyId, {
                                 method: 'POST',
@@ -305,7 +304,8 @@ export const registerUser = (payload) =>
                                   credentials: 'include',
                                   body: JSON.stringify(payload)
                               }).then(res => {
-                                  console.log(res.body);
+                                console.log("Inside res of sendOneResp: ");
+                                  console.log(res);
                                   return res;
                               }).catch(error => {
                                   console.log("This is error");

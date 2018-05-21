@@ -113,39 +113,13 @@ public class PublishAspect {
                 if (reqObj.has("surveyType")) {
                     surveyType = Integer.parseInt(reqObj.getString("surveyType"));
                 }
-                String surveyId = (String) args[2];
 
-                Survey survey = surveyService.findBySurveyId(surveyId);
-
-                if (survey == null) {
-//                                send error, no such survey found
-                    return 2;
-                }
-
-                //not available in req
-                if (surveyType == 0) {
-                    surveyType = survey.getSurveyType();
-                }
-
-                //check survey type, validation for survey type also
-                if (!surveyService.validSurveyType(surveyType)) {
-//                        send error, invalid survey type
-                    return 1;
-                }
 
                 if (surveyType == SurveyTypeEnum.CLOSED.getEnumCode()) {
 
                     if (!(reqObj.has("attendeesList"))) {
 
-                        if (survey.getResponseList() != null) {
-                            int numberOfAttendees = survey.getResponseList().size();
-                            if (numberOfAttendees > 0)
-                                return 0;
-                            else
-//                                    send error, no attendee added, so can't publish
-                                return 3;
-                        } else
-//                                send error, no attendee added, so can't publish
+                        //          send error, no attendee added, so can't publish
                             return 3;
                     } else {
                         JSONArray attendeeList = reqObj.getJSONArray("attendeesList");

@@ -49,6 +49,7 @@ class Survey extends Component {
                     if(this.props.email){
                       payload.email=this.props.email;
                     }
+                    
                     API.getSurveyAndResp(payload)
                         .then((res) => {
                             console.log(res.responses);
@@ -83,12 +84,13 @@ class Survey extends Component {
         else {
             API.getSurveyId(data)
                 .then((aaj) => {
-
+                    console.log("printig aaj");
+                    console.log(aaj);
                     if (aaj.status !== 403) {
 
                         aaj.json().then(res => {
                             console.log("surveyId Fetched for Non-General Surveys: ");
-                            console.log(res.toString());
+                            console.log(res);
                             // if()
 
                             this.setState({
@@ -99,7 +101,8 @@ class Survey extends Component {
 
                             API.getSurveyAndResp(payload)
                                 .then((res) => {
-
+                                    console.log("getting response in getSurveyAndResp:");
+                                    console.log(res);
                                     this.setState({
                                         surveyId: res.survey.surveyId,
                                         surveyResponse_id: res.survey.surveyResponse_id,

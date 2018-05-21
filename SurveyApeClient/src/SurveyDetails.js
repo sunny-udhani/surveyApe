@@ -19,8 +19,136 @@ class SurveyDetails extends Component{
   componentWillMount(){
     console.log("data");
     console.log(this.props.response.survey);
+
+    var output = [];
+    for(var i=0;i<this.props.response.survey.questionList.length;i++)
+    {
+      for(var j=0;j<this.props.response.survey.questionList[i].questionOptionList.length;j++)
+      {
+        var optionText = this.props.response.survey.questionList[i].questionOptionList[j].optionText;
+
+        // count in responselist how many times each option occurs.
+        console.log(optionText);
+
+        var count=0;
+        for(var k=0; k<this.props.response.survey.questionList[i].questionResponseList.length; k++)
+        {
+
+          if((this.props.response.survey.questionList[i].questionResponseList[k].response) === optionText)
+          {
+            count++;
+          }
+        }
+        console.log(count);
+        var questionText = this.props.response.survey.questionList[i].questionText;
+
+        var obj = {};
+
+        obj.questionText = questionText;
+
+        obj["responses"] = {
+          "optionText": optionText,
+          "responseCount": count
+        };
+
+        output.push(obj);
+    }
+    }
+
+    console.log("Output built: ");
+      console.log(output);
+
+
+      this.setState({
+        output: output
+      });
+
   }
+
   render(){
+    if(this.props.response.survey.surveyType === 1){
+      return (
+        <div>
+
+          <h3>Survey Name: {this.props.response.survey.surveyTitle}</h3>
+          <h3>Start Date: {this.props.response.survey.startDate}</h3>
+          <h3>End Date {this.props.response.survey.endDate}</h3>
+
+          <div className="row" >
+
+            <div className="col-lg-5">
+                <h5>Total Number of Submissions: {this.props.response.survey.responseList.length}</h5>
+            </div>
+
+              <div className="col-lg-7">
+
+                <BarChart width={300} height={400}data={[
+
+                   { name: 'Total Submissions', value: this.props.response.survey.responseList.length }
+                ]}>
+                    <CartesianGrid strokeDasharray="3 3" />
+                    <XAxis dataKey="name" fill="white" />
+                    <YAxis type="number" domain={[0, 100]}/>
+                    <Tooltip />
+                    <Legend />
+                    <Bar dataKey="value" fill="blue" />
+                </BarChart>
+
+            </div>
+
+          </div>
+
+
+          <div className="row" >
+
+            <div className="col-lg-12">
+                <h5>Total Questions in the Survey: {this.props.response.survey.questionList.length}</h5>
+
+                {this.props.response.survey.questionList.map((question,i) => (
+                      <div className="row" >
+                          <div className="col-lg-12">
+                            <div className="row" style={{paddingLeft: 20}}>
+                              <h5>Question:  <span style={{color: "green"}}>{question.questionText}</span> </h5>
+                            </div>
+                          </div>
+
+
+                    <div className="col-lg-12" style={{border: "1px solid"}}>
+                      <div className="row">
+                        {this.state.output.map(optionsAndCount => (
+
+                          <div className="col-lg-3" style={{paddingTop: 20}}>
+                            <h5> <span style={{fontWeight: 600}}>Option Text: </span>{optionsAndCount.optionText}</h5>
+                            <h5> <span style={{fontWeight: 600}}>Response Count: </span>{optionsAndCount.responseCount}</h5>
+                            <br/>
+                          </div>
+
+
+
+                        ))}
+                      </div>
+                    </div>
+
+                      </div>
+            ))}
+
+            </div>
+
+              <div className="col-lg-5">
+
+
+
+            </div>
+
+          </div>
+
+
+
+
+        </div>
+      );
+    } else {
+
     return (
       <div>
 
@@ -87,6 +215,7 @@ class SurveyDetails extends Component{
 
       </div>
     );
+  }
   }
 }
 

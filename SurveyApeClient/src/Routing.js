@@ -52,6 +52,9 @@ class Routing extends Component {
         else {
 
         }
+
+        console.log("SUrveytype debug:"+surveyType);
+
         for (var i = 0; i < survey.questions.length; i++) {
             survey.questions[i].optionList = survey.questions[i].optionList.join(',');
         }
