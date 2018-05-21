@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.surveyApe.config.QuestionTypeEnum;
 import com.surveyApe.config.SurveyTypeEnum;
 import com.surveyApe.entity.*;
+import com.surveyApe.repository.SurveyQuestionRepository;
 import com.surveyApe.service.*;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -25,7 +26,7 @@ import java.util.*;
 
 
 @Controller
-@CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
+@CrossOrigin(origins = "*", allowCredentials = "true")
 //requires you to run react server on port 3000
 @RequestMapping(path = "/survey")
 public class SurveyController {
@@ -42,6 +43,9 @@ public class SurveyController {
     private SurveyResponseService surveyResponseService;
     @Autowired
     private MailServices mailServices;
+    @Autowired
+    private SurveyQuestionRepository surveyQuestionRepository;
+
 
     @PostMapping(path = "/create", produces = MediaType.APPLICATION_JSON_VALUE)
     public @ResponseBody
@@ -230,6 +234,9 @@ public class SurveyController {
         }
 
 
+        survey.getQuestionList().stream().forEach(q->{
+            surveyQuestionRepository.delete(q);
+        });
         survey.getQuestionList().clear();
         surveyService.saveSurvey(survey);
 
