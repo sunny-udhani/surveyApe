@@ -348,7 +348,6 @@ class Routing extends Component {
       this.setState({
         dataOpen: data
       });
-
       this.props.history.push('/signup');
     }
 
@@ -367,10 +366,35 @@ class Routing extends Component {
                 dataOpen: res.dataOpen
               });
 
-                if (res.status == 200) {
-                    alert("User registration is successful!");
-                    this.props.history.push("/confirmation");
+
+              if (res.status == 200) {
+
+                var temp = (Math.random() * 100000);
+                var  url1 = "http://localhost:3000/surveyee/takeSurvey/2/" + temp;
+                if(res.dataOpen){
+                  var data = {
+                    surveyId: res.dataOpen.surveyIdOpen,
+                    email: payload.email,
+                    url: url1
+                  }
+                  API.sendEmailUrlSurveyId(data)
+                  .then(res =>{
+                      console.log("result of sendEmailUrlId:");
+                      console.log(res);
+                  })
+                  .catch(err => {
+                    console.error(err);
+                  })
                 }
+                else{
+                  alert("User registration is successful!");
+                  this.props.history.push("/confirmation");
+
+                }
+
+
+              }
+
                 else if (res.status == 401) {
                     alert("User with this email id already exists. Please use another email id!");
                     this.props.history.push("/");
@@ -404,7 +428,7 @@ class Routing extends Component {
                 if (res.status == 200) {
 
                   var temp = (Math.random() * 100000);
-                var  url1 = "http://localhost:3000/surveyee/takeSurvey/2/" + temp;
+                  var  url1 = "http://localhost:3000/surveyee/takeSurvey/2/" + temp;
                   if(res.dataOpen){
                     var data = {
                       surveyId: res.dataOpen.surveyIdOpen,
@@ -473,16 +497,20 @@ class Routing extends Component {
      console.log("Data received:");
      console.log(data);
 
+     var temp = (Math.random() * 100000);
+     var  url1 = "http://localhost:3000/surveyee/takeSurvey/2/" + temp;
 
+       var data2 = {
+         surveyId: data.surveyIdOpen,
+         email: data.email,
+         url: url1
+}
 
-     var data1 = {
-       surveyId: data.surveyIdOpen,
-       email: data.email,
-       url: data.openUrl
-     }
-
-     API.sendEmailUrlSurveyId(data1)
+     API.sendEmailUrlSurveyId(data2)
      .then(res =>{
+
+       console.log("Inside sendEmailUrlId in gotoEmailOpen:");
+       console.log(res);
         alert('Email sent successfully');
          console.log(res);
      })
