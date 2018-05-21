@@ -561,7 +561,9 @@ class Routing extends Component {
 
               <Route exact path="/editSurvey" render={() => (
                       <div>
-                        <EditSurvey surveyId={this.state.surveyId} editSurvey={this.editSurvey}/>
+                        <EditSurvey surveyId={this.state.surveyId} editSurvey={this.editSurvey} gotoMysurvey = {this.gotoMySurveys}
+                            reloadEditSurvey={ this.EditSurvey}
+                        />
                       </div>
                 )} />
 
