@@ -45,8 +45,6 @@ public class SurveyController {
     private SurveyResponseService surveyResponseService;
     @Autowired
     private MailServices mailServices;
-    @Autowired
-    private SurveyQuestionRepository surveyQuestionRepository;
 
 
     @PostMapping(path = "/create", produces = MediaType.APPLICATION_JSON_VALUE)
