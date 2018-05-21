@@ -69,7 +69,7 @@ public class SurveyController1 {
                 return new ResponseEntity<Object>(response.toString(), HttpStatus.SERVICE_UNAVAILABLE);
             } else {
 
-                if (session != null) {
+                if (session != null && session.getAttribute("surveyorEmail") != null) {
                     String user_email = session.getAttribute("surveyorEmail").toString();
                     if (!user_email.isEmpty()) {
                         SurveyResponse surveyResponse = surveyResponseService.findBySurveyIdAndEmail(survey, user_email);
