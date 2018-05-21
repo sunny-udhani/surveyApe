@@ -230,14 +230,14 @@ class Survey extends Component {
             }
             return (
 
-                <div className="question">
+                <div className="question" style={{height: "auto"}}>
                     <div className="col-lg-12" style={{backgroundColor: "gray"}}>
                         <h3>{question.questionText}</h3>
                     </div>
 
                     {question.questionOptionList.map(option => (
                         <div>
-                            <input type="radio" name="a" checked={option.option_text===question.response} onChange={(event)=>{
+                            <input type="radio" name="a" checked={option.optionText===question.response} onChange={(event)=>{
 
                               var payload={question_id:question.surveyQuestionId,response:event.target.value,survey_id:this.state.surveyId,survey_response_id:this.state.surveyResponse_id};
                               console.log("jhasbxa"+payload);
@@ -252,7 +252,7 @@ class Survey extends Component {
                               }} onClick={(event) => {
                                 console.log("asklndasnjdasjkndasjkdjknasnjkas");
 
-                            }} value={option.option_text}/> {option.option_text}<br/>
+                            }} value={option.optionText}/> {option.optionText}<br/>
                         </div>
                     ))}
                 </div>
@@ -528,8 +528,8 @@ class Survey extends Component {
 
         </div>
           <h2> Survey Name: {this.state.surveyTitle}</h2>
-          <div>
-            <div className="row mainPageSurvey">
+          <div style={{height: "auto", paddingBottom: 20}}>
+            <div className="row mainPageSurvey" style={{height: "auto", paddingBottom: 20}}>
 
               {this.state.questionList.map((question,index) => (
 
