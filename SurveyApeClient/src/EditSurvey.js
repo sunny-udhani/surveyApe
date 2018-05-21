@@ -261,17 +261,24 @@ class EditSurvey extends Component{
       questions:temp
     })
   }
+    importJSON(e) {
+        var formdata = new FormData();
+        formdata.append("file", e.target.files[0]);
+        API.importJSON(this.props.surveyId, formdata)
+            .then(res => {
+                console.log(res);
+                if (res.status == 200) {
+                    alert("Imported Successfully")
+                    this.setState({new: "reload"});
+                }
+            })
 
-
-  componentWillMount(){
-
-  }
+    }
 
   render(){
     var self=this;
     return(
       <div style={{marginLeft:"20%"}}>
-
 
         <h4>SurveyName:</h4>
         <input type="text" style={{width:"80%"}} value={this.state.surveyTitle} onChange={(event)=>this.setState({surveyTitle:event.target.value})}/><br/>
@@ -559,23 +566,26 @@ class EditSurvey extends Component{
                 this.saveAndPublish();
               }}/>
 
+            <input type="file" style={{marginLeft: "10%"}} accept="application/json"
+                   onChange={e => this.importJSON(e)}/>
+
             <input type="button" style={{marginLeft:"40%"}} className="btn btn-primary" value="Save" onClick={()=>{
               this.save();
                 }}/>
         </div>
       </div>
 
-      <div>
+                <div>
 
-        <div>
+                    <div>
 
 
-        </div>
-      </div>
+                    </div>
+                </div>
 
-      </div>
-    );
-  }
+            </div>
+        );
+    }
 }
 
 export default EditSurvey;

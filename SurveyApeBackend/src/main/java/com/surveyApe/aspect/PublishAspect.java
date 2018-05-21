@@ -20,7 +20,7 @@ import java.util.Map;
 
 @Aspect
 @Component
-//@Order(1)
+@Order(1)
 public class PublishAspect {
 
     @Autowired
@@ -65,6 +65,8 @@ public class PublishAspect {
         String methodName = joinPoint.getSignature().getName();
 
         Object[] args = joinPoint.getArgs();
+        if(methodName.contains("importJSON"))
+            return 0;
         String requestBody = (String) args[0];
 //        Map<String, String> requestParams = (Map<String, String>) args[1];
         JSONObject reqObj = new JSONObject(requestBody);

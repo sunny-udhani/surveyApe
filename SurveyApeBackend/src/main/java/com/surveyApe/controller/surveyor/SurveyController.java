@@ -13,12 +13,15 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpSession;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.io.*;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.*;
 
 
 @Controller
@@ -528,6 +531,127 @@ public class SurveyController {
 //        sendEmailtoAttendees(survey);
 
         return new ResponseEntity<Object>(survey, HttpStatus.OK);
+    }
+
+    @GetMapping(path = "/export/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public @ResponseBody
+    ResponseEntity<?> exportAsJSON(@RequestParam Map<String, String> params, @PathVariable String id, HttpSession session) {
+
+        //Todo: validations for ending survey
+
+        JSONObject response = new JSONObject();
+        String jsonData = "";
+        String surveyorEmail = session.getAttribute("surveyorEmail").toString();
+        String fileName = params.containsKey("filename") ? params.get("filename") : "file.txt";
+        String surveyId = id;
+        User userVO = userService.getUserById(surveyorEmail).orElse(null);
+        //Check user first
+        if (userVO == null) {
+            response.put("message", "Invalid user / user id");
+            return new ResponseEntity<Object>(response.toString(), HttpStatus.BAD_REQUEST);
+        }
+
+        Survey survey = surveyService.findBySurveyIdAndSurveyorEmail(surveyId, userVO);
+        //check survey id
+        if (survey == null) {
+            response.put("message", "No such survey");
+            return new ResponseEntity<Object>(response.toString(), HttpStatus.BAD_REQUEST);
+        }
+
+        try {
+
+            survey.setResponseList(null);
+            survey.setSurveyorEmail(null);
+            survey.getQuestionList().stream().forEach(q -> q.setQuestionResponseList(null));
+            jsonData = new ObjectMapper().writeValueAsString(survey);
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+
+        byte[] base64 = Base64.getEncoder().encode(jsonData.getBytes(StandardCharsets.UTF_8));
+//        sendEmailtoAttendees(survey);
+        JSONObject resp = new JSONObject();
+        resp.put("byteArray", new String(base64));
+
+        return new ResponseEntity<Object>(resp.toString(), HttpStatus.OK);
+    }
+
+
+    @PostMapping(path = "/import/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public @ResponseBody
+    ResponseEntity<?> importJSON(@RequestParam("file") MultipartFile uploadfile, @PathVariable String id, HttpSession session) {
+
+        //Todo: validations for ending survey
+
+        JSONObject response = new JSONObject();
+        String jsonData = "";
+        String surveyorEmail = session.getAttribute("surveyorEmail").toString();
+//        String fileName = params.containsKey("filename") ? params.get("filename") : "file.txt";
+        String surveyId = id;
+        User userVO = userService.getUserById(surveyorEmail).orElse(null);
+        //Check user first
+        if (userVO == null) {
+            response.put("message", "Invalid user / user id");
+            return new ResponseEntity<Object>(response.toString(), HttpStatus.BAD_REQUEST);
+        }
+
+        Survey survey = surveyService.findBySurveyIdAndSurveyorEmail(surveyId, userVO);
+        //check survey id
+        if (survey == null) {
+            response.put("message", "No such survey");
+            return new ResponseEntity<Object>(response.toString(), HttpStatus.BAD_REQUEST);
+        }
+
+        try {
+
+            byte[] bytes = uploadfile.getBytes();
+            Path path = Paths.get("./src/jsonfiles/" + uploadfile.getOriginalFilename());
+            Files.write(path, bytes);
+
+            Map<?, ?> surveyMap = new ObjectMapper().readValue(new FileInputStream("./src/jsonfiles/" + uploadfile.getOriginalFilename()), Map.class);
+            if (!surveyMap.containsKey("questionList")) {
+                response.put("message", "no questions to import");
+                return new ResponseEntity<Object>(response.toString(), HttpStatus.OK);
+            }
+            System.out.println(surveyMap);
+            System.out.println(surveyMap.get("questionList"));
+
+            ArrayList<LinkedHashMap<?, ?>> questions = (ArrayList) surveyMap.get("questionList");
+            questions.stream().forEach(q -> {
+                String qtx = q.get("questionText").toString();
+                String gty = q.get("questionType").toString();
+                String questionOrderNumber = q.get("questionOrderNumber").toString();
+
+                SurveyQuestion suq = new SurveyQuestion(qtx, Integer.parseInt(gty));
+                suq.setQuestionOrderNumber(Integer.parseInt(questionOrderNumber));
+
+
+                ArrayList<LinkedHashMap<?, ?>> options = (ArrayList) q.get("questionOptionList");
+                options.stream().forEach(o -> {
+                    String otc = o.get("optionText").toString();
+                    String oty = o.get("optionType").toString();
+                    String otr = o.get("optionOrderNumber").toString();
+
+                    QuestionOption option = new QuestionOption(otc);
+                    option.setQuestionId(suq);
+                    questionOptionService.saveOption(option);
+                    suq.getQuestionOptionList().add(option);
+
+                });
+
+                suq.setSurveyId(survey);
+                survey.getQuestionList().add(suq);
+                questionService.addQuestion(suq);
+                surveyService.saveSurvey(survey);
+
+            });
+//            String str = surveyMap.get("questionList").toString();tionList").toString());
+
+        } catch (IOException ex) {
+            System.out.println(ex.toString());
+        }
+        return new ResponseEntity<Object>("", HttpStatus.OK);
     }
 
     @GetMapping(path = "/endSurvey/info/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
