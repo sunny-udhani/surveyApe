@@ -1,5 +1,5 @@
 package com.surveyApe.controller.surveyor;
-
+import com.surveyApe.repository.SurveyQuestionRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.surveyApe.config.QuestionTypeEnum;
 import com.surveyApe.config.SurveyTypeEnum;
@@ -25,13 +25,15 @@ import java.util.*;
 
 
 @Controller
-@CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
+@CrossOrigin(origins = "*", allowCredentials = "true")
 //requires you to run react server on port 3000
 @RequestMapping(path = "/survey")
 public class SurveyController {
 
     @Autowired
     private SurveyService surveyService;
+    @Autowired
+    private SurveyQuestionRepository surveyQuestionRepository;
     @Autowired
     private UserService userService;
     @Autowired
@@ -230,10 +232,13 @@ public class SurveyController {
         }
 
         System.out.println(survey.getQuestionList());
-        survey.getQuestionList().clear();
-        System.out.println(survey.getQuestionList());
 
+        survey.getQuestionList().stream().forEach(q->{
+            surveyQuestionRepository.delete(q);
+        });
+        survey.getQuestionList().clear();
         surveyService.saveSurvey(survey);
+        System.out.println(survey.getQuestionList());
 
         JSONArray questionArray = reqObj.getJSONArray("questions");
 

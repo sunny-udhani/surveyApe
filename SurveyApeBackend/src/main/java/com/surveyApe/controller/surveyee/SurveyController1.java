@@ -22,7 +22,7 @@ import java.util.Map;
 
 
 @Controller
-@CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
+@CrossOrigin(origins = "*", allowCredentials = "true")
 //requires you to run react server on port 3000
 @RequestMapping(path = "/surveyee")
 public class SurveyController1 {
