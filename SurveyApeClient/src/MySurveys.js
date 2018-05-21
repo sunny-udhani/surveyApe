@@ -74,7 +74,7 @@ class MySurveys extends Component{
 
             <div className="col-lg-4">{item.publishedInd==0?(<div><input type="button" className="butt2" value="Publish" onClick={()=>this.props.PublishSurvey(item.surveyId)}/></div>):(<div>Already Published</div>)}</div>
 
-            <div className="col-lg-4">{item.publishedInd==1?(<div style={{paddingLeft: 117}}><input type="button" className="butt2" value="End Survey" onClick={()=>this.props.EndSurvey(item.surveyId)}/></div>):(<div>Survey Inactive</div>)}</div>
+            <div className="col-lg-4">{item.surveyCompletedInd==0?(<div style={{paddingLeft: 117}}><input type="button" className="butt2" value="End Survey" onClick={()=>this.props.EndSurvey(item.surveyId)}/></div>):(<div>Survey Complete</div>)}</div>
       </div>
 
       <div className="row" style={{marginTop: 10, marginBottom: 20, fontSize: 18, fontWeight: 500}}>

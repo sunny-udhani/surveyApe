@@ -50,7 +50,7 @@ class Survey extends Component {
                     if(this.props.email){
                       payload.email=this.props.email;
                     }
-                    
+
                     API.getSurveyAndResp(payload)
                         .then((res) => {
                             console.log(res.responses);
@@ -230,14 +230,14 @@ class Survey extends Component {
             }
             return (
 
-                <div className="question">
+                <div className="question" style={{height: "auto"}}>
                     <div className="col-lg-12" style={{backgroundColor: "gray"}}>
                         <h3>{question.questionText}</h3>
                     </div>
 
                     {question.questionOptionList.map(option => (
                         <div>
-                            <input type="radio" name="a" checked={option.option_text===question.response} onChange={(event)=>{
+                            <input type="radio" name="a" checked={option.optionText===question.response} onChange={(event)=>{
 
                               var payload={question_id:question.surveyQuestionId,response:event.target.value,survey_id:this.state.surveyId,survey_response_id:this.state.surveyResponse_id};
                               console.log("jhasbxa"+payload);
@@ -252,7 +252,7 @@ class Survey extends Component {
                               }} onClick={(event) => {
                                 console.log("asklndasnjdasjkndasjkdjknasnjkas");
 
-                            }} value={option.option_text}/> {option.option_text}<br/>
+                            }} value={option.optionText}/> {option.optionText}<br/>
                         </div>
                     ))}
                 </div>
@@ -412,7 +412,7 @@ class Survey extends Component {
                         temp.push({qid: question.surveyQuestionId, answer: event.target.value});
                         this.setState({answerObj: temp});
                     }}
-                     value={this.state.questionList[index].response} />
+                     value={this.state.questionList[index].response!==undefined?this.state.questionList[index].response:""} />
 
                 </div>
 
@@ -435,7 +435,7 @@ class Survey extends Component {
                     <div className="col-lg-12"
                          style={{textAlign: "left", paddingLeft: 20, fontSize: 16}}>
 
-                        <input type="date" onChange={(event) => {
+                        <input type="date" value={this.state.questionList[index].response!==undefined?this.state.questionList[index].response:null} onChange={(event) => {
                             var temp = this.state.answerObj;
                             for (var i = 0; i < temp.length; i++) {
                                 if (temp[i].qid === question.surveyQuestionId) {
@@ -472,8 +472,8 @@ class Survey extends Component {
                          style={{textAlign: "left", paddingLeft: 20, fontSize: 24}}>
                         <StarRatingComponent
                             name="rate1"
-                            starCount={parseInt(question.response)}
-                            value={this.state.rating}
+                            starCount={5}
+                            value={this.state.questionList[index].response!==undefined?this.state.questionList[index].response:0}
                             onStarClick={(next, pre, name) => {
                                 this.onStarClick1.bind(this)
                                 this.setState({rating: next});
@@ -528,8 +528,8 @@ class Survey extends Component {
 
         </div>
           <h2> Survey Name: {this.state.surveyTitle}</h2>
-          <div>
-            <div className="row mainPageSurvey">
+          <div style={{height: "auto", paddingBottom: 20}}>
+            <div className="row mainPageSurvey" style={{height: "auto", paddingBottom: 20}}>
 
               {this.state.questionList.map((question,index) => (
 
