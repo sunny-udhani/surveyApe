@@ -48,6 +48,7 @@ class Survey extends Component {
                     console.log(res.survey_id);
                     this.setState({surveyId: res.survey_id, surveyResponse_id: res.surveyResponse_id});
                     var payload={surveyId:res.survey_id,surveyResponse_id:res.surveyResponse_id};
+                    
                     if(this.props.email){
                       payload.email=this.props.email;
                     }
@@ -95,12 +96,13 @@ class Survey extends Component {
         }
         else {
             API.getSurveyId(data)
-                .then((aaj) => {
+                .then((res) => {
                     console.log("printig aaj");
-                    console.log(aaj);
-                    if (aaj.status !== 403) {
+                    console.log(res);
 
-                        aaj.json().then(res => {
+                    this.setState({surveyId: res.survey_id, surveyResponse_id: res.surveyResponse_id});
+                    var payload={surveyId:res.survey_id,surveyResponse_id:res.surveyResponse_id};
+
                             console.log("surveyId Fetched for Non-General Surveys: ");
                             console.log(res);
                             // if()
@@ -146,23 +148,14 @@ class Survey extends Component {
                             for(var i=0;i<this.state.questionList.length;i++){
                               console.log(this.state.questionList[i]);
                             }
-                            var temp=[];
-                            for(var i=0;i<this.state.responseList.length;i++){
-                              var one=this.state.responseList[i].questionId;
-                              var two=this.state.responseList[i].response;
-                                var obj={ one: two};
-                                temp.push(obj);
-                            }
-                            this.setState({...this.state, respObj:temp,"bool":true});
+
                         })
                             .catch(err => {
                                 console.log("aaj");
                                 console.log(err);
                             });
-                    }else{
-                        this.props.submitResponses();
-                    }
-                })
+
+
         }
     }
 
