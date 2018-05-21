@@ -185,6 +185,16 @@ public class UserController {
 
     }
 
+    @PostMapping(value = "/logout", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public @ResponseBody
+    ResponseEntity<?> logoutUser(HttpSession session) {
+
+        session.invalidate();
+
+        return new ResponseEntity<Object>("null",HttpStatus.OK);
+
+    }
+
     @PostMapping(value = "/signup", consumes = MediaType.APPLICATION_JSON_VALUE)
     public @ResponseBody
     ResponseEntity<?> signupUser(@RequestBody String data) {

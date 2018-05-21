@@ -1,10 +1,11 @@
 import React, {Component} from 'react';
 import {withRouter} from 'react-router';
 import StarRatingComponent from 'react-star-rating-component';
+import Logo from './logo.png';
 
 import './Survey.css';
 import * as API from './api/API';
-import Logo from './logo.png';
+
 
 class Survey extends Component {
     constructor(props) {
@@ -515,20 +516,28 @@ class Survey extends Component {
 
       return (
         <div>
-        <div className="row bar">
-            <div className="col-lg-1 logo">
-                <img src={Logo} />
-            </div>
-            <div className="col-lg-3 textLogo">
-              Survey Ape
-            </div>
-            <div className="col-lg-4">
 
-            </div>
+          <div className="row bar">
+              <div className="col-lg-1 logo">
+                  <img src={Logo} />
+              </div>
+              <div className="col-lg-2 textLogo">
+                Survey Ape
+              </div>
+              <div className="col-lg-2" style={{paddingTop: 38}}>
+                <h5  style={{color: "#268D5D", fontWeight: 700}} onClick={()=>{this.props.gotoDashboard()}}>Dashboard</h5>
+              </div>
 
-        </div>
-          <h2> Survey Name: {this.state.surveyTitle}</h2>
+              <div className="col-lg-2" style={{paddingTop: 38}}>
+                <h5  style={{color: "#268D5D", fontWeight: 700}} onClick={()=>{this.props.logout()}}>Logout</h5>
+              </div>
+
+          </div>
+
+
+
           <div style={{height: "auto", paddingBottom: 20}}>
+          <h2> Survey Name: {this.state.surveyTitle}</h2>
             <div className="row mainPageSurvey" style={{height: "auto", paddingBottom: 20}}>
 
               {this.state.questionList.map((question,index) => (
@@ -536,8 +545,10 @@ class Survey extends Component {
                   this.renderOptions(question, index)
 
               ))}
-              </div>
+            </div>
+
               <br/>
+
               <div className="row">
                 <div className="col-lg-4">
                 </div>
@@ -548,12 +559,11 @@ class Survey extends Component {
                 </div>
 
               </div>
-          </div>
-
-
-
 
           </div>
+
+          </div>
+
     );
 
 }

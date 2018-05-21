@@ -368,3 +368,23 @@ export const registerUser = (payload) =>
                                         console.log("This is error");
                                         return error;
                                     });
+
+                                    export const logout = () =>
+                                        fetch(`${api}/user/logout`, {
+                                            method: 'POST',
+                                            headers: {
+                                                ...headers,
+                                                'Content-Type': 'application/json'
+                                            },
+                                            credentials: 'include',
+
+                                        }).then(res => {
+                                          console.log("Inside logout in API ");
+
+                                            console.log(res);
+                                            return res;
+
+                                        }).catch(error => {
+                                            console.log("This is error");
+                                            return error;
+                                        });

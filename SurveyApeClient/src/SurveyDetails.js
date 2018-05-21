@@ -71,7 +71,7 @@ class SurveyDetails extends Component{
     if((this.props.response.survey.surveyType === 1) && (this.props.response.survey.surveyType > 2)){
       return (
         <div>
-        
+
         <div className="row bar">
             <div className="col-lg-1 logo">
                 <img src={Logo} />
@@ -82,6 +82,11 @@ class SurveyDetails extends Component{
             <div className="col-lg-2" style={{paddingTop: 38}}>
               <h5  style={{color: "#268D5D", fontWeight: 700}} onClick={()=>{this.props.gotoDashboard()}}>Dashboard</h5>
             </div>
+
+            <div className="col-lg-2" style={{paddingTop: 38}}>
+              <h5  style={{color: "#268D5D", fontWeight: 700}} onClick={()=>{this.props.logout()}}>Logout</h5>
+            </div>
+
         </div>
 
           <h3>Survey Name: {this.props.response.survey.surveyTitle}</h3>
@@ -182,6 +187,11 @@ class SurveyDetails extends Component{
             <div className="col-lg-2" style={{paddingTop: 38}}>
               <h5  style={{color: "#268D5D", fontWeight: 700}} onClick={()=>{this.props.gotoDashboard()}}>Dashboard</h5>
             </div>
+
+            <div className="col-lg-2" style={{paddingTop: 38}}>
+              <h5  style={{color: "#268D5D", fontWeight: 700}} onClick={()=>{this.props.logout()}}>Logout</h5>
+            </div>
+
         </div>
 
         <h3>Survey Name: {this.state.name}</h3>
@@ -303,6 +313,11 @@ class SurveyDetails extends Component{
             <div className="col-lg-2" style={{paddingTop: 38}}>
               <h5  style={{color: "#268D5D", fontWeight: 700}} onClick={()=>{this.props.gotoDashboard()}}>Dashboard</h5>
             </div>
+
+            <div className="col-lg-2" style={{paddingTop: 38}}>
+              <h5  style={{color: "#268D5D", fontWeight: 700}} onClick={()=>{this.props.logout()}}>Logout</h5>
+            </div>
+
         </div>
 
             <h2> Could not Generate Survey Stats. <br /> Less than two responses have been submitted.</h2>

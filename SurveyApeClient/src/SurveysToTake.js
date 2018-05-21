@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import * as API from './api/API';
+import Logo from './logo.png';
 
 class SurveysToTake extends Component{
   constructor(props){
@@ -24,6 +25,26 @@ class SurveysToTake extends Component{
 
   render(){
     return (
+
+      <div>
+
+      <div className="row bar">
+          <div className="col-lg-1 logo">
+              <img src={Logo} />
+          </div>
+          <div className="col-lg-2 textLogo">
+            Survey Ape
+          </div>
+          <div className="col-lg-2" style={{paddingTop: 38}}>
+            <h5  style={{color: "#268D5D", fontWeight: 700}} onClick={()=>{this.props.gotoDashboard()}}>Dashboard</h5>
+          </div>
+
+          <div className="col-lg-2" style={{paddingTop: 38}}>
+            <h5  style={{color: "#268D5D", fontWeight: 700}} onClick={()=>{this.props.logout()}}>Logout</h5>
+          </div>
+
+      </div>
+
       <div style={{textAlign:"center"}}>
         <h3>Surveys Assigned To You</h3>
           <div style={{marginLeft:"30%"}}>
@@ -45,6 +66,7 @@ class SurveysToTake extends Component{
             <br/><br/>
           </div>
 
+      </div>
       </div>
     );
   }
