@@ -1,7 +1,6 @@
 import React, {Component} from 'react';
 import * as API from './api/API';
-
-var id = 1;
+var id=1;
 
 class EditSurvey extends Component{
   constructor(props){
@@ -23,13 +22,10 @@ class EditSurvey extends Component{
       surveyAnswers:0
     }
 
-
-  }
-
-  componentWillMount(){
     API.getSurvey(this.props.surveyId)
     .then((res) => {
         console.log(res);
+        res=res.survey;
         var temp=[];
         for(var i=0;i<res.questionList.length;i++){
           var type=res.questionList[i].questionType;
@@ -93,37 +89,41 @@ class EditSurvey extends Component{
           id++;
         }
 
-                    this.setState({
-                        surveyTitle: res.survey.surveyTitle,
-                        surveyType: res.survey.surveyType,
-                        startDate: res.survey.startDate,
-                        endDate: res.survey.endDate,
-                        questions: temp,
-                        options: ""
-                    })
-                    if (res.survey.surveyType === 1) {
-                        var temp = res.survey.responseList;
-                        var temp2 = [];
-                        for (var i = 0; i < temp.length; i++) {
-                            temp2.push(temp[i].userEmail);
-                        }
-                        this.setState({inviteeStr: temp2.join(",")});
-                        this.setState({oldInvitees: temp2});
-                        //  this.setState({inviteeStr:""});
-                    }
+        this.setState({
+          surveyTitle:res.surveyTitle,
+          surveyType:res.surveyType,
+          startDate:res.startDate,
+          endDate:res.endDate,
+          questions:temp,
+          options:""
+        })
+        if(res.surveyType===1){
+          var temp=res.responseList;
+          var temp2=[];
+          for(var i=0;i<temp.length;i++){
+            temp2.push(temp[i].userEmail);
+          }
+        this.setState({inviteeStr:temp2.join(",")});
+        this.setState({oldInvitees:temp2});
+      //  this.setState({inviteeStr:""});
+        }
 
-                    if (res.survey.surveyType === 3) {
-                        var temp = res.survey.responseList;
-                        var temp2 = [];
-                        for (var i = 0; i < temp.length; i++) {
-                            temp2.push(temp[i].userEmail);
-                        }
+        if(res.surveyType===3){
+          var temp=res.responseList;
+          var temp2=[];
+          for(var i=0;i<temp.length;i++){
+            temp2.push(temp[i].userEmail);
+          }
 
           //this.setState({closedSurveyStr:temp2.join(",")});
           this.setState({closedSurveyStr:""});
           this.setState({oldInvitees:temp2});
         }
     });
+  }
+
+  componentWillMount(){
+
   }
   addQuestion(ques,options=null){
       var temp=this.state.questions;
@@ -188,6 +188,62 @@ class EditSurvey extends Component{
     });
   }
 
+  saveAndPublish(){
+    if(this.state.inviteeStr){
+    var inviteeList=this.state.inviteeStr.split(",");
+    }
+    if(this.state.closedSurveyStr){
+    var closedSurveyList=this.state.closedSurveyStr.split(",");
+    }
+
+    if(inviteeList && inviteeList.length>0){
+      this.props.editSurvey({type:""+this.state.surveyType,questions:this.state.questions,name:this.state.surveyTitle,publish:true,oldInvitees:this.state.oldInvitees},[],inviteeList);
+    }
+    else if(closedSurveyList.length>0){
+      this.props.editSurvey({type:""+this.state.surveyType,questions:this.state.questions,name:this.state.surveyTitle,publish:true,oldInvitees:this.state.oldInvitees},closedSurveyList,[]);
+    }
+    else{
+      this.props.editSurvey({type:""+this.state.surveyType,questions:this.state.questions,name:this.state.surveyTitle,publish:true,oldInvitees:this.state.oldInvitees},[],[]);
+    }
+    this.setState({
+      questions:[],
+      type:null,
+      choice:null,
+      ans:null,
+      style:null,
+      question:"",
+      options:""
+    })
+  }
+
+  save(){
+    if(this.state.inviteeStr){
+    var inviteeList=this.state.inviteeStr.split(",");
+    }
+    if(this.state.closedSurveyStr){
+    var closedSurveyList=this.state.closedSurveyStr.split(",");
+    }
+    console.log(inviteeList);
+    if(inviteeList && inviteeList.length>0){
+      this.props.editSurvey({type:""+this.state.surveyType,questions:this.state.questions,name:this.state.surveyTitle,publish:false,oldInvitees:this.state.oldInvitees},[],inviteeList);
+    }
+    else if(closedSurveyList.length>0){
+      this.props.editSurvey({type:""+this.state.surveyType,questions:this.state.questions,name:this.state.surveyTitle,publish:false,oldInvitees:this.state.oldInvitees},closedSurveyList,[]);
+    }
+    else{
+      this.props.editSurvey({type:""+this.state.surveyType,questions:this.state.questions,name:this.state.surveyTitle,publish:false,oldInvitees:this.state.oldInvitees},[],[]);
+    }
+      this.setState({
+        questions:[],
+        type:null,
+        choice:null,
+        ans:null,
+        style:null,
+        question:"",
+        options:""
+      })
+  }
+
   deleteQuestion(id1){
     console.log(id1);
     var temp=this.state.questions;
@@ -220,6 +276,7 @@ class EditSurvey extends Component{
     }
 
   render(){
+    var self=this;
     return(
       <div style={{marginLeft:"20%"}}>
 
@@ -484,128 +541,39 @@ class EditSurvey extends Component{
 </div>)}
 
 
-                </div>
-                <div style={{marginLeft: "30%"}}>
-                    <h4>QUESTIONS:</h4>
-                    <ul>
-                        {this.state.questions.map((item) => {
-                            return <div>
-                                <li style={{listStyleType: "none", width: "80%"}} key={item.id}>Q: {item.questionText}
-                                    <ul>
-                                        {item.optionList.map((option) => {
-                                            return <li style={{listStyleType: "none", width: "60%"}} key={option}><input
-                                                type="radio" value={option}/><label>{option}</label></li>
-                                        })}
-                                    </ul>
-                                </li>
-                                <input type="button" className="btn btn-primary" onClick={() => {
-                                    this.deleteQuestion(item.id)
-                                }} value="Delete Question"/>
-                            </div>
-                        })}
-                    </ul>
-                </div>
-                <br/>
-                <div>
+    </div>
+  <div style={{marginLeft:"30%"}}>
+  <h4>QUESTIONS:</h4>
+    <ul>
+      {this.state.questions.map((item)=>{
+        return <div><li style={{listStyleType:"none",width:"80%"}} key={item.id}>Q: {item.questionText}
+                <ul>
+              {item.optionList.map((option)=>{
+                return <li style={{listStyleType:"none",width:"60%"}} key={option}> <input type="radio" value={option}/><label>{option}</label></li>
+              })}
+            </ul>
+             </li>
+             <input type="button" className="btn btn-primary" onClick={()=>{this.deleteQuestion(item.id)}} value="Delete Question"/>
+           </div>
+      })}
+    </ul>
+  </div>
+  <br/>
+      <div>
 
-                    <div>
-                        <input type="button" style={{marginLeft: "10%"}} className="btn btn-primary"
-                               value="Save and Publish" onClick={() => {
-                            if (this.state.inviteeStr) {
-                                var inviteeList = this.state.inviteeStr.split(",");
-                            }
-                            if (this.state.closedSurveyStr) {
-                                var closedSurveyList = this.state.closedSurveyStr.split(",");
-                            }
+        <div>
+            <input type="button" style={{marginLeft:"10%"}} className="btn btn-primary" value="Save and Publish" onClick={()=>{
+                this.saveAndPublish();
+              }}/>
 
-                            if (inviteeList && inviteeList.length > 0) {
-                                this.props.editSurvey({
-                                    type: "" + this.state.surveyType,
-                                    questions: this.state.questions,
-                                    name: this.state.surveyTitle,
-                                    publish: true,
-                                    oldInvitees: this.state.oldInvitees
-                                }, [], inviteeList);
-                            }
-                            else if (closedSurveyList.length > 0) {
-                                this.props.editSurvey({
-                                    type: "" + this.state.surveyType,
-                                    questions: this.state.questions,
-                                    name: this.state.surveyTitle,
-                                    publish: true,
-                                    oldInvitees: this.state.oldInvitees
-                                }, closedSurveyList, []);
-                            }
-                            else {
-                                this.props.editSurvey({
-                                    type: "" + this.state.surveyType,
-                                    questions: this.state.questions,
-                                    name: this.state.surveyTitle,
-                                    publish: true,
-                                    oldInvitees: this.state.oldInvitees
-                                }, [], []);
-                            }
-                            this.setState({
-                                questions: [],
-                                type: null,
-                                choice: null,
-                                ans: null,
-                                style: null,
-                                question: "",
-                                options: ""
-                            })
-                        }}/>
+            <input type="file" style={{marginLeft: "10%"}} accept="application/json"
+                   onChange={e => this.importJSON(e)}/>
 
-                        <input type="file" style={{marginLeft: "10%"}} accept="application/json"
-                               onChange={e => this.importJSON(e)}/>
-
-                        <input type="button" style={{marginLeft: "10%"}} className="btn btn-primary" value="Save"
-                               onClick={() => {
-                                   if (this.state.inviteeStr) {
-                                       var inviteeList = this.state.inviteeStr.split(",");
-                                   }
-                                   if (this.state.closedSurveyStr) {
-                                       var closedSurveyList = this.state.closedSurveyStr.split(",");
-                                   }
-                                   console.log(inviteeList)
-                                   if (inviteeList && inviteeList.length > 0) {
-                                       this.props.editSurvey({
-                                           type: "" + this.state.surveyType,
-                                           questions: this.state.questions,
-                                           name: this.state.surveyTitle,
-                                           publish: false
-                                       }, [], inviteeList);
-                                   }
-                                   else if (closedSurveyList.length > 0) {
-                                       this.props.editSurvey({
-                                           type: "" + this.state.surveyType,
-                                           questions: this.state.questions,
-                                           name: this.state.surveyTitle,
-                                           publish: false,
-                                           oldInvitees: this.state.oldInvitees
-                                       }, closedSurveyList, []);
-                                   }
-                                   else {
-                                       this.props.editSurvey({
-                                           type: "" + this.state.surveyType,
-                                           questions: this.state.questions,
-                                           name: this.state.surveyTitle,
-                                           publish: false,
-                                           oldInvitees: this.state.oldInvitees
-                                       }, [], []);
-                                   }
-                                   this.setState({
-                                       questions: [],
-                                       type: null,
-                                       choice: null,
-                                       ans: null,
-                                       style: null,
-                                       question: "",
-                                       options: ""
-                                   })
-                               }}/>
-                    </div>
-                </div>
+            <input type="button" style={{marginLeft:"40%"}} className="btn btn-primary" value="Save" onClick={()=>{
+              this.save();
+                }}/>
+        </div>
+      </div>
 
                 <div>
 

@@ -142,6 +142,8 @@ class Routing extends Component {
         url-
         > 1 way hash
         */
+        console.log("PRINTING SURVEY OBJECT");
+        console.log(survey);
         console.log(closedSurveyList);
         console.log(inviteeList);
         var surveyType = survey.type;
@@ -190,7 +192,7 @@ class Routing extends Component {
         };
         var removed=[];
         var added=[];
-        if (attendeesList.length > 0) {
+        if (attendeesList.length > 0 && survey.oldInvitees) {
           for(var i=0;i<survey.oldInvitees.length;i++){
             for(var j=0;j<attendeesList.length;j++){
               if(survey.oldInvitees[i]===attendeesList[j]){
