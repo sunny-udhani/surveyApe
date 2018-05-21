@@ -27,16 +27,22 @@ class Dashboard extends Component {
     return (
       <div className="dashboard">
 
-              <div className="row bar">
-                  <div className="col-lg-1 logo">
-                      <img src={Logo} />
-                  </div>
-                  <div className="col-lg-3 textLogo">
-                    Survey Ape
-                  </div>
-                  
+      <div className="row bar">
+          <div className="col-lg-1 logo">
+              <img src={Logo} />
+          </div>
+          <div className="col-lg-2 textLogo">
+            Survey Ape
+          </div>
+          <div className="col-lg-2" style={{paddingTop: 38}}>
+            <h5  style={{color: "#268D5D", fontWeight: 700}} onClick={()=>{this.props.gotoDashboard()}}>Dashboard</h5>
+          </div>
 
-              </div>
+          <div className="col-lg-2" style={{paddingTop: 38}}>
+            <h5  style={{color: "#268D5D", fontWeight: 700}} onClick={()=>{this.props.logout()}}>Logout</h5>
+          </div>
+
+      </div>
 
               <div className="row survey-pane">
 

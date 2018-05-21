@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 
 import './Signin.css';
+import Logo from './logo.png';
 
 
 class Signin extends Component {
@@ -22,6 +23,24 @@ class Signin extends Component {
   render() {
     return (
       <div style={{backgroundColor: "white"}}>
+
+      <div className="row bar">
+          <div className="col-lg-1 logo">
+              <img src={Logo} />
+          </div>
+          <div className="col-lg-2 textLogo">
+            Survey Ape
+          </div>
+          <div className="col-lg-2" style={{paddingTop: 38}}>
+            <h5  style={{color: "#268D5D", fontWeight: 700}} onClick={()=>{this.props.gotoDashboard()}}>Dashboard</h5>
+          </div>
+
+          <div className="col-lg-2" style={{paddingTop: 38}}>
+            <h5  style={{color: "#268D5D", fontWeight: 700}} onClick={()=>{this.props.logout()}}>Logout</h5>
+          </div>
+
+      </div>
+
       {/* Place Header here  */}
         <div className="container" style={{marginTop: "3%"}}>
 

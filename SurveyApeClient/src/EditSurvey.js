@@ -214,6 +214,7 @@ class EditSurvey extends Component{
     return(
       <div style={{marginLeft:"20%"}}>
 
+
         <h4>SurveyName:</h4>
         <input type="text" style={{width:"80%"}} value={this.state.surveyTitle} onChange={(event)=>this.setState({surveyTitle:event.target.value})}/><br/>
       <h4>Survey Start Date:</h4>
