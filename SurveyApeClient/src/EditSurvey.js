@@ -21,6 +21,11 @@ class EditSurvey extends Component{
       oldInvitees:[],
       surveyAnswers:0
     }
+
+
+  }
+
+  componentWillMount(){
     API.getSurvey(this.props.surveyId)
     .then((res) => {
         console.log(res);
@@ -118,7 +123,6 @@ class EditSurvey extends Component{
           this.setState({oldInvitees:temp2});
         }
     });
-
   }
   addQuestion(ques,options=null){
       var temp=this.state.questions;

@@ -10,10 +10,13 @@ class SurveysToTake extends Component{
   }
 
   componentWillMount(){
-    API.assignedSurveys().
+    API.surveyeeSurveys().
     then((res)=>{
-      if(res.length>0){
-        this.setState({surveys:res});
+      if(res.surveys && res.surveys.length>0){
+        this.setState({surveys:res.surveys});
+      }
+      else{
+        alert("Some issue in fetching surveys");
       }
       console.log(res);
     })
@@ -22,15 +25,23 @@ class SurveysToTake extends Component{
   render(){
     return (
       <div style={{textAlign:"center"}}>
-          <div>
-            <h3>Surveys Assigned To You</h3>
-            =
+        <h3>Surveys Assigned To You</h3>
+          <div style={{marginLeft:"30%"}}>
+
+            <br/><br/>
+            <table style={{border:"1px solid black"}}>
+              <tr>
+              <th style={{borderRight:"1px solid black"}}>Survey Title</th>
+              <th>Survey URL</th>
+              </tr>
               {this.state.surveys.map((item)=>{
-                 return <li>{item.surveyId}</li>;
+                 return <tr><td style={{borderRight:"1px solid black"}}>{item.surveyTitle}</td>
+                 <td><a href={item.surveyURI}>{item.surveyURI}</a></td>
+                 </tr>;
               }
               //
               )}
-
+            </table>
             <br/><br/>
           </div>
 
