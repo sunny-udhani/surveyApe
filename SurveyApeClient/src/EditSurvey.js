@@ -17,7 +17,7 @@ class EditSurvey extends Component{
       closedSurveyStr:null,
       closedSurveyList:[],
       inviteeList:[],
-      inviteeStr:null,
+      inviteeStr:"",
       oldInvitees:[],
       surveyAnswers:0
     }
@@ -189,11 +189,13 @@ class EditSurvey extends Component{
   }
 
   saveAndPublish(){
+    var inviteeList=[];
+    var closedSurveyList=[];
     if(this.state.inviteeStr){
-    var inviteeList=this.state.inviteeStr.split(",");
+  inviteeList=this.state.inviteeStr.split(",");
     }
     if(this.state.closedSurveyStr){
-    var closedSurveyList=this.state.closedSurveyStr.split(",");
+closedSurveyList=this.state.closedSurveyStr.split(",");
     }
 
     if(inviteeList && inviteeList.length>0){
@@ -217,14 +219,17 @@ class EditSurvey extends Component{
   }
 
   save(){
+    var inviteeList=[];
+    var closedSurveyList=[];
     if(this.state.inviteeStr){
-    var inviteeList=this.state.inviteeStr.split(",");
+    inviteeList=this.state.inviteeStr.split(",");
     }
     if(this.state.closedSurveyStr){
-    var closedSurveyList=this.state.closedSurveyStr.split(",");
+    closedSurveyList=this.state.closedSurveyStr.split(",");
     }
     console.log(inviteeList);
-    if(inviteeList && inviteeList.length>0){
+
+    if(inviteeList.length>0){
       this.props.editSurvey({type:""+this.state.surveyType,questions:this.state.questions,name:this.state.surveyTitle,publish:false,oldInvitees:this.state.oldInvitees},[],inviteeList);
     }
     else if(closedSurveyList.length>0){

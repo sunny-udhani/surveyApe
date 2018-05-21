@@ -226,8 +226,10 @@ public class SurveyController {
             }
         }
 
-
+        System.out.println(survey.getQuestionList());
         survey.getQuestionList().clear();
+        System.out.println(survey.getQuestionList());
+
         surveyService.saveSurvey(survey);
 
         JSONArray questionArray = reqObj.getJSONArray("questions");
