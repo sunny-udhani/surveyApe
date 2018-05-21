@@ -109,6 +109,11 @@ class Routing extends Component {
                 console.log(res);
                 if(res.surveyId){
                   this.setState({surveyId:res.surveyId});
+                  alert('Survey was created successfully');
+                  this.props.history.push("/dashboard");
+                }
+                else{
+                  alert(res.message);
                   this.props.history.push("/dashboard");
                 }
 
@@ -233,18 +238,19 @@ class Routing extends Component {
             .then((res) => {
                 console.log(res);
                 if(res.surveyId){
+                  alert('Survey successfully edited');
                   this.props.history.push("/dashboard");
                 }
 
 
                 if (res.status == 200) {
-                  //  alert("Survey successfully created");
                     console.log(res.json());
                     this.props.history.push("/signin");
-                    this.props.history.push('/createSurvey');
+                    this.props.history.push('/dashboard');
                 }
-                else if (res.status == 406) {
-                    alert("Representation error!");
+                else{
+                    alert(res.message);
+
                     this.props.history.push('/signin');
 
                 }
@@ -478,9 +484,11 @@ class Routing extends Component {
 
      API.sendEmailUrlSurveyId(data1)
      .then(res =>{
+        alert('Email sent successfully');
          console.log(res);
      })
      .catch(err => {
+       alert('Issue with sending the email');
        console.error(err);
      })
 
@@ -516,10 +524,13 @@ class Routing extends Component {
       var payload={surveyId:id,publish:true};
       API.PublishSurvey1(payload)
       .then(res =>{
+        alert('Survey Successfully Published');
         this.props.history.push('/');
         this.props.history.push('/mySurveys');
       })
       .catch(err => {
+
+          alert('Problem in publishing survey');
         console.error(err);
       })
 
@@ -529,8 +540,12 @@ class Routing extends Component {
       //API call for end survey
       API.endSurvey(id).
       then((res)=>{
+        alert('Survey Ended Successfully');
         this.props.history.push('/');
         this.props.history.push('/mySurveys');
+      })
+      .catch(err=>{
+        alert('Problem in ending survey');
       });
     }
 
@@ -545,10 +560,11 @@ class Routing extends Component {
       var payload={surveyId:id,addInviteeList:arr};
       API.addInvitees(payload).
       then((res)=>{
+        alert('Invitees Successfully Added');
         this.props.history.push('/');
         this.props.history.push('/mySurveys');
       });
-      alert('Invitees Successfully Added');
+
 
     }
 

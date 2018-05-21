@@ -24,6 +24,8 @@ export const submitResponse = (data) =>
     });
 
 
+
+
     export const PublishSurvey1 = (payload) =>
         fetch(`${api}/survey/publish/${payload.surveyId}`, {
             method: 'POST',
