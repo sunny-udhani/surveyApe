@@ -48,7 +48,7 @@ class Survey extends Component {
                     console.log(res.survey_id);
                     this.setState({surveyId: res.survey_id, surveyResponse_id: res.surveyResponse_id});
                     var payload={surveyId:res.survey_id,surveyResponse_id:res.surveyResponse_id};
-                    
+
                     if(this.props.email){
                       payload.email=this.props.email;
                     }
@@ -112,7 +112,8 @@ class Survey extends Component {
                                 email: res.email, surveyResponse_id: res.surveyResponse_id
                             });
                             var payload={surveyId:res.survey_id,surveyResponse_id:res.surveyResponse_id,email:res.email};
-
+                            console.log("Payload for getSurveyAndResp:");
+                            console.log(payload);
                             API.getSurveyAndResp(payload)
                                 .then((res) => {
                                     console.log("getting response in getSurveyAndResp:");
