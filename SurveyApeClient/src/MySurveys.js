@@ -135,11 +135,6 @@ class MySurveys extends Component {
                                                         onClick={() => this.props.PublishSurvey(item.surveyId)}/>
                                             </div>) : (<div>Already Published</div>)}</div>
 
-                                        <div className="col-lg-4">{item.publishedInd == 1 ? (
-                                            <div style={{paddingLeft: 117}}><input type="button" className="butt2"
-                                                                                   value="End Survey"
-                                                                                   onClick={() => this.props.EndSurvey(item.surveyId)}/>
-                                            </div>) : (<div>Survey Inactive</div>)}</div>
 
                                         <div className="col-lg-4">{item.surveyCompletedInd == 0 ? (
                                             <div style={{paddingLeft: 117}}><input type="button" className="butt2"
@@ -173,12 +168,13 @@ class MySurveys extends Component {
 
 
                                         <div className="col-lg-6"><label>Export as JSON File&nbsp;</label>
-                                            <input type="button" style={{width: 120}}
-                                                   onClick={(event) => this.exportAsJson(item.surveyId)}/>
+
                                             <div className="col-lg-6"><label>Filename &nbsp;</label> <input
                                                 type="text" onChange={(event) => this.filename = event.target.value}/>
                                             </div>
-
+                                            <br/>
+                                            <button type="button" style={{width: 120}}
+                                                   onClick={(event) => this.exportAsJson(item.surveyId)}>Export</button>
                                         </div>
                                     </div>
 
