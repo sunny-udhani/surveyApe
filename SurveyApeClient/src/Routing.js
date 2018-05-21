@@ -499,6 +499,10 @@ class Routing extends Component {
         this.props.history.push('/takeSurvey');
     }
 
+    gotoDashboard = () => {
+      this.props.history.push('/dashboard');
+    }
+
     EditSurvey = (id) =>{
       this.setState({surveyId:id},function(){
         this.props.history.push('/editSurvey');
@@ -580,7 +584,7 @@ class Routing extends Component {
 
                 <Route exact path="/surveyDetails" render={() => (
                     <div>
-                        <SurveyDetails response={this.state.res} surveyId={this.state.surveyId}/>
+                        <SurveyDetails response={this.state.res} surveyId={this.state.surveyId} gotoDashboard={this.gotoDashboard}/>
                     </div>
                 )}/>
                 <Route exact path="/qr" render={() => (
