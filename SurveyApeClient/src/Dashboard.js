@@ -34,9 +34,7 @@ class Dashboard extends Component {
                   <div className="col-lg-3 textLogo">
                     Survey Ape
                   </div>
-                  <div className="col-lg-4">
-
-                  </div>
+                  
 
               </div>
 
