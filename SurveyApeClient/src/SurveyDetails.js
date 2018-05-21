@@ -117,10 +117,16 @@ class SurveyDetails extends Component{
                       <div className="row">
                         {this.state.output.map(optionsAndCount => (
 
-                          <div className="col-lg-3" style={{paddingTop: 20}}>
-                            <h5> <span style={{fontWeight: 600}}>Option Text: </span>{optionsAndCount.optionText}</h5>
-                            <h5> <span style={{fontWeight: 600}}>Response Count: </span>{optionsAndCount.responseCount}</h5>
-                            <br/>
+
+
+                          <div>
+                            {(optionsAndCount.questionText) === question.questionText ? (<div className="col-lg-3" style={{paddingTop: 20}}>
+
+                              <h5> <span style={{fontWeight: 600}}>Option Text: </span>{optionsAndCount.responses.optionText}</h5>
+                              <h5> <span style={{fontWeight: 600}}>Response Count: </span>{optionsAndCount.responses.responseCount}</h5>
+                              <br/>
+                              </div>): (<span></span>)}
+
                           </div>
 
 
