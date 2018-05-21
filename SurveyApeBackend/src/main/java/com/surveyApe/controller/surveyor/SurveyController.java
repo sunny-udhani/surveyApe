@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.surveyApe.config.QuestionTypeEnum;
 import com.surveyApe.config.SurveyTypeEnum;
 import com.surveyApe.entity.*;
+import com.surveyApe.repository.SurveyQuestionRepository;
 import com.surveyApe.service.*;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -44,6 +45,9 @@ public class SurveyController {
     private SurveyResponseService surveyResponseService;
     @Autowired
     private MailServices mailServices;
+    @Autowired
+    private SurveyQuestionRepository surveyQuestionRepository;
+
 
     @PostMapping(path = "/create", produces = MediaType.APPLICATION_JSON_VALUE)
     public @ResponseBody
