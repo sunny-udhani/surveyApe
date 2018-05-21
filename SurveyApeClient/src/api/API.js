@@ -363,7 +363,8 @@ export const registerUser = (payload) =>
                                     }).then(res => {
                                       console.log("Data fetched after calling sendEmailUrlSurveyId: ");
 
-                                        console.log(res.body);
+                                        console.log(res);
+                                        return res.json();
 
                                     }).catch(error => {
                                         console.log("This is error");

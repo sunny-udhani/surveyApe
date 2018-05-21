@@ -44,7 +44,6 @@ componentWillMount() {
             console.log(res.survey_id);
           }
 
-
             //  alert("Survey successfully created");
             this.setState({
               surveyIdOpen: res.survey_id,
