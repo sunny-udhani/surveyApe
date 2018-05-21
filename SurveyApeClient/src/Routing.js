@@ -394,13 +394,14 @@ class Routing extends Component {
     }
 
     signIn = (payload) => {
+        console.log("ghjvsdhagjsghasd");
+        this.setState({surveyorEmail:payload.email})
         API.signIn(payload)
             .then((res) => {
                 console.log("Data received for Open Survey Data: ");
                 console.log(res);
                 console.log(res.msg);
                 if (res.status == 200) {
-
 
                   var temp = (Math.random() * 100000);
                 var  url1 = "http://localhost:3000/surveyee/takeSurvey/2/" + temp;
@@ -420,6 +421,7 @@ class Routing extends Component {
                   }
                   else{
                     alert("User Signed In Successfully");
+                    console.log(payload.email);
                     this.setState({
                       surveyorEmail: payload.email
                     })
@@ -598,13 +600,13 @@ class Routing extends Component {
             <div className="container-fluid" style={{backgroundColor: "white", height: "100%"}}>
                 <Route exact path="/" render={() => (
                     <div>
-                        <LandingPage gotoSignin={this.gotoSignin} gotoSignup={this.gotoSignup}/>
+                        <LandingPage gotoSignin={this.gotoSignin} logout={this.logout} gotoSignup={this.gotoSignup}/>
                     </div>
                 )}/>
 
               <Route exact path="/mySurveys" render={() => (
                     <div>
-                        <MySurveys GetSurveyStats={this.GetSurveyStats} EditSurvey={this.EditSurvey} PublishSurvey={this.PublishSurvey} EndSurvey={this.EndSurvey} AddInvitees={this.AddInvitees}/>
+                        <MySurveys GetSurveyStats={this.GetSurveyStats} logout={this.logout} EditSurvey={this.EditSurvey} PublishSurvey={this.PublishSurvey} EndSurvey={this.EndSurvey} AddInvitees={this.AddInvitees}/>
                     </div>
                 )}/>
 
@@ -621,58 +623,58 @@ class Routing extends Component {
 
               <Route exact path="/editSurvey" render={() => (
                       <div>
-                        <EditSurvey surveyId={this.state.surveyId} editSurvey={this.editSurvey}/>
+                        <EditSurvey surveyId={this.state.surveyId} logout={this.logout} editSurvey={this.editSurvey}/>
                       </div>
                 )} />
 
                 <Route exact path="/dashboard" render={() => (
                     <div>
-                        <Dashboard submitResponses={this.submitResponses} gotoCreateSurvey={this.gotoCreateSurvey} gotoMySurveys={this.gotoMySurveys} gotoSurveysToTake={this.gotoSurveysToTake} surveyorEmail={this.state.surveyorEmail} gotoSignin={this.gotoSignin}/>
+                        <Dashboard submitResponses={this.submitResponses} logout={this.logout} gotoCreateSurvey={this.gotoCreateSurvey} gotoMySurveys={this.gotoMySurveys} gotoSurveysToTake={this.gotoSurveysToTake} surveyorEmail={this.state.surveyorEmail} gotoSignin={this.gotoSignin}/>
                     </div>
                 )}/>
 
 
                 <Route exact path="/signup" render={() => (
                     <div>
-                        <Signup gotoSignin={this.gotoSignin} registerUser={this.registerUser} dataOpen={this.state.dataOpen}/>
+                        <Signup gotoSignin={this.gotoSignin} logout={this.logout} registerUser={this.registerUser} dataOpen={this.state.dataOpen}/>
                     </div>
                 )}/>
 
 
                 <Route exact path="/signin" render={() => (
                     <div>
-                        <Signin signIn={this.signIn} gotoSignup={this.gotoSignup} dataOpen={this.state.dataOpen}/>
+                        <Signin signIn={this.signIn} gotoSignup={this.gotoSignup} logout={this.logout} dataOpen={this.state.dataOpen}/>
                     </div>
                 )}/>
 
                 <Route exact path="/confirmation" render={() => (
                     <div>
-                        <Confirmation verifyUser={this.verifyUser} dataOpen={this.state.dataOpen}/>
+                        <Confirmation verifyUser={this.verifyUser} logout={this.logout} dataOpen={this.state.dataOpen}/>
                     </div>
                 )}/>
 
                 <Route exact path="/createSurvey" render={() => (
-                    <div style={{height: "100%"}}>
-                        <CreateSurvey createSurvey={this.createSurvey}/>
-                    </div>
+                  <div>
+                      <Form1 createSurvey={this.createSurvey} logout={this.logout}/>
+                  </div>
                 )}/>
 
                 <Route exact path="/surveyee/takeSurvey/:surveyType/:randSurvey" render={() => (
                     <div>
-                        <Survey submitSurveys={this.submitSurveys} email={this.state.surveyorEmail} submitResponses={this.submitResponses}/>
+                        <Survey submitSurveys={this.submitSurveys} logout={this.logout} email={this.state.surveyorEmail} submitResponses={this.submitResponses}/>
                     </div>
                 )}/>
 
                 <Route exact path="/surveyee/register/:surveyType/:randSurvey" render={() => (
                     <div>
-                        <OpenUniqueSurvey gotoSigninOpen={this.gotoSigninOpen} gotoSignupOpen={this.gotoSignupOpen} gotoEmailOpen={this.gotoEmailOpen}/>
+                        <OpenUniqueSurvey gotoSigninOpen={this.gotoSigninOpen} logout={this.logout} gotoSignupOpen={this.gotoSignupOpen} gotoEmailOpen={this.gotoEmailOpen}/>
                     </div>
                 )}/>
 
 
               <Route exact path="/takeSurvey" render={() => (
                     <div>
-                        <SurveysToTake surveyorEmail={this.state.surveyorEmail}/>
+                        <SurveysToTake surveyorEmail={this.state.surveyorEmail} logout={this.logout}/>
                     </div>
                 )}/>
 
@@ -686,7 +688,7 @@ class Routing extends Component {
 
               <Route exact path="/form" render={() => (
                     <div>
-                        <Form1 createSurvey={this.createSurvey}/>
+                        <Form1 createSurvey={this.createSurvey} logout={this.logout}/>
                     </div>
                 )}/>
 

@@ -134,13 +134,10 @@ public class SurveyController {
             for (int i = 0; i < attendeesArray.length(); i++) {
                 JSONObject attendeesObj = attendeesArray.getJSONObject(i);
 
-                System.out.println(attendeesObj);
-
                 String surveyeeEmail = attendeesObj.getString("email");
                 String surveyeeURI = attendeesObj.getString("url");
 
                 SurveyResponse newSurveyeeResponseEntry = createNewSurveyeeResponseEntry(surveyVO.getSurveyId(), surveyeeEmail, surveyeeURI);
-
                 if (newSurveyeeResponseEntry == null) {
                     response.put("message", "response entity not created");
                     return new ResponseEntity<Object>(response.toString(), HttpStatus.BAD_REQUEST);
