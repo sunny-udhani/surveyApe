@@ -12,6 +12,17 @@ class Dashboard extends Component {
     }
   }
 
+  componentWillMount() {
+
+    console.log("inside will Mount of Dashboard");
+    console.log(this.props);
+    if(this.props.surveyorEmail === null)
+    {
+      alert("you are not logged in.");
+      this.props.gotoSignin();
+    }
+  }
+
   render() {
     return (
       <div className="dashboard">

@@ -418,12 +418,9 @@ class Routing extends Component {
                       surveyorEmail: payload.email
                     })
 
+
                     this.props.history.push("/dashboard");
                   }
-
-
-
-
 
 
                 }
@@ -442,8 +439,8 @@ class Routing extends Component {
                 }
                 else {
                     console.log("res.status===", res)
-                    alert("Failed to register!Please check all the fields and try again");
-                    this.props.history.push("/signup");
+                    alert("Wrong Credentials used! Please check all the fields and try again");
+                    this.props.history.push("/signin");
                 }
 
             });
@@ -565,7 +562,20 @@ class Routing extends Component {
       });
     }
 
-
+    logout = () => {
+      API.logout().
+      then((res)=>{
+        console.log(res);
+        if(res.status === 200)
+        {
+          alert("user logged out successfully");
+          this.setState({
+            surveyorEmail: null
+          });
+          this.props.history.push('/');
+        }
+      });
+    }
 
     render() {
         return (
@@ -584,7 +594,7 @@ class Routing extends Component {
 
                 <Route exact path="/surveyDetails" render={() => (
                     <div>
-                        <SurveyDetails response={this.state.res} surveyId={this.state.surveyId} gotoDashboard={this.gotoDashboard}/>
+                        <SurveyDetails response={this.state.res} surveyId={this.state.surveyId} gotoDashboard={this.gotoDashboard} logout={this.logout}/>
                     </div>
                 )}/>
                 <Route exact path="/qr" render={() => (
@@ -601,7 +611,7 @@ class Routing extends Component {
 
                 <Route exact path="/dashboard" render={() => (
                     <div>
-                        <Dashboard submitResponses={this.submitResponses} gotoCreateSurvey={this.gotoCreateSurvey} gotoMySurveys={this.gotoMySurveys} gotoSurveysToTake={this.gotoSurveysToTake}/>
+                        <Dashboard submitResponses={this.submitResponses} gotoCreateSurvey={this.gotoCreateSurvey} gotoMySurveys={this.gotoMySurveys} gotoSurveysToTake={this.gotoSurveysToTake} surveyorEmail={this.state.surveyorEmail} gotoSignin={this.gotoSignin}/>
                     </div>
                 )}/>
 
