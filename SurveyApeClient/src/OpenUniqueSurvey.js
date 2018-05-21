@@ -31,34 +31,25 @@ componentWillMount() {
     "surveyType": this.props.match.params.surveyType
   }
 
-
+  console.log("data1: ");
+  console.log(data1);
 
 {/* Fetching surveyId from Open Unique Link */}
 
   API.fetchSurveyIdOpen(data1)
       .then((res) => {
           console.log(res);
-          if(res.surveyId){
+          if(res.survey_id){
             console.log("Assuming that surveyId Received: ");
-            console.log(res.surveyId);
+            console.log(res.survey_id);
+          }
+
+
+            //  alert("Survey successfully created");
             this.setState({
-              surveyIdOpen: res.surveyId,
+              surveyIdOpen: res.survey_id,
               url: "http://localhost:3000" + this.props.match.url
             });
-
-          }
-
-          if (res.status == 200) {
-            //  alert("Survey successfully created");
-              console.log(res.json());
-              this.props.history.push("/signin");
-              this.props.history.push('/createSurvey');
-          }
-          else if (res.status == 406) {
-              alert("Representation error!");
-              this.props.history.push('/signin');
-
-          }
 
       });
 

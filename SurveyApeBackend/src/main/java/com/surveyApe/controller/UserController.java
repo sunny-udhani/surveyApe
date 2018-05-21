@@ -187,7 +187,8 @@ public class UserController {
 
     @PostMapping(value = "/logout", consumes = MediaType.APPLICATION_JSON_VALUE)
     public @ResponseBody
-    ResponseEntity<?> logoutUser(HttpSession session) {
+    ResponseEntity<?> logoutUser(
+            HttpSession session) {
 
         session.invalidate();
 

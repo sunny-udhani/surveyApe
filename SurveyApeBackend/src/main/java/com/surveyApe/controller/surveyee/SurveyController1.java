@@ -42,6 +42,8 @@ public class SurveyController1 {
         JSONObject reqObj = new JSONObject(req);
         JSONObject response = new JSONObject();
 
+
+
         int surveyType = Integer.parseInt(reqObj.getString("surveyType"));
         String url = reqObj.getString("url");
 
@@ -129,6 +131,11 @@ public class SurveyController1 {
                 response.put("message", "Your URL is no longer valid");
                 return new ResponseEntity<Object>(response.toString(), HttpStatus.FORBIDDEN);
             }
+
+            System.out.println("logging inside surveyefor openUnique");
+            System.out.println(surveyResponse.getSurveyResponseId());
+            System.out.println(surveyResponse.getUserEmail());
+            System.out.println(surveyResponse.getSurveyId().getSurveyId());
 
             response.put("surveyResponse_id", surveyResponse.getSurveyResponseId());
             response.put("email", surveyResponse.getUserEmail());
@@ -307,7 +314,7 @@ public class SurveyController1 {
 
         if (surveyType == SurveyTypeEnum.OPEN.getEnumCode()) {
             Survey survey = surveyService.findSurveyByURL(url);
-
+            System.out.println(survey.getSurveyId());
             int checkForValidations = surveyValidations(survey);
             if (checkForValidations == 1) {
                 response.put("message", "No such survey");

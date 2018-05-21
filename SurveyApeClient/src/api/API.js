@@ -331,6 +331,7 @@ export const registerUser = (payload) =>
                               });
 
                             export const fetchSurveyIdOpen = (payload) =>
+
                                 fetch(`${api}/surveyee/open/getSurvey/uri`, {
                                     method: 'POST',
                                     headers: {
@@ -342,9 +343,9 @@ export const registerUser = (payload) =>
                                 }).then(res => {
                                   console.log("Data fetched after calling fetchSurveyIdOpen: ");
 
-                                    console.log(res.body);
-                                    res.surveyId = "297ee401637bac7c01637bae82f40000";
-                                    return res;
+                                    console.log(res);
+                                  //  res.surveyId = "297ee401637bac7c01637bae82f40000";
+                                    return res.json();
                                 }).catch(error => {
                                     console.log("This is error");
                                     return error;
