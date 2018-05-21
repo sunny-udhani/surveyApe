@@ -569,7 +569,7 @@ class EditSurvey extends Component{
             <input type="file" style={{marginLeft: "10%"}} accept="application/json"
                    onChange={e => this.importJSON(e)}/>
 
-            <input type="button" style={{marginLeft:"40%"}} className="btn btn-primary" value="Save" onClick={()=>{
+            <input type="button" style={{marginLeft:"10%"}} className="btn btn-primary" value="Save" onClick={()=>{
               this.save();
                 }}/>
         </div>
