@@ -26,7 +26,7 @@ class Survey extends Component {
 
     componentWillMount() {
 
-        console.log("http://localhost:3000" + this.props.match.url);
+        console.log("http://13.56.150.136:3000" + this.props.match.url);
         console.log("surveyType: ", this.props.match.params.surveyType);
         console.log("SurveyRandomNumber: ", this.props.match.params.randSurvey);
 
@@ -34,7 +34,7 @@ class Survey extends Component {
         }
 
         var data = {
-            "url": "http://localhost:3000" + this.props.match.url,
+            "url": "http://13.56.150.136:3000" + this.props.match.url,
             "surveyType": this.props.match.params.surveyType
         }
 
