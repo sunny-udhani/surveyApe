@@ -275,9 +275,11 @@ public class UserController {
         }
 
         Date now = new Date();
-        if (now.after(survey.getEndDate())) {
-            response.put("message", "Survey has ended!");
-            return new ResponseEntity<Object>(response.toString(), HttpStatus.SERVICE_UNAVAILABLE);
+        if(survey.getEndDate()!=null) {
+            if (now.after(survey.getEndDate())) {
+                response.put("message", "Survey has ended!");
+                return new ResponseEntity<Object>(response.toString(), HttpStatus.SERVICE_UNAVAILABLE);
+            }
         }
 
         surveyResponse.setSurveyURIValidInd(false);

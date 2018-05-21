@@ -50,7 +50,7 @@ class Survey extends Component {
                     if(this.props.email){
                       payload.email=this.props.email;
                     }
-                    
+
                     API.getSurveyAndResp(payload)
                         .then((res) => {
                             console.log(res.responses);
@@ -412,7 +412,7 @@ class Survey extends Component {
                         temp.push({qid: question.surveyQuestionId, answer: event.target.value});
                         this.setState({answerObj: temp});
                     }}
-                     value={this.state.questionList[index].response} />
+                     value={this.state.questionList[index].response!==undefined?this.state.questionList[index].response:""} />
 
                 </div>
 
@@ -435,7 +435,7 @@ class Survey extends Component {
                     <div className="col-lg-12"
                          style={{textAlign: "left", paddingLeft: 20, fontSize: 16}}>
 
-                        <input type="date" onChange={(event) => {
+                        <input type="date" value={this.state.questionList[index].response!==undefined?this.state.questionList[index].response:null} onChange={(event) => {
                             var temp = this.state.answerObj;
                             for (var i = 0; i < temp.length; i++) {
                                 if (temp[i].qid === question.surveyQuestionId) {
@@ -472,8 +472,8 @@ class Survey extends Component {
                          style={{textAlign: "left", paddingLeft: 20, fontSize: 24}}>
                         <StarRatingComponent
                             name="rate1"
-                            starCount={parseInt(question.response)}
-                            value={this.state.rating}
+                            starCount={5}
+                            value={this.state.questionList[index].response!==undefined?this.state.questionList[index].response:0}
                             onStarClick={(next, pre, name) => {
                                 this.onStarClick1.bind(this)
                                 this.setState({rating: next});
