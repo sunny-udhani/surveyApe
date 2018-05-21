@@ -1,5 +1,4 @@
 import axios from 'axios';
-
 const api = 'http://localhost:8080';
 
 
@@ -93,6 +92,7 @@ export const endSurvey = (data) =>
     });
 
 
+
 export const getMySurveys = () =>
     fetch(`${api}/survey/surveyor/getAll`, {
         method: 'GET',
@@ -111,6 +111,8 @@ export const getMySurveys = () =>
         console.log("This is error");
         return error;
     });
+
+
 
 
 export const getSurvey = (id) =>
@@ -256,21 +258,37 @@ export const getSurvey1 = (id) =>
         return error;
     });
 
-export const assignedSurveys = (id) =>
-    fetch(`${api}/survey/surveyee/getAll`, {
-        method: 'GET',
-        headers: {
-            ...headers,
-            'Content-Type': 'application/json'
-        },
-        credentials: 'include'
-    }).then(res => {
-        console.log(res);
-        return res.json();
-    }).catch(error => {
-        console.log("This is error");
-        return error;
-    });
+                    export const assignedSurveys = (id) =>
+                        fetch(`${api}/survey/surveyee/getAll`, {
+                            method: 'GET',
+                            headers: {
+                                ...headers,
+                                'Content-Type': 'application/json'
+                            },
+                            credentials: 'include'
+                        }).then(res => {
+                            console.log(res);
+                            return res.json();
+                        }).catch(error => {
+                            console.log("This is error");
+                            return error;
+                        });
+
+                        export const surveyeeSurveys = (id) =>
+                            fetch(`${api}/surveyee/survey/getAll`, {
+                                method: 'GET',
+                                headers: {
+                                    ...headers,
+                                    'Content-Type': 'application/json'
+                                },
+                                credentials: 'include'
+                            }).then(res => {
+                                console.log(res);
+                                return res.json();
+                            }).catch(error => {
+                                console.log("This is error");
+                                return error;
+                            });
 
 export const getSurveyId = (payload) =>
     fetch(`${api}/surveyee/getSurvey/uri`, {
@@ -306,6 +324,7 @@ export const getSurveyAndResp = (payload) =>
         return error;
     });
 
+                              
 
 export const addInvitees = (payload) =>
     fetch(`${api}/survey/addAttendees/` + payload.surveyId, {
@@ -324,42 +343,44 @@ export const addInvitees = (payload) =>
         return error;
     });
 
-export const sendOneResp = (payload) =>
-    fetch(`${api}/surveyee/responses/question/answer`, {
-        method: 'POST',
-        headers: {
-            ...headers,
-            'Content-Type': 'application/json'
-        },
-        credentials: 'include',
-        body: JSON.stringify(payload)
-    }).then(res => {
-        console.log(res.body);
-        return res;
-    }).catch(error => {
-        console.log("This is error");
-        return error;
-    });
+                            export const sendOneResp = (payload) =>
+                                fetch(`${api}/surveyee/responses/question/answer`, {
+                                  method: 'POST',
+                                  headers: {
+                                      ...headers,
+                                      'Content-Type': 'application/json'
+                                  },
+                                  credentials: 'include',
+                                  body: JSON.stringify(payload)
+                              }).then(res => {
+                                console.log("Inside res of sendOneResp: ");
+                                  console.log(res);
+                                  return res;
+                              }).catch(error => {
+                                  console.log("This is error");
+                                  return error;
+                              });
 
-export const fetchSurveyIdOpen = (payload) =>
-    fetch(`${api}/surveyee/open/getSurvey/uri`, {
-        method: 'POST',
-        headers: {
-            ...headers,
-            'Content-Type': 'application/json'
-        },
-        credentials: 'include',
-        body: JSON.stringify(payload)
-    }).then(res => {
-        console.log("Data fetched after calling fetchSurveyIdOpen: ");
+                            export const fetchSurveyIdOpen = (payload) =>
 
-        console.log(res.body);
-        res.surveyId = "297ee401637bac7c01637bae82f40000";
-        return res;
-    }).catch(error => {
-        console.log("This is error");
-        return error;
-    });
+                                fetch(`${api}/surveyee/open/getSurvey/uri`, {
+                                    method: 'POST',
+                                    headers: {
+                                        ...headers,
+                                        'Content-Type': 'application/json'
+                                    },
+                                    credentials: 'include',
+                                    body: JSON.stringify(payload)
+                                }).then(res => {
+                                  console.log("Data fetched after calling fetchSurveyIdOpen: ");
+
+                                    console.log(res);
+                                  //  res.surveyId = "297ee401637bac7c01637bae82f40000";
+                                    return res.json();
+                                }).catch(error => {
+                                    console.log("This is error");
+                                    return error;
+                                });
 
 export const sendEmailUrlSurveyId = (payload) =>
     fetch(`${api}/surveyee/open/create/surveyResponse/`, {
@@ -373,9 +394,30 @@ export const sendEmailUrlSurveyId = (payload) =>
     }).then(res => {
         console.log("Data fetched after calling sendEmailUrlSurveyId: ");
 
-        console.log(res.body);
+                                        console.log(res);
+                                        return res.json();
 
-    }).catch(error => {
-        console.log("This is error");
-        return error;
-    });
+                                    }).catch(error => {
+                                        console.log("This is error");
+                                        return error;
+                                    });
+
+                                    export const logout = () =>
+                                        fetch(`${api}/user/logout`, {
+                                            method: 'POST',
+                                            headers: {
+                                                ...headers,
+                                                'Content-Type': 'application/json'
+                                            },
+                                            credentials: 'include',
+
+                                        }).then(res => {
+                                          console.log("Inside logout in API ");
+
+                                            console.log(res);
+                                            return res;
+
+                                        }).catch(error => {
+                                            console.log("This is error");
+                                            return error;
+                                        });

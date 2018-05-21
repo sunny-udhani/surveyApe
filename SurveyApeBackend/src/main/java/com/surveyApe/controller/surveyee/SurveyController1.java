@@ -42,6 +42,8 @@ public class SurveyController1 {
         JSONObject reqObj = new JSONObject(req);
         JSONObject response = new JSONObject();
 
+
+
         int surveyType = Integer.parseInt(reqObj.getString("surveyType"));
         String url = reqObj.getString("url");
 
@@ -130,9 +132,14 @@ public class SurveyController1 {
                 return new ResponseEntity<Object>(response.toString(), HttpStatus.FORBIDDEN);
             }
 
+            System.out.println("logging inside surveyefor openUnique");
+            System.out.println(surveyResponse.getSurveyResponseId());
+            System.out.println(surveyResponse.getUserEmail());
+            System.out.println(surveyResponse.getSurveyId().getSurveyId());
+
             response.put("surveyResponse_id", surveyResponse.getSurveyResponseId());
             response.put("email", surveyResponse.getUserEmail());
-            response.put("survey_id", surveyResponse.getSurveyId());
+            response.put("survey_id", surveyResponse.getSurveyId().getSurveyId());
 
             return new ResponseEntity<Object>(response.toString(), HttpStatus.OK);
 
@@ -196,12 +203,33 @@ public class SurveyController1 {
                 if (!surveyResponse_id.isEmpty()) {
                     SurveyResponse surveyResponse = surveyResponseService.getSurveyResponseEntityFromId(surveyResponse_id);
                     if (surveyResponse != null) {
-                        surveyResponseStr = responseJSON.writeValueAsString(surveyResponse.getQuestionResponseList());
+
+                        JSONObject responses = new JSONObject();
+                        JSONArray resp = new JSONArray();
+                        surveyResponse.getQuestionResponseList().stream().forEach( sr -> {
+                            JSONObject ne = new JSONObject();
+                            ne.put("questionId", sr.getQuestionId().getSurveyQuestionId());
+                            ne.put("response", sr.getResponse());
+                            resp.put(ne);
+                        });
+
+                        surveyResponseStr = resp.toString();
+//                        surveyResponseStr = responseJSON.writeValueAsString(surveyResponse.getQuestionResponseList());
                     }
                 } else {
                     SurveyResponse surveyResponse = surveyResponseService.findBySurveyIdAndEmail(survey, userEmail);
                     if (surveyResponse != null) {
-                        surveyResponseStr = responseJSON.writeValueAsString(surveyResponse.getQuestionResponseList());
+                        JSONArray resp = new JSONArray();
+                        surveyResponse.getQuestionResponseList().stream().forEach( sr -> {
+                            JSONObject ne = new JSONObject();
+                            ne.put("questionId", sr.getQuestionId().getSurveyQuestionId());
+                            ne.put("response", sr.getResponse());
+                            resp.put(ne);
+                        });
+
+                        surveyResponseStr = resp.toString();
+//
+//                        surveyResponseStr = responseJSON.writeValueAsString(surveyResponse.getQuestionResponseList());
                     }
                 }
 
@@ -286,7 +314,7 @@ public class SurveyController1 {
 
         if (surveyType == SurveyTypeEnum.OPEN.getEnumCode()) {
             Survey survey = surveyService.findSurveyByURL(url);
-
+            System.out.println(survey.getSurveyId());
             int checkForValidations = surveyValidations(survey);
             if (checkForValidations == 1) {
                 response.put("message", "No such survey");

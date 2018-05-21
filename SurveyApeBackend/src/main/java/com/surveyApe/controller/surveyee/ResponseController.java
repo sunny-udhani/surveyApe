@@ -34,7 +34,7 @@ public class ResponseController {
     ResponseEntity<?> fillResponseForQuestion(@RequestBody String req, @RequestParam Map<String, String> params, HttpSession session) {
         JSONObject reqObj = new JSONObject(req);
         JSONObject response = new JSONObject();
-        System.out.println("ALA ithe");
+
         if (!reqObj.has("survey_id")) {
             response.put("message", "please specify which survey");
             return new ResponseEntity<Object>(response.toString(), HttpStatus.BAD_REQUEST);
@@ -57,7 +57,11 @@ public class ResponseController {
         String response1 = reqObj.getString("response");
         Survey survey = surveyService.findBySurveyId(reqObj.getString("survey_id"));
 
-
+        System.out.println(responseId);
+        System.out.println(questionId);
+        System.out.println(response1);
+        System.out.println(survey);
+        System.out.println("ALA ithe");
 
         if (survey == null) {
             response.put("message", "invalid survey id");
@@ -68,7 +72,7 @@ public class ResponseController {
                 .filter(r -> r.getSurveyResponseId().equals(responseId))
                 .findAny()
                 .orElse(null);
-
+        System.out.println(userResponseEntity);
         if (userResponseEntity == null) {
             response.put("message", "invalid survey response id");
             return new ResponseEntity<Object>(response.toString(), HttpStatus.BAD_REQUEST);
@@ -78,7 +82,7 @@ public class ResponseController {
                 .filter(r -> r.getSurveyQuestionId().equals(questionId))
                 .findAny()
                 .orElse(null);
-
+        System.out.println(questionEntity);
         if (questionEntity == null) {
             response.put("message", "invalid survey question id");
             return new ResponseEntity<Object>(response.toString(), HttpStatus.BAD_REQUEST);
@@ -88,20 +92,21 @@ public class ResponseController {
                 .filter(r -> r.getSurveyResponseId().equals(userResponseEntity.getSurveyResponseId()))
                 .findAny()
                 .orElse(null);
-
+        System.out.println(questionResponse);
         if (questionResponse == null) {
             QuestionResponse newAnswer = new QuestionResponse();
             newAnswer.setQuestionId(questionEntity);
             newAnswer.setSurveyResponseId(userResponseEntity);
             newAnswer.setResponse(response1);
-            questionResponseService.saveResponse(questionResponse);
+
+            questionResponseService.saveResponse(newAnswer);
         } else {
             questionResponse.setResponse(response1);
             questionResponseService.saveResponse(questionResponse);
         }
 
         response.put("message", "invalid request");
-        return new ResponseEntity<>(response.toString(), HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(response.toString(), HttpStatus.OK);
     }
 
 }

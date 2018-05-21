@@ -52,6 +52,9 @@ class Routing extends Component {
         else {
 
         }
+
+        console.log("SUrveytype debug:"+surveyType);
+
         for (var i = 0; i < survey.questions.length; i++) {
             survey.questions[i].optionList = survey.questions[i].optionList.join(',');
         }
@@ -106,6 +109,11 @@ class Routing extends Component {
                 console.log(res);
                 if(res.surveyId){
                   this.setState({surveyId:res.surveyId});
+                  alert('Survey was created successfully');
+                  this.props.history.push("/dashboard");
+                }
+                else{
+                  alert(res.message);
                   this.props.history.push("/dashboard");
                 }
 
@@ -230,18 +238,19 @@ class Routing extends Component {
             .then((res) => {
                 console.log(res);
                 if(res.surveyId){
+                  alert('Survey successfully edited');
                   this.props.history.push("/dashboard");
                 }
 
 
                 if (res.status == 200) {
-                  //  alert("Survey successfully created");
                     console.log(res.json());
                     this.props.history.push("/signin");
-                    this.props.history.push('/createSurvey');
+                    this.props.history.push('/dashboard');
                 }
-                else if (res.status == 406) {
-                    alert("Representation error!");
+                else{
+                    alert(res.message);
+
                     this.props.history.push('/signin');
 
                 }
@@ -339,7 +348,6 @@ class Routing extends Component {
       this.setState({
         dataOpen: data
       });
-
       this.props.history.push('/signup');
     }
 
@@ -358,10 +366,35 @@ class Routing extends Component {
                 dataOpen: res.dataOpen
               });
 
-                if (res.status == 200) {
-                    alert("User registration is successful!");
-                    this.props.history.push("/confirmation");
+
+              if (res.status == 200) {
+
+                var temp = (Math.random() * 100000);
+                var  url1 = "http://localhost:3000/surveyee/takeSurvey/2/" + temp;
+                if(res.dataOpen){
+                  var data = {
+                    surveyId: res.dataOpen.surveyIdOpen,
+                    email: payload.email,
+                    url: url1
+                  }
+                  API.sendEmailUrlSurveyId(data)
+                  .then(res =>{
+                      console.log("result of sendEmailUrlId:");
+                      console.log(res);
+                  })
+                  .catch(err => {
+                    console.error(err);
+                  })
                 }
+                else{
+                  alert("User registration is successful!");
+                  this.props.history.push("/confirmation");
+
+                }
+
+
+              }
+
                 else if (res.status == 401) {
                     alert("User with this email id already exists. Please use another email id!");
                     this.props.history.push("/");
@@ -385,6 +418,8 @@ class Routing extends Component {
     }
 
     signIn = (payload) => {
+        console.log("ghjvsdhagjsghasd");
+        this.setState({surveyorEmail:payload.email})
         API.signIn(payload)
             .then((res) => {
                 console.log("Data received for Open Survey Data: ");
@@ -392,9 +427,8 @@ class Routing extends Component {
                 console.log(res.msg);
                 if (res.status == 200) {
 
-
                   var temp = (Math.random() * 100000);
-                var  url1 = "http://localhost:3000/surveyee/takeSurvey/2/" + temp;
+                  var  url1 = "http://localhost:3000/surveyee/takeSurvey/2/" + temp;
                   if(res.dataOpen){
                     var data = {
                       surveyId: res.dataOpen.surveyIdOpen,
@@ -411,16 +445,14 @@ class Routing extends Component {
                   }
                   else{
                     alert("User Signed In Successfully");
+                    console.log(payload.email);
                     this.setState({
                       surveyorEmail: payload.email
                     })
 
+
                     this.props.history.push("/dashboard");
                   }
-
-
-
-
 
 
                 }
@@ -439,8 +471,8 @@ class Routing extends Component {
                 }
                 else {
                     console.log("res.status===", res)
-                    alert("Failed to register!Please check all the fields and try again");
-                    this.props.history.push("/signup");
+                    alert("Wrong Credentials used! Please check all the fields and try again");
+                    this.props.history.push("/signin");
                 }
 
             });
@@ -457,6 +489,39 @@ class Routing extends Component {
 
     }
 
+    gotoEmailOpen = (data) => {
+     console.log("Inside gotoEmailOpen");
+     console.log("Props received:");
+     console.log(this.props);
+
+     console.log("Data received:");
+     console.log(data);
+
+     var temp = (Math.random() * 100000);
+     var  url1 = "http://localhost:3000/surveyee/takeSurvey/2/" + temp;
+
+       var data2 = {
+         surveyId: data.surveyIdOpen,
+         email: data.email,
+         url: url1
+}
+
+     API.sendEmailUrlSurveyId(data2)
+     .then(res =>{
+
+       console.log("Inside sendEmailUrlId in gotoEmailOpen:");
+       console.log(res);
+        alert('Email sent successfully');
+         console.log(res);
+     })
+     .catch(err => {
+       alert('Issue with sending the email');
+       console.error(err);
+     })
+
+
+   }
+
     gotoMySurveys = () =>{
       this.props.history.push('/mySurveys');
     }
@@ -467,6 +532,10 @@ class Routing extends Component {
 
     gotoSurveysToTake = () => {
         this.props.history.push('/takeSurvey');
+    }
+
+    gotoDashboard = () => {
+      this.props.history.push('/dashboard');
     }
 
     EditSurvey = (id) =>{
@@ -486,10 +555,13 @@ class Routing extends Component {
       var payload={surveyId:id,publish:true};
       API.PublishSurvey1(payload)
       .then(res =>{
+        alert('Survey Successfully Published');
         this.props.history.push('/');
         this.props.history.push('/mySurveys');
       })
       .catch(err => {
+
+          alert('Problem in publishing survey');
         console.error(err);
       })
 
@@ -499,8 +571,12 @@ class Routing extends Component {
       //API call for end survey
       API.endSurvey(id).
       then((res)=>{
+        alert('Survey Ended Successfully');
         this.props.history.push('/');
         this.props.history.push('/mySurveys');
+      })
+      .catch(err=>{
+        alert('Problem in ending survey');
       });
     }
 
@@ -515,10 +591,11 @@ class Routing extends Component {
       var payload={surveyId:id,addInviteeList:arr};
       API.addInvitees(payload).
       then((res)=>{
+        alert('Invitees Successfully Added');
         this.props.history.push('/');
         this.props.history.push('/mySurveys');
       });
-      alert('Invitees Successfully Added');
+
 
     }
 
@@ -531,26 +608,39 @@ class Routing extends Component {
       });
     }
 
-
+    logout = () => {
+      API.logout().
+      then((res)=>{
+        console.log(res);
+        if(res.status === 200)
+        {
+          alert("user logged out successfully");
+          this.setState({
+            surveyorEmail: null
+          });
+          this.props.history.push('/');
+        }
+      });
+    }
 
     render() {
         return (
             <div className="container-fluid" style={{backgroundColor: "white", height: "100%"}}>
                 <Route exact path="/" render={() => (
                     <div>
-                        <LandingPage gotoSignin={this.gotoSignin} gotoSignup={this.gotoSignup}/>
+                        <LandingPage gotoSignin={this.gotoSignin} logout={this.logout} gotoSignup={this.gotoSignup}/>
                     </div>
                 )}/>
 
               <Route exact path="/mySurveys" render={() => (
                     <div>
-                        <MySurveys GetSurveyStats={this.GetSurveyStats} EditSurvey={this.EditSurvey} PublishSurvey={this.PublishSurvey} EndSurvey={this.EndSurvey} AddInvitees={this.AddInvitees}/>
+                        <MySurveys GetSurveyStats={this.GetSurveyStats} logout={this.logout} EditSurvey={this.EditSurvey} PublishSurvey={this.PublishSurvey} EndSurvey={this.EndSurvey} AddInvitees={this.AddInvitees}/>
                     </div>
                 )}/>
 
                 <Route exact path="/surveyDetails" render={() => (
                     <div>
-                        <SurveyDetails response={this.state.res} surveyId={this.state.surveyId}/>
+                        <SurveyDetails response={this.state.res} surveyId={this.state.surveyId} gotoDashboard={this.gotoDashboard} logout={this.logout}/>
                     </div>
                 )}/>
                 <Route exact path="/qr" render={() => (
@@ -569,52 +659,52 @@ class Routing extends Component {
 
                 <Route exact path="/dashboard" render={() => (
                     <div>
-                        <Dashboard submitResponses={this.submitResponses} gotoCreateSurvey={this.gotoCreateSurvey} gotoMySurveys={this.gotoMySurveys} gotoSurveysToTake={this.gotoSurveysToTake}/>
+                        <Dashboard submitResponses={this.submitResponses} logout={this.logout} gotoCreateSurvey={this.gotoCreateSurvey} gotoMySurveys={this.gotoMySurveys} gotoSurveysToTake={this.gotoSurveysToTake} surveyorEmail={this.state.surveyorEmail} gotoSignin={this.gotoSignin}/>
                     </div>
                 )}/>
 
 
                 <Route exact path="/signup" render={() => (
                     <div>
-                        <Signup gotoSignin={this.gotoSignin} registerUser={this.registerUser} dataOpen={this.state.dataOpen}/>
+                        <Signup gotoSignin={this.gotoSignin} logout={this.logout} registerUser={this.registerUser} dataOpen={this.state.dataOpen}/>
                     </div>
                 )}/>
 
 
                 <Route exact path="/signin" render={() => (
                     <div>
-                        <Signin signIn={this.signIn} gotoSignup={this.gotoSignup} dataOpen={this.state.dataOpen}/>
+                        <Signin signIn={this.signIn} gotoSignup={this.gotoSignup} logout={this.logout} dataOpen={this.state.dataOpen}/>
                     </div>
                 )}/>
 
                 <Route exact path="/confirmation" render={() => (
                     <div>
-                        <Confirmation verifyUser={this.verifyUser} dataOpen={this.state.dataOpen}/>
+                        <Confirmation verifyUser={this.verifyUser} logout={this.logout} dataOpen={this.state.dataOpen}/>
                     </div>
                 )}/>
 
                 <Route exact path="/createSurvey" render={() => (
-                    <div style={{height: "100%"}}>
-                        <CreateSurvey createSurvey={this.createSurvey}/>
-                    </div>
+                  <div>
+                      <Form1 createSurvey={this.createSurvey} logout={this.logout}/>
+                  </div>
                 )}/>
 
                 <Route exact path="/surveyee/takeSurvey/:surveyType/:randSurvey" render={() => (
                     <div>
-                        <Survey submitSurveys={this.submitSurveys} email={this.state.surveyorEmail} submitResponses={this.submitResponses}/>
+                        <Survey submitSurveys={this.submitSurveys} logout={this.logout} email={this.state.surveyorEmail} submitResponses={this.submitResponses}/>
                     </div>
                 )}/>
 
                 <Route exact path="/surveyee/register/:surveyType/:randSurvey" render={() => (
                     <div>
-                        <OpenUniqueSurvey gotoSigninOpen={this.gotoSigninOpen} gotoSignupOpen={this.gotoSignupOpen}/>
+                        <OpenUniqueSurvey gotoSigninOpen={this.gotoSigninOpen} logout={this.logout} gotoSignupOpen={this.gotoSignupOpen} gotoEmailOpen={this.gotoEmailOpen}/>
                     </div>
                 )}/>
 
 
               <Route exact path="/takeSurvey" render={() => (
                     <div>
-                        <SurveysToTake surveyorEmail={this.state.surveyorEmail}/>
+                        <SurveysToTake surveyorEmail={this.state.surveyorEmail} logout={this.logout}/>
                     </div>
                 )}/>
 
@@ -628,7 +718,7 @@ class Routing extends Component {
 
               <Route exact path="/form" render={() => (
                     <div>
-                        <Form1 createSurvey={this.createSurvey}/>
+                        <Form1 createSurvey={this.createSurvey} logout={this.logout}/>
                     </div>
                 )}/>
 

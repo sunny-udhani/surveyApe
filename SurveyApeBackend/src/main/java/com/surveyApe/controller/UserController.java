@@ -185,6 +185,17 @@ public class UserController {
 
     }
 
+    @PostMapping(value = "/logout", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public @ResponseBody
+    ResponseEntity<?> logoutUser(
+            HttpSession session) {
+
+        session.invalidate();
+
+        return new ResponseEntity<Object>("null",HttpStatus.OK);
+
+    }
+
     @PostMapping(value = "/signup", consumes = MediaType.APPLICATION_JSON_VALUE)
     public @ResponseBody
     ResponseEntity<?> signupUser(@RequestBody String data) {
@@ -275,9 +286,11 @@ public class UserController {
         }
 
         Date now = new Date();
-        if (now.after(survey.getEndDate())) {
-            response.put("message", "Survey has ended!");
-            return new ResponseEntity<Object>(response.toString(), HttpStatus.SERVICE_UNAVAILABLE);
+        if(survey.getEndDate()!=null) {
+            if (now.after(survey.getEndDate())) {
+                response.put("message", "Survey has ended!");
+                return new ResponseEntity<Object>(response.toString(), HttpStatus.SERVICE_UNAVAILABLE);
+            }
         }
 
         surveyResponse.setSurveyURIValidInd(false);

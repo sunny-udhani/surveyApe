@@ -20,9 +20,9 @@ class MySurveys extends Component {
             });
     }
 
-    componentWillMount() {
+  componentWillMount(){
 
-    }
+  }
 
     exportAsJson(surveyId) {
 
@@ -78,16 +78,20 @@ class MySurveys extends Component {
         return (
             <div>
 
-                <div className="row bar">
-                    <div className="col-lg-1 logo">
-                        <img src={Logo}/>
-                    </div>
-                    <div className="col-lg-3 textLogo">
-                        Survey Ape
-                    </div>
-                    <div className="col-lg-4">
+      <div className="row bar">
+          <div className="col-lg-1 logo">
+              <img src={Logo} />
+          </div>
+          <div className="col-lg-2 textLogo">
+            Survey Ape
+          </div>
+          <div className="col-lg-2" style={{paddingTop: 38}}>
+            <h5  style={{color: "#268D5D", fontWeight: 700}} onClick={()=>{this.props.gotoDashboard()}}>Dashboard</h5>
+          </div>
 
-                    </div>
+          <div className="col-lg-2" style={{paddingTop: 38}}>
+            <h5  style={{color: "#268D5D", fontWeight: 700}} onClick={()=>{this.props.logout()}}>Logout</h5>
+          </div>
 
                 </div>
 
@@ -133,6 +137,8 @@ class MySurveys extends Component {
                                             </div>) : (<div>Survey Inactive</div>)}</div>
                                     </div>
 
+            <div className="col-lg-4">{item.surveyCompletedInd==0?(<div style={{paddingLeft: 117}}><input type="button" className="butt2" value="End Survey" onClick={()=>this.props.EndSurvey(item.surveyId)}/></div>):(<div>Survey Complete</div>)}</div>
+      </div>
                                     <div className="row"
                                          style={{marginTop: 10, marginBottom: 20, fontSize: 18, fontWeight: 500}}>
 
