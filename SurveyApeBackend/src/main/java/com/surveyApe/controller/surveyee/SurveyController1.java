@@ -371,6 +371,7 @@ public class SurveyController1 {
             } else {
 
                 createNewEmailResponseEntity(survey, email, newUniqueUrlForEmail);
+                response.put("surveyResponse_id", survey.getSurveyId());
                 mailServices.sendEmail(email, "You must fill this survey: " + newUniqueUrlForEmail, "survayape.noreply@gmail.com", "Survey Filling request", newUniqueUrlForEmail, true);
 
 //                mailServices.sendEmail(email, );

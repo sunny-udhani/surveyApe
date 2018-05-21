@@ -421,6 +421,14 @@ class Routing extends Component {
                     API.sendEmailUrlSurveyId(data)
                     .then(res =>{
                         console.log(res);
+                        alert("User Signed In Successfully");
+                        console.log(payload.email);
+                        this.setState({
+                          surveyorEmail: payload.email
+                        })
+
+
+                        this.props.history.push("/dashboard");
                     })
                     .catch(err => {
                       console.error(err);

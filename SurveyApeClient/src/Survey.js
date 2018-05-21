@@ -16,6 +16,7 @@ class Survey extends Component {
             "rating": 1,
             "surveyResponses": [],
             "surveyId": '',
+            "surveyResponse_id": '',
             "email": null,
             "bool":false
 
@@ -120,7 +121,7 @@ class Survey extends Component {
                                     console.log(res);
                                     this.setState({
                                         surveyId: res.survey.surveyId,
-                                        surveyResponse_id: res.survey.surveyResponse_id,
+                                        // surveyResponse_id: res.survey.surveyResponse_id,
                                         surveyTitle: res.survey.surveyTitle,
                                         questionList: res.survey.questionList,
                                         responseList: res.responses,
@@ -142,6 +143,11 @@ class Survey extends Component {
                                       for(var i=0;i<this.state.questionList.length;i++){
                                         console.log(this.state.questionList[i]);
                                       }
+
+                                      console.log("State variable:");
+                                      console.log(this.state);
+                                      this.setState({...this.state,"bool":true});
+
                                     })
                                 });
 
@@ -149,6 +155,7 @@ class Survey extends Component {
                             for(var i=0;i<this.state.questionList.length;i++){
                               console.log(this.state.questionList[i]);
                             }
+
 
                         })
                             .catch(err => {
@@ -208,10 +215,10 @@ class Survey extends Component {
                         var payload={question_id:question.surveyQuestionId,response:event.target.value,survey_id:this.state.surveyId,survey_response_id:this.state.surveyResponse_id};
                         console.log(payload);
                         API.sendOneResp(payload);
-                    }}>
+                    }} >
                         {question.questionOptionList.map(option => (
 
-                            <option value={option.optionText}>{option.optionText}</option>
+                            <option selected={question.response == option.optionText} value={option.optionText}>{option.optionText}</option>
 
                         ))}
                     </select>
