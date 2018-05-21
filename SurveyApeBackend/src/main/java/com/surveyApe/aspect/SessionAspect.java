@@ -23,7 +23,7 @@ import java.util.Map;
 
 @Aspect
 @Component
-//@Order(0)
+@Order(0)
 public class SessionAspect {
 
     @Autowired
@@ -37,7 +37,7 @@ public class SessionAspect {
     }
 
     @Around("controller()")
-    public Object beforeSaveSurvey(ProceedingJoinPoint joinPoint) throws Throwable {
+    public Object checkSession(ProceedingJoinPoint joinPoint) throws Throwable {
         System.out.println(joinPoint.getSignature());
         System.out.println(joinPoint.getSignature().getName());
 
