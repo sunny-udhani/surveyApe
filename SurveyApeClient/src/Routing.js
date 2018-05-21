@@ -394,13 +394,14 @@ class Routing extends Component {
     }
 
     signIn = (payload) => {
+        console.log("ghjvsdhagjsghasd");
+        this.setState({surveyorEmail:payload.email})
         API.signIn(payload)
             .then((res) => {
                 console.log("Data received for Open Survey Data: ");
                 console.log(res);
                 console.log(res.msg);
                 if (res.status == 200) {
-
 
                   var temp = (Math.random() * 100000);
                 var  url1 = "http://localhost:3000/surveyee/takeSurvey/2/" + temp;
@@ -420,6 +421,7 @@ class Routing extends Component {
                   }
                   else{
                     alert("User Signed In Successfully");
+                    console.log(payload.email);
                     this.setState({
                       surveyorEmail: payload.email
                     })
