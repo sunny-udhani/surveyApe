@@ -151,12 +151,12 @@ class MySurveys extends Component {
                                                                          </div>)}
                                         </div>
 
-                                        <div className="col-lg-4">{item.publishedInd == 0 ? (
+                                        <div className="col-lg-4">{item.publishedInd == 0 && item.surveyCompletedInd==0 ? (
                                             <div><input type="button" className="butt2" value="Publish"
                                                         onClick={() => this.props.PublishSurvey(item.surveyId)}/>
                                                     </div>) : (<div>
 
-                                                      {this.state.respArr[index]<1 && item.publishedInd==1?(<div>
+                                                      {this.state.respArr[index]<1 && item.publishedInd==1 && item.surveyCompletedInd==0?(<div>
                                                         <input type="button" className="butt2" value="Unpublish"
                                                                     onClick={() => this.props.UnpublishSurvey(item.surveyId)}/>
                                                       </div>):(<div>
