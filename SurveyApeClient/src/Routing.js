@@ -222,9 +222,9 @@ class Routing extends Component {
             }
           }
 
-            for(var j=0;j<survey.oldInvitees.length;i++){
-              if(attendeesList.indexOf(survey.oldInvitees[i])>=0){
-                attendeesList.splice(attendeesList.indexOf(survey.oldInvitees[i]),1);
+            for(var j=0;j<survey.oldInvitees.length;j++){
+              if(attendeesList.indexOf(survey.oldInvitees[j])>=0){
+                attendeesList.splice(attendeesList.indexOf(survey.oldInvitees[j]),1);
               }
             }
 
@@ -261,31 +261,17 @@ class Routing extends Component {
         console.log(payload);
         //API FOR others
         var temp=this.state.surveyId;
-        API.editSurvey(payload,temp)
+        console.log(temp);
+        API.editSurvey(payload,this.state.surveyId)
             .then((res) => {
-                if(res==="failure"){
-                  alert('Not able to edit this survey at this time');
-                  this.props.history.push("/dashboard");
-                }
-                console.log(res);
                 if(res.surveyId){
                   alert('Survey successfully edited');
                   this.props.history.push("/dashboard");
                 }
-
-
-                if (res.status == 200) {
-                    console.log(res.json());
-                    this.props.history.push("/signin");
-                    this.props.history.push('/dashboard');
-                }
                 else{
-                    alert(res.message);
-
-                    this.props.history.push('/signin');
-
+                  alert('Survey edit unsuccessful');
+                  this.props.history.push("/dashboard");
                 }
-
             });
 
 

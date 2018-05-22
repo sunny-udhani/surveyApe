@@ -74,7 +74,7 @@ class SurveyDetails extends Component{
 
   render(){
     if(this.props.response){
-    if((this.props.response.survey.surveyType === 1) && (this.props.response.competedResponses > 2)){
+    if((this.props.response.survey.surveyType === 1) && (this.props.response.competedResponses >= 2)){
       return (
         <div>
 
