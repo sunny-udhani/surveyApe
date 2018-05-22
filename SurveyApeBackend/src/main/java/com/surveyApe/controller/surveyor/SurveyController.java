@@ -45,8 +45,6 @@ public class SurveyController {
     private SurveyResponseService surveyResponseService;
     @Autowired
     private MailServices mailServices;
-    @Autowired
-    private SurveyQuestionRepository surveyQuestionRepository;
 
 
     @PostMapping(path = "/create", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -397,7 +395,7 @@ public class SurveyController {
                 }
 
                 if (survey.isPublishedInd())
-                    mailServices.sendEmail(surveyeeEmail, "You are invited to take this survey: " + survey.getSurveyTitle() + " at " + surveyeeURI, "aviralkum@gmail.com", "Survey filling request", surveyeeURI, true);
+                    mailServices.sendEmail(surveyeeEmail, "You are invited to take this survey: " + survey.getSurveyTitle() + " at " + surveyeeURI, "survayape.noreply@gmail.comalkum@gmail.com", "Survey filling request", surveyeeURI, true);
 
             }
         }
@@ -417,7 +415,7 @@ public class SurveyController {
                 }
 
                 if (survey.isPublishedInd())
-                    mailServices.sendEmail(surveyeeEmail, "You are invited to take this survey: " + survey.getSurveyTitle() + " at " + survey.getSurveyURI(), "aviralkum@gmail.com", "Survey filling request", survey.getSurveyURI(), true);
+                    mailServices.sendEmail(surveyeeEmail, "You are invited to take this survey: " + survey.getSurveyTitle() + " at " + survey.getSurveyURI(), "survayape.noreply@gmail.comalkum@gmail.com", "Survey filling request", survey.getSurveyURI(), true);
 
             }
         }
