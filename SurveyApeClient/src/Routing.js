@@ -17,7 +17,6 @@ import SurveysToTake from './SurveysToTake';
 import * as API from './api/API';
 import URL from './getPath';
 
-var QRCode = require('qrcode.react');
 const headers = {};
 
 class Routing extends Component {
@@ -668,11 +667,6 @@ class Routing extends Component {
                         <SurveyDetails response={this.state.res} handleFailure={this.handleFailure}
                                        surveyId={this.state.surveyId} gotoDashboard={this.gotoDashboard}
                                        logout={this.logout}/>
-                    </div>
-                )}/>
-                <Route exact path="/qr" render={() => (
-                    <div>
-                        <QRCode value="http://facebook.github.io/react/"/>
                     </div>
                 )}/>
 
