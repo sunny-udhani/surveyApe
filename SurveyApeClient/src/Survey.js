@@ -423,7 +423,13 @@ class Survey extends Component {
 
                         this.setState({...this.state,questionList:temp});
                     }}  type="text" onFocus={(event)=>{
-                      event.target.value=question.response;
+                      if(question.response==undefined){
+                        event.target.value="";
+                      }
+                      else{
+                        event.target.value=question.response;
+                      }
+
                     }}  onBlur={(event)=>{
                       var payload={question_id:question.surveyQuestionId,response:event.target.value,survey_id:this.state.surveyId,survey_response_id:this.state.surveyResponse_id};
                       console.log(payload);
