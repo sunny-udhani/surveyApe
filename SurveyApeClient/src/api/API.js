@@ -1,5 +1,5 @@
 import axios from 'axios';
-const api = 'http://13.56.150.136:8080';
+const api = 'http://localhost:8080';
 
 
 const headers = {
@@ -40,6 +40,26 @@ export const PublishSurvey1 = (payload) =>
         console.log("This is error");
         return error;
     });
+
+    export const UnPublishSurvey = (payload) =>
+        fetch(`${api}/survey/unpublish/${payload.surveyId}`, {
+            method: 'POST',
+            headers: {
+                ...headers,
+                'Content-Type': 'application/json'
+            },
+            credentials: 'include',
+            body: JSON.stringify(payload)
+        }).then(res => {
+            console.log(res.body);
+            if(res.status!==200){
+              return "failure";
+            }
+            return res.json();
+        }).catch(error => {
+            console.log("This is error");
+            return error;
+        });
 
 export const exportAsJSON = (payload) =>
     fetch(`${api}/survey/export/${payload.surveyId}?filename=${payload.filename}`, {
@@ -105,6 +125,9 @@ export const getMySurveys = () =>
         },
         credentials: 'include'
     }).then(res => {
+      if(res.status!==200){
+        return "failure";
+      }
         console.log(res);
         return res.json();
     }).catch(error => {
@@ -127,6 +150,9 @@ export const getSurvey = (id) =>
         },
         credentials: 'include'
     }).then(res => {
+        if(res.status!==200){
+          return "failure";
+        }
         console.log(res);
         return res.json();
     }).catch(error => {
@@ -145,6 +171,9 @@ export const editSurvey = (payload, id) =>
         credentials: 'include',
         body: JSON.stringify(payload)
     }).then(res => {
+        if(res.status!==200){
+          return "failure";
+        }
         console.log(res);
         return res.json();
     }).catch(error => {
@@ -251,6 +280,9 @@ export const getSurvey1 = (id) =>
         },
         credentials: 'include'
     }).then(res => {
+        if(res.status!==200){
+          return "failure";
+        }
         console.log(res);
         return res.json();
     }).catch(error => {

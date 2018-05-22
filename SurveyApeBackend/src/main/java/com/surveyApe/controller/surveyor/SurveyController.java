@@ -412,7 +412,7 @@ public class SurveyController {
                 }
 
                 if (survey.isPublishedInd())
-                    mailServices.sendEmail(surveyeeEmail, "You are invited to take this survey: " + survey.getSurveyTitle() + " at " + surveyeeURI, "survayape.noreply@gmail.comal", "Survey filling request", surveyeeURI, true);
+                    mailServices.sendEmail(surveyeeEmail, "You are invited to take this survey: " + survey.getSurveyTitle() + " at " + surveyeeURI, "survayape.noreply@gmail.com", "Survey filling request", surveyeeURI, true);
 
             }
         }

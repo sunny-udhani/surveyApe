@@ -24,6 +24,11 @@ class EditSurvey extends Component{
 
     API.getSurvey(this.props.surveyId)
     .then((res) => {
+        if(res==="failure"){
+          alert("Failed to open the survey, please retry");
+          this.props.handleFailure();
+        }
+        else{
         console.log(res);
         res=res.survey;
         var temp=[];
@@ -119,6 +124,7 @@ class EditSurvey extends Component{
           this.setState({closedSurveyStr:""});
           this.setState({oldInvitees:temp2});
         }
+      }
     });
   }
 

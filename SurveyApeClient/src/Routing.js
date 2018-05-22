@@ -20,11 +20,20 @@ var QRCode = require('qrcode.react');
 const headers = {};
 
 class Routing extends Component {
-    state = {
-        surveyorEmail: null,
-        surveyId:null
+
+    constructor(){
+      super();
+      this.state = {
+          surveyorEmail: null,
+          surveyId:null
+      }
     }
 
+
+
+    handleFailure =()=>{
+        this.props.history.push('/dashboard');
+    }
 
 
     createSurvey = (survey, closedSurveyList, inviteeList) => {
@@ -60,10 +69,10 @@ class Routing extends Component {
         }
         console.log(survey.questions);
         var self = this;
-        var url = "http://13.56.150.136:3000/surveyee/takeSurvey/" + surveyType + "/" + Math.random() * 10000000;
+        var url = "http://localhost:3000/surveyee/takeSurvey/" + surveyType + "/" + Math.random() * 10000000;
         var qr = url + "?qr=true";
         if(surveyType=="2" || surveyType=="Open"){
-          url="http://13.56.150.136:3000/surveyee/register/" + surveyType + "/" + Math.random() * 10000000;
+          url="http://localhost:3000/surveyee/register/" + surveyType + "/" + Math.random() * 10000000;
           qr= url + "?qr=true";
         }
         console.log(url);
@@ -73,7 +82,7 @@ class Routing extends Component {
                 var obj = {};
                 obj.email = closedSurveyList[i];
                 var temp = (Math.random() * 100000);
-                obj.url = "http://13.56.150.136:3000/surveyee/takeSurvey/" + surveyType + "/" + temp;
+                obj.url = "http://localhost:3000/surveyee/takeSurvey/" + surveyType + "/" + temp;
                 attendeesList.push(obj);
             }
         }
@@ -170,7 +179,7 @@ class Routing extends Component {
             survey.questions[i].optionList = survey.questions[i].optionList.join(',');
         }
         var self = this;
-        var url = "http://13.56.150.136:3000/surveyee/takeSurvey/" + surveyType + "/" + Math.random() * 10000000;
+        var url = "http://localhost:3000/surveyee/takeSurvey/" + surveyType + "/" + Math.random() * 10000000;
         var qr = url + "?qr=true";
         console.log(url);
         var attendeesList = [];
@@ -179,7 +188,7 @@ class Routing extends Component {
                 var obj = {};
                 obj.email = closedSurveyList[i];
                 var temp = (Math.random() * 100000);
-                obj.url = "http://13.56.150.136:3000/surveyee/takeSurvey/" + surveyType + "/" + temp;
+                obj.url = "http://localhost:3000/surveyee/takeSurvey/" + surveyType + "/" + temp;
                 attendeesList.push(obj);
             }
         }
@@ -250,6 +259,10 @@ class Routing extends Component {
         var temp=this.state.surveyId;
         API.editSurvey(payload,temp)
             .then((res) => {
+                if(res==="failure"){
+                  alert('Not able to edit this survey at this time');
+                  this.props.history.push("/dashboard");
+                }
                 console.log(res);
                 if(res.surveyId){
                   alert('Survey successfully edited');
@@ -399,7 +412,7 @@ class Routing extends Component {
                 if (res.status == 200) {
 
                   var temp = (Math.random() * 100000);
-                var  url1 = "http://13.56.150.136:3000/surveyee/takeSurvey/2/" + temp;
+                var  url1 = "http://localhost:3000/surveyee/takeSurvey/2/" + temp;
                   if(res.dataOpen){
                     var data = {
                       surveyId: res.dataOpen.surveyIdOpen,
@@ -548,11 +561,19 @@ class Routing extends Component {
       console.log("Ithe ala "+id);
       //API call for publish survey
       var payload={surveyId:id,publish:false};
-      API.PublishSurvey1(payload)
+      API.UnPublishSurvey(payload)
       .then(res =>{
-        alert('Survey Successfully Unublished');
-        this.props.history.push('/');
-        this.props.history.push('/mySurveys');
+        if(res==="failure"){
+          alert('Survey already filled,cannot unpublish');
+          this.props.history.push('/');
+          this.props.history.push('/mySurveys');
+        }
+        else{
+          alert('Survey Successfully Unpublished');
+          this.props.history.push('/');
+          this.props.history.push('/mySurveys');
+        }
+
       })
       .catch(err => {
 
@@ -590,7 +611,7 @@ class Routing extends Component {
             var obj = {};
             obj.email = arr[i].email;
             var temp = (Math.random() * 100000);
-            obj.URI = "http://13.56.150.136:3000/surveyee/takeSurvey/" + type + "/" + temp;
+            obj.URI = "http://localhost:3000/surveyee/takeSurvey/" + type + "/" + temp;
             addAttendeesList.push(obj);
         }
         var payload={surveyId:id,addAttendeesList:addAttendeesList};
@@ -614,7 +635,14 @@ class Routing extends Component {
       var payload={surveyId:id};
       API.getSurvey1(id).
       then((res)=>{
-        this.setState({surveyId:id,res:res},function(){this.props.history.push('/surveyDetails')});
+        if(res==="failure"){
+          alert("You are not allowed to view this survey's information at this time");
+          this.state.history.push('/dashboard');
+        }
+        else{
+          this.setState({surveyId:id,res:res},function(){this.props.history.push('/surveyDetails')});
+        }
+
 
       });
     }
@@ -645,13 +673,13 @@ class Routing extends Component {
 
               <Route exact path="/mySurveys" render={() => (
                     <div>
-                        <MySurveys GetSurveyStats={this.GetSurveyStats}  EditSurvey={this.EditSurvey} UnpublishSurvey={this.UnpublishSurvey} PublishSurvey={this.PublishSurvey} EndSurvey={this.EndSurvey} AddInvitees={this.AddInvitees} gotoDashboard={this.gotoDashboard} logout={this.logout}/>
+                        <MySurveys handleFailure={this.handleFailure} GetSurveyStats={this.GetSurveyStats}  EditSurvey={this.EditSurvey} UnpublishSurvey={this.UnpublishSurvey} PublishSurvey={this.PublishSurvey} EndSurvey={this.EndSurvey} AddInvitees={this.AddInvitees} gotoDashboard={this.gotoDashboard} logout={this.logout}/>
                     </div>
                 )}/>
 
                 <Route exact path="/surveyDetails" render={() => (
                     <div>
-                        <SurveyDetails response={this.state.res} surveyId={this.state.surveyId} gotoDashboard={this.gotoDashboard} logout={this.logout}/>
+                        <SurveyDetails response={this.state.res} handleFailure={this.handleFailure} surveyId={this.state.surveyId} gotoDashboard={this.gotoDashboard} logout={this.logout}/>
                     </div>
                 )}/>
                 <Route exact path="/qr" render={() => (
@@ -662,7 +690,7 @@ class Routing extends Component {
 
               <Route exact path="/editSurvey" render={() => (
                       <div>
-                        <EditSurvey surveyId={this.state.surveyId} editSurvey={this.editSurvey} gotoMysurvey = {this.gotoMySurveys}
+                        <EditSurvey surveyId={this.state.surveyId} editSurvey={this.editSurvey} gotoMysurvey = {this.gotoMySurveys} handleFailure={this.handleFailure}
                             reloadEditSurvey={ this.EditSurvey} gotoDashboard={this.gotoDashboard} logout={this.logout}
                         />
                       </div>

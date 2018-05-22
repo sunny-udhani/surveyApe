@@ -22,12 +22,12 @@ componentWillMount() {
   console.log(this.props.match.params.randSurvey);
 
   var data = {
-      "url": "http://13.56.150.136:3000" + this.props.match.url,
+      "url": "http://localhost:3000" + this.props.match.url,
       "surveyType": this.props.match.params.surveyType,
       "randSurvey": this.props.match.params.randSurvey
   }
   var data1 = {
-    "url": "http://13.56.150.136:3000" + this.props.match.url,
+    "url": "http://localhost:3000" + this.props.match.url,
     "surveyType": this.props.match.params.surveyType
   }
 
@@ -47,7 +47,7 @@ componentWillMount() {
             //  alert("Survey successfully created");
             this.setState({
               surveyIdOpen: res.survey_id,
-              url: "http://13.56.150.136:3000" + this.props.match.url
+              url: "http://localhost:3000" + this.props.match.url
             });
 
       });

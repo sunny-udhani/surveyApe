@@ -15,6 +15,11 @@ class MySurveys extends Component {
             .then((res) => {
                 console.log('AAAAAAA');
                 console.log(res);
+                if(res==="failure"){
+                  alert('Failed to fetch surveys,please retry');
+                  this.props.handleFailure();
+                }
+                else{
                 var temp=res.surveys;
                 var respArr=[];
                 for(var i=0;i<temp.length;i++){
@@ -30,6 +35,7 @@ class MySurveys extends Component {
                 console.log(respArr);
                 this.setState({surveysArr: res.surveys,respArr:respArr});
                 console.log(this.state.surveysArr);
+                }
             });
     }
 

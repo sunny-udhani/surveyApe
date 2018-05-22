@@ -16,11 +16,16 @@ class SurveyDetails extends Component{
       registeredSurveyees: 10,
       totalInvited: 32,
     }
+    if(this.props.response===undefined){
+      this.props.handleFailure();
+    }
   }
   componentWillMount(){
     console.log("data");
-    console.log(this.props.response);
-
+    if(this.props.response===undefined){
+      this.props.handleFailure();
+    }
+    else{
     var output = [];
     for(var i=0;i<this.props.response.survey.questionList.length;i++)
     {
@@ -58,16 +63,17 @@ class SurveyDetails extends Component{
 
     console.log("Output built: ");
       console.log(output);
-
+      console.log(this.props.response.competedResponses);
+      console.log(this.props.response.survey.responseList.length);
 
       this.setState({
         output: output
       });
-
+    }
   }
 
   render(){
-
+    if(this.props.response){
     if((this.props.response.survey.surveyType === 1) && (this.props.response.competedResponses > 2)){
       return (
         <div>
@@ -172,7 +178,7 @@ class SurveyDetails extends Component{
 
         </div>
       );
-    } else if((this.props.response.survey.surveyType === 2) && (this.props.response.survey.surveyType === 3)  && (this.props.response.competedResponses > 2)) {
+    } else if(((this.props.response.survey.surveyType === 2) || (this.props.response.survey.surveyType === 3))  && (this.props.response.competedResponses >= 2)) {
 
       return (
         <div>
@@ -204,7 +210,7 @@ class SurveyDetails extends Component{
             <div className="col-lg-5">
             <h3>No of Participants: {this.props.response.survey.responseList.length}</h3>
             <h3>No of Submissions: {this.props.competedResponses}</h3>
-            <h3>Complete Percentage: {100*(this.props.competedResponses/this.props.response.survey.responseList.length)}</h3>
+            <h3>Complete Percentage: {100*(this.props.response.competedResponses/this.props.response.survey.responseList.length)}</h3>
             </div>
 
               <div className="col-lg-7">
@@ -301,6 +307,15 @@ class SurveyDetails extends Component{
     );
   }
   }
+  else{
+    return(
+      <div>
+        You are not allowed to access this page at this time
+      </div>
+    )
+  }
+}
+
 }
 
 
