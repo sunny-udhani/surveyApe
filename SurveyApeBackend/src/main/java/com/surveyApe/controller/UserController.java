@@ -143,6 +143,7 @@ public class UserController {
             User u = userService.getUser(email);
             if (u.getPassword().equals(password) && u.isVerificationInd() == true) {
                 session.setAttribute("surveyorEmail", email);
+                session.setMaxInactiveInterval(30*60);
                 return new ResponseEntity<Object>(HttpStatus.OK);
             }
             if (u.getPassword().equals(password) && u.isVerificationInd() == false) {
