@@ -56,7 +56,7 @@ componentWillMount() {
 
 render() {
   return (
-      <div className="open-unique-mainpage">
+      <div className="open-unique-mainpage" style={{backgroundColor: "white"}}>
 
       <div className="row bar">
           <div className="col-lg-1 logo">
@@ -75,18 +75,18 @@ render() {
 
       </div>
 
-        <div className="container">
+        <div className="container" style={{backgroundColor: "white"}}>
 
         <div className="row">
         <p></p>
         </div>
 
           <div className="row">
-            <h3>This is a Open Unique Survey. You Must Take the Survey Using one of the methods below: </h3>
+            <h3 style={{fontWeight: 700}}>This is a Open Unique Survey. You Must Take the Survey Using one of the methods below: </h3>
           </div>
           <br />
           <div className="row">
-            <h3>Please Sign In and Proceed to the Survey.</h3>
+            <h3>Please Sign In and You will get a link to the survey.</h3>
           </div>
 
           <div className="row">
@@ -106,14 +106,14 @@ render() {
           <br/>
 
           <div className="row">
-          <div className="col-lg-12">
-            <span> Use Your email Instead.. </span><input placeholder="email" className="inputBox" value={this.state.email} onChange={(event) => {
+          <div className="col-lg-12" style={{paddingLeft: 0}}>
+            <span style={{fontSize: 28}}> Use Your email Instead.. </span><br/><input placeholder="email" style={{width: "40%"}} className="inputBox" value={this.state.email} onChange={(event) => {
           this.setState({
               email: event.target.value
           });}}/>
           </div>
-          <div className="col-lg-12">
-            <button className="btn btn-primary" onClick={() => {this.props.gotoEmailOpen({surveyIdOpen: this.state.surveyIdOpen, openUrl: this.state.url, email: this.state.email})}}> Use Your email Instead.. </button>
+          <div className="col-lg-12" style={{paddingLeft: 0, marginTop: 10}}>
+            <button className="btn btn-primary" onClick={() => {this.props.gotoEmailOpen({surveyIdOpen: this.state.surveyIdOpen, openUrl: this.state.url, email: this.state.email})}}> Proceed to Survey </button>
           </div>
           </div>
       </div>
