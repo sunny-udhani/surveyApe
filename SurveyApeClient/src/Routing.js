@@ -22,20 +22,19 @@ const headers = {};
 
 class Routing extends Component {
 
-    constructor(){
-      super();
-      this.state = {
-          surveyorEmail: null,
-          surveyId:null
-      }
+    constructor() {
+        super();
+        this.state = {
+            surveyorEmail: null,
+            surveyId: null
+        }
 
-      console.log("URL in router");
-      console.log(URL);
+        console.log("URL in router");
+        console.log(URL);
     }
 
 
-
-    handleFailure =()=>{
+    handleFailure = () => {
         this.props.history.push('/dashboard');
     }
 
@@ -66,18 +65,18 @@ class Routing extends Component {
 
         }
 
-        console.log("SUrveytype debug:"+surveyType);
+        console.log("SUrveytype debug:" + surveyType);
 
         for (var i = 0; i < survey.questions.length; i++) {
             survey.questions[i].optionList = survey.questions[i].optionList.join(',');
         }
         console.log(survey.questions);
         var self = this;
-        var url = URL+":3000/surveyee/takeSurvey/" + surveyType + "/" + Math.random() * 10000000;
+        var url = URL + ":3000/surveyee/takeSurvey/" + surveyType + "/" + Math.random() * 10000000;
         var qr = url + "?qr=true";
-        if(surveyType=="2" || surveyType=="Open"){
-          url=URL+":3000/surveyee/register/" + surveyType + "/" + Math.random() * 10000000;
-          qr= url + "?qr=true";
+        if (surveyType == "2" || surveyType == "Open") {
+            url = URL + ":3000/surveyee/register/" + surveyType + "/" + Math.random() * 10000000;
+            qr = url + "?qr=true";
         }
         console.log(url);
         var attendeesList = [];
@@ -86,7 +85,7 @@ class Routing extends Component {
                 var obj = {};
                 obj.email = closedSurveyList[i];
                 var temp = (Math.random() * 100000);
-                obj.url = URL+":3000/surveyee/takeSurvey/" + surveyType + "/" + temp;
+                obj.url = URL + ":3000/surveyee/takeSurvey/" + surveyType + "/" + temp;
                 attendeesList.push(obj);
             }
         }
@@ -108,14 +107,14 @@ class Routing extends Component {
         console.log("sdbhjfknasdnlkasd");
         console.log(attendeesList);
         if (inviteeList.length > 0) {
-          var temp=[];
-          for(var i=0;i<inviteeList.length;i++){
-            temp.push({"email":inviteeList[i],"inviteeURI":url})
-          }
-          payload.inviteeList = temp;
+            var temp = [];
+            for (var i = 0; i < inviteeList.length; i++) {
+                temp.push({"email": inviteeList[i], "inviteeURI": url})
+            }
+            payload.inviteeList = temp;
         }
-        if(attendeesList.length>0){
-          payload.attendeesList=attendeesList;
+        if (attendeesList.length > 0) {
+            payload.attendeesList = attendeesList;
         }
 
         console.log("payload");
@@ -124,19 +123,19 @@ class Routing extends Component {
         API.createSurvey(payload)
             .then((res) => {
                 console.log(res);
-                if(res.surveyId){
-                  this.setState({surveyId:res.surveyId});
-                  alert('Survey was created successfully');
-                  this.props.history.push("/dashboard");
+                if (res.surveyId) {
+                    this.setState({surveyId: res.surveyId});
+                    alert('Survey was created successfully');
+                    this.props.history.push("/dashboard");
                 }
-                else{
-                  alert(res.message);
-                  this.props.history.push("/dashboard");
+                else {
+                    alert(res.message);
+                    this.props.history.push("/dashboard");
                 }
 
 
                 if (res.status == 200) {
-                  //  alert("Survey successfully created");
+                    //  alert("Survey successfully created");
                     console.log(res.json());
                     this.props.history.push("/signin");
                     this.props.history.push('/createSurvey');
@@ -183,7 +182,7 @@ class Routing extends Component {
             survey.questions[i].optionList = survey.questions[i].optionList.join(',');
         }
         var self = this;
-        var url = URL+":3000/surveyee/takeSurvey/" + surveyType + "/" + Math.random() * 10000000;
+        var url = URL + ":3000/surveyee/takeSurvey/" + surveyType + "/" + Math.random() * 10000000;
         var qr = url + "?qr=true";
         console.log(url);
         var attendeesList = [];
@@ -192,13 +191,13 @@ class Routing extends Component {
                 var obj = {};
                 obj.email = closedSurveyList[i];
                 var temp = (Math.random() * 100000);
-                obj.url = URL+":3000/surveyee/takeSurvey/" + surveyType + "/" + temp;
+                obj.url = URL + ":3000/surveyee/takeSurvey/" + surveyType + "/" + temp;
                 attendeesList.push(obj);
             }
         }
         //INVITEE GENERAL ATTENDEE CLOSED
         var payload = {
-            survey_id:this.state.surveyId,
+            survey_id: this.state.surveyId,
             surveyType: surveyType,
             surveyorEmail: this.state.surveyorEmail,
             surveyTitle: survey.name,
@@ -207,70 +206,70 @@ class Routing extends Component {
             qr: qr,
             publish: survey.publish
         };
-        var removed=[];
-        var added=[];
+        var removed = [];
+        var added = [];
         if (attendeesList.length > 0) {
-          for(var i=0;i<survey.oldInvitees.length;i++){
-            for(var j=0;j<attendeesList.length;j++){
-              var cntr=0;
-              if(survey.oldInvitees[i]===attendeesList[j]){
-                cntr=1;
-              }
-            }
-            if(cntr===0){
-              removed.push(survey.oldInvitees[i]);
-            }
-          }
-
-            for(var j=0;j<survey.oldInvitees.length;j++){
-              if(attendeesList.indexOf(survey.oldInvitees[j])>=0){
-                attendeesList.splice(attendeesList.indexOf(survey.oldInvitees[j]),1);
-              }
+            for (var i = 0; i < survey.oldInvitees.length; i++) {
+                for (var j = 0; j < attendeesList.length; j++) {
+                    var cntr = 0;
+                    if (survey.oldInvitees[i] === attendeesList[j]) {
+                        cntr = 1;
+                    }
+                }
+                if (cntr === 0) {
+                    removed.push(survey.oldInvitees[i]);
+                }
             }
 
-          payload.added = attendeesList;
-          payload.removed=removed;
+            for (var j = 0; j < survey.oldInvitees.length; j++) {
+                if (attendeesList.indexOf(survey.oldInvitees[j]) >= 0) {
+                    attendeesList.splice(attendeesList.indexOf(survey.oldInvitees[j]), 1);
+                }
+            }
+
+            payload.added = attendeesList;
+            payload.removed = removed;
         }
         else if (inviteeList.length > 0) {
 
-          for(var i=0;i<survey.oldInvitees.length;i++){
-            for(var j=0;j<inviteeList.length;j++){
-              var cntr=0;
-              if(survey.oldInvitees[i]===inviteeList[j]){
-                cntr=1;
-              }
-            }
-            if(cntr===0){
-              removed.push(survey.oldInvitees[i]);
-            }
+            for (var i = 0; i < survey.oldInvitees.length; i++) {
+                for (var j = 0; j < inviteeList.length; j++) {
+                    var cntr = 0;
+                    if (survey.oldInvitees[i] === inviteeList[j]) {
+                        cntr = 1;
+                    }
+                }
+                if (cntr === 0) {
+                    removed.push(survey.oldInvitees[i]);
+                }
 
-          }
-
-
-            for(var j=0;j<survey.oldInvitees.length;j++){
-              if(inviteeList.indexOf(survey.oldInvitees[j])>=0){
-                inviteeList.splice(inviteeList.indexOf(survey.oldInvitees[j]),1);
-              }
             }
 
-          payload.added = inviteeList;
-          payload.removed=removed;
+
+            for (var j = 0; j < survey.oldInvitees.length; j++) {
+                if (inviteeList.indexOf(survey.oldInvitees[j]) >= 0) {
+                    inviteeList.splice(inviteeList.indexOf(survey.oldInvitees[j]), 1);
+                }
+            }
+
+            payload.added = inviteeList;
+            payload.removed = removed;
         }
 
         console.log("payload");
         console.log(payload);
         //API FOR others
-        var temp=this.state.surveyId;
+        var temp = this.state.surveyId;
         console.log(temp);
-        API.editSurvey(payload,this.state.surveyId)
+        API.editSurvey(payload, this.state.surveyId)
             .then((res) => {
-                if(res.surveyId){
-                  alert('Survey successfully edited');
-                  this.props.history.push("/dashboard");
+                if (res.surveyId) {
+                    alert('Survey successfully edited');
+                    this.props.history.push("/dashboard");
                 }
-                else{
-                  alert('Survey edit unsuccessful');
-                  this.props.history.push("/dashboard");
+                else {
+                    alert('Survey edit unsuccessful');
+                    this.props.history.push("/dashboard");
                 }
             });
 
@@ -283,12 +282,11 @@ class Routing extends Component {
         API.verifyUser(data)
             .then((res) => {
 
-                    if(res.status===200)
-                    {
+                if (res.status === 200) {
 
                     alert("User verified successfully! Please Login to get Started");
                     this.props.history.push("/signin");
-                  }
+                }
                 else if (res.status == 401) {
                     alert("User with this email id already exists. Please use another email id!");
                     this.props.history.push("/");
@@ -321,49 +319,47 @@ class Routing extends Component {
 
 
     gotoSigninOpen = (data) => {
-      console.log("Inside gotoSigninOpen");
-      console.log("Props received:");
-      console.log(this.props);
+        console.log("Inside gotoSigninOpen");
+        console.log("Props received:");
+        console.log(this.props);
 
-      console.log("Data received:");
-      console.log(data);
+        console.log("Data received:");
+        console.log(data);
 
-      this.setState({
-        dataOpen: data
-      });
+        this.setState({
+            dataOpen: data
+        });
 
-      this.props.history.push('/signin');
+        this.props.history.push('/signin');
     }
 
     gotoSignupOpen = (data) => {
-      console.log("Inside gotoSignupOpen");
-      console.log("Props received:");
-      console.log(this.props);
+        console.log("Inside gotoSignupOpen");
+        console.log("Props received:");
+        console.log(this.props);
 
-      console.log("Data received:");
-      console.log(data);
+        console.log("Data received:");
+        console.log(data);
 
-      this.setState({
-        dataOpen: data
-      });
+        this.setState({
+            dataOpen: data
+        });
 
-      this.props.history.push('/signup');
+        this.props.history.push('/signup');
     }
 
 
-
-
     registerUser = (payload) => {
-      console.log("Payload Received inside registerUser: ");
-      console.log(payload);
+        console.log("Payload Received inside registerUser: ");
+        console.log(payload);
         API.registerUser(payload)
             .then((res) => {
-              console.log("Data received for Open Survey Data in registerUser: ");
-              console.log(res);
+                console.log("Data received for Open Survey Data in registerUser: ");
+                console.log(res);
 
-              this.setState({
-                dataOpen: res.dataOpen
-              });
+                this.setState({
+                    dataOpen: res.dataOpen
+                });
 
                 if (res.status == 200) {
                     alert("User registration is successful!");
@@ -393,7 +389,7 @@ class Routing extends Component {
 
     signIn = (payload) => {
         console.log("ghjvsdhagjsghasd");
-        this.setState({surveyorEmail:payload.email})
+        this.setState({surveyorEmail: payload.email})
         API.signIn(payload)
             .then((res) => {
                 console.log("Data received for Open Survey Data: ");
@@ -401,40 +397,40 @@ class Routing extends Component {
                 console.log(res.msg);
                 if (res.status == 200) {
 
-                  var temp = (Math.random() * 100000);
-                var  url1 = URL+":3000/surveyee/takeSurvey/2/" + temp;
-                  if(res.dataOpen){
-                    var data = {
-                      surveyId: res.dataOpen.surveyIdOpen,
-                      email: payload.email,
-                      url: url1
+                    var temp = (Math.random() * 100000);
+                    var url1 = URL + ":3000/surveyee/takeSurvey/2/" + temp;
+                    if (res.dataOpen) {
+                        var data = {
+                            surveyId: res.dataOpen.surveyIdOpen,
+                            email: payload.email,
+                            url: url1
+                        }
+                        API.sendEmailUrlSurveyId(data)
+                            .then(res => {
+                                console.log(res);
+                                alert("User Signed In Successfully");
+                                console.log(payload.email);
+                                this.setState({
+                                    surveyorEmail: payload.email
+                                })
+
+
+                                this.props.history.push("/dashboard");
+                            })
+                            .catch(err => {
+                                console.error(err);
+                            })
                     }
-                    API.sendEmailUrlSurveyId(data)
-                    .then(res =>{
-                        console.log(res);
+                    else {
                         alert("User Signed In Successfully");
                         console.log(payload.email);
                         this.setState({
-                          surveyorEmail: payload.email
+                            surveyorEmail: payload.email
                         })
 
 
                         this.props.history.push("/dashboard");
-                    })
-                    .catch(err => {
-                      console.error(err);
-                    })
-                  }
-                  else{
-                    alert("User Signed In Successfully");
-                    console.log(payload.email);
-                    this.setState({
-                      surveyorEmail: payload.email
-                    })
-
-
-                    this.props.history.push("/dashboard");
-                  }
+                    }
 
 
                 }
@@ -461,47 +457,49 @@ class Routing extends Component {
     }
 
     submitResponses = () => {
-        if(this.state.surveyorEmail){
-          this.props.history.push('/dashboard');
+        if (this.state.surveyorEmail) {
+            this.props.history.push('/dashboard');
 
         }
-        else{
-          this.props.history.push('/signin');
+        else {
+            this.props.history.push('/signin');
         }
 
     }
 
     gotoEmailOpen = (data) => {
-     console.log("Inside gotoEmailOpen");
-     console.log("Props received:");
-     console.log(this.props);
+        console.log("Inside gotoEmailOpen");
+        console.log("Props received:");
+        console.log(this.props);
 
-     console.log("Data received:");
-     console.log(data);
+        console.log("Data received:");
+        console.log(data);
 
-
-
-     var data1 = {
-       surveyId: data.surveyIdOpen,
-       email: data.email,
-       url: data.openUrl
-     }
-
-     API.sendEmailUrlSurveyId(data1)
-     .then(res =>{
-        alert('Email sent successfully');
-         console.log(res);
-     })
-     .catch(err => {
-       alert('Issue with sending the email');
-       console.error(err);
-     })
+        var temp = (Math.random() * 100000);
+        var url1 = "http://localhost:3000/surveyee/takeSurvey/2/" + temp;
 
 
-   }
+        var data1 = {
+            surveyId: data.surveyIdOpen,
+            email: data.email,
+            url: url1
+        }
 
-    gotoMySurveys = () =>{
-      this.props.history.push('/mySurveys');
+        API.sendEmailUrlSurveyId(data1)
+            .then(res => {
+                alert('Email sent successfully');
+                console.log(res);
+            })
+            .catch(err => {
+                alert('Issue with sending the email');
+                console.error(err);
+            })
+
+
+    }
+
+    gotoMySurveys = () => {
+        this.props.history.push('/mySurveys');
     }
 
     gotoCreateSurvey = () => {
@@ -513,143 +511,139 @@ class Routing extends Component {
     }
 
     gotoDashboard = () => {
-      this.props.history.push('/dashboard');
+        this.props.history.push('/dashboard');
     }
 
-    EditSurvey = (id) =>{
-      this.setState({surveyId:id},function(){
-        this.props.history.push('/editSurvey');
-      });
+    EditSurvey = (id) => {
+        this.setState({surveyId: id}, function () {
+            this.props.history.push('/editSurvey');
+        });
 
     }
-/*
-    callback = (res) => {
-      this.props.history.push('/');
-      this.props.history.push('/mySurveys');
-    }*/
-    PublishSurvey = (id) =>{
-      console.log("Ithe ala "+id);
-      //API call for publish survey
-      var payload={surveyId:id,publish:true};
-      API.PublishSurvey1(payload)
-      .then(res =>{
-        alert('Survey Successfully Published');
-        this.props.history.push('/');
-        this.props.history.push('/mySurveys');
-      })
-      .catch(err => {
-
-          alert('Problem in publishing survey');
-        console.error(err);
-      })
-
-    }
-
-
-
-    UnpublishSurvey = (id) =>{
-      console.log("Ithe ala "+id);
-      //API call for publish survey
-      var payload={surveyId:id,publish:false};
-      API.UnPublishSurvey(payload)
-      .then(res =>{
-        if(res==="failure"){
-          alert('Survey already filled,cannot unpublish');
+    /*
+        callback = (res) => {
           this.props.history.push('/');
           this.props.history.push('/mySurveys');
-        }
-        else{
-          alert('Survey Successfully Unpublished');
-          this.props.history.push('/');
-          this.props.history.push('/mySurveys');
-        }
+        }*/
+    PublishSurvey = (id) => {
+        console.log("Ithe ala " + id);
+        //API call for publish survey
+        var payload = {surveyId: id, publish: true};
+        API.PublishSurvey1(payload)
+            .then(res => {
+                alert('Survey Successfully Published');
+                this.props.history.push('/');
+                this.props.history.push('/mySurveys');
+            })
+            .catch(err => {
 
-      })
-      .catch(err => {
-
-          alert('Problem in unpublishing survey');
-        console.error(err);
-      })
+                alert('Problem in publishing survey');
+                console.error(err);
+            })
 
     }
 
-    EndSurvey=(id)=>{
-      //API call for end survey
-      API.endSurvey(id).
-      then((res)=>{
-        alert('Survey Ended Successfully');
-        this.props.history.push('/');
-        this.props.history.push('/mySurveys');
-      })
-      .catch(err=>{
-        alert('Problem in ending survey');
-      });
+
+    UnpublishSurvey = (id) => {
+        console.log("Ithe ala " + id);
+        //API call for publish survey
+        var payload = {surveyId: id, publish: false};
+        API.UnPublishSurvey(payload)
+            .then(res => {
+                if (res === "failure") {
+                    alert('Survey already filled,cannot unpublish');
+                    this.props.history.push('/');
+                    this.props.history.push('/mySurveys');
+                }
+                else {
+                    alert('Survey Successfully Unpublished');
+                    this.props.history.push('/');
+                    this.props.history.push('/mySurveys');
+                }
+
+            })
+            .catch(err => {
+
+                alert('Problem in unpublishing survey');
+                console.error(err);
+            })
+
+    }
+
+    EndSurvey = (id) => {
+        //API call for end survey
+        API.endSurvey(id).then((res) => {
+            alert('Survey Ended Successfully');
+            this.props.history.push('/');
+            this.props.history.push('/mySurveys');
+        })
+            .catch(err => {
+                alert('Problem in ending survey');
+            });
     }
 
 
-    AddInvitees=(id,invitees,type)=>{
-      //API call for add invitees
-      var arr=invitees.split(',');
+    AddInvitees = (id, invitees, type) => {
+        //API call for add invitees
+        var arr = invitees.split(',');
 
-      for(var i=0;i<arr.length;i++){
-        arr[i]={email:arr[i]};
-      }
-      //API
-      if(type=="3"){
-        var addAttendeesList=[];
         for (var i = 0; i < arr.length; i++) {
-            var obj = {};
-            obj.email = arr[i].email;
-            var temp = (Math.random() * 100000);
-            obj.URI = URL+":3000/surveyee/takeSurvey/" + type + "/" + temp;
-            addAttendeesList.push(obj);
+            arr[i] = {email: arr[i]};
         }
-        var payload={surveyId:id,addAttendeesList:addAttendeesList};
-      }
-      else{
-        var payload={surveyId:id,addInviteeList:arr};
-      }
-      //addAttendeesList
+        //API
+        if (type == "3") {
+            var addAttendeesList = [];
+            for (var i = 0; i < arr.length; i++) {
+                var obj = {};
+                obj.email = arr[i].email;
+                var temp = (Math.random() * 100000);
+                obj.URI = URL + ":3000/surveyee/takeSurvey/" + type + "/" + temp;
+                addAttendeesList.push(obj);
+            }
+            var payload = {surveyId: id, addAttendeesList: addAttendeesList};
+        }
+        else {
+            var payload = {surveyId: id, addInviteeList: arr};
+        }
+        //addAttendeesList
 
-      API.addInvitees(payload).
-      then((res)=>{
-        alert('Invitees Successfully Added');
-        this.props.history.push('/');
-        this.props.history.push('/mySurveys');
-      });
+        API.addInvitees(payload).then((res) => {
+            alert('Invitees Successfully Added');
+            this.props.history.push('/');
+            this.props.history.push('/mySurveys');
+        });
 
 
     }
 
-    GetSurveyStats=(id)=>{
-      var payload={surveyId:id};
-      API.getSurvey1(id).
-      then((res)=>{
-        if(res==="failure"){
-          alert("You are not allowed to view this survey's information at this time");
-          this.state.history.push('/dashboard');
-        }
-        else{
-          this.setState({surveyId:id,res:res},function(){this.props.history.push('/surveyDetails')});
-        }
+    GetSurveyStats = (id) => {
+        var payload = {surveyId: id};
+        API.getSurvey1(id).then((res) => {
+            if (res === "failure") {
+                alert("You are not allowed to view this survey's information at this time");
+                this.state.history.push('/dashboard');
+            }
+            else {
+                this.setState({surveyId: id, res: res}, function () {
+                    this.props.history.push('/surveyDetails')
+                });
+            }
 
 
-      });
+        });
     }
 
     logout = () => {
-      API.logout().
-      then((res)=>{
-        console.log(res);
-        if(res.status === 200)
-        {
-          alert("user logged out successfully");
-          this.setState({
-            surveyorEmail: null
-          });
-          this.props.history.push('/');
-        }
-      });
+        API.logout().then((res) => {
+            console.log(res);
+            if (res.status === 200) {
+                alert("user logged out successfully");
+                this.setState({
+                    surveyorEmail: null
+                });
+                this.props.history.push('/');
+            }
+        });
     }
 
     render() {
@@ -661,15 +655,21 @@ class Routing extends Component {
                     </div>
                 )}/>
 
-              <Route exact path="/mySurveys" render={() => (
+                <Route exact path="/mySurveys" render={() => (
                     <div>
-                        <MySurveys handleFailure={this.handleFailure} GetSurveyStats={this.GetSurveyStats}  EditSurvey={this.EditSurvey} UnpublishSurvey={this.UnpublishSurvey} PublishSurvey={this.PublishSurvey} EndSurvey={this.EndSurvey} AddInvitees={this.AddInvitees} gotoDashboard={this.gotoDashboard} logout={this.logout}/>
+                        <MySurveys handleFailure={this.handleFailure} GetSurveyStats={this.GetSurveyStats}
+                                   EditSurvey={this.EditSurvey} UnpublishSurvey={this.UnpublishSurvey}
+                                   PublishSurvey={this.PublishSurvey} EndSurvey={this.EndSurvey}
+                                   AddInvitees={this.AddInvitees} gotoDashboard={this.gotoDashboard}
+                                   logout={this.logout}/>
                     </div>
                 )}/>
 
                 <Route exact path="/surveyDetails" render={() => (
                     <div>
-                        <SurveyDetails response={this.state.res} handleFailure={this.handleFailure} surveyId={this.state.surveyId} gotoDashboard={this.gotoDashboard} logout={this.logout}/>
+                        <SurveyDetails response={this.state.res} handleFailure={this.handleFailure}
+                                       surveyId={this.state.surveyId} gotoDashboard={this.gotoDashboard}
+                                       logout={this.logout}/>
                     </div>
                 )}/>
                 <Route exact path="/qr" render={() => (
@@ -678,65 +678,78 @@ class Routing extends Component {
                     </div>
                 )}/>
 
-              <Route exact path="/editSurvey" render={() => (
-                      <div>
-                        <EditSurvey surveyId={this.state.surveyId} editSurvey={this.editSurvey} gotoMysurvey = {this.gotoMySurveys} handleFailure={this.handleFailure}
-                            reloadEditSurvey={ this.EditSurvey} gotoDashboard={this.gotoDashboard} logout={this.logout}
+                <Route exact path="/editSurvey" render={() => (
+                    <div>
+                        <EditSurvey surveyId={this.state.surveyId} editSurvey={this.editSurvey}
+                                    gotoMysurvey={this.gotoMySurveys} handleFailure={this.handleFailure}
+                                    reloadEditSurvey={this.EditSurvey} gotoDashboard={this.gotoDashboard}
+                                    logout={this.logout}
                         />
-                      </div>
-                )} />
+                    </div>
+                )}/>
 
                 <Route exact path="/dashboard" render={() => (
                     <div>
-                        <Dashboard submitResponses={this.submitResponses} gotoCreateSurvey={this.gotoCreateSurvey} gotoMySurveys={this.gotoMySurveys} gotoSurveysToTake={this.gotoSurveysToTake} surveyorEmail={this.state.surveyorEmail} gotoSignin={this.gotoSignin} gotoDashboard={this.gotoDashboard} logout={this.logout}/>
+                        <Dashboard submitResponses={this.submitResponses} gotoCreateSurvey={this.gotoCreateSurvey}
+                                   gotoMySurveys={this.gotoMySurveys} gotoSurveysToTake={this.gotoSurveysToTake}
+                                   surveyorEmail={this.state.surveyorEmail} gotoSignin={this.gotoSignin}
+                                   gotoDashboard={this.gotoDashboard} logout={this.logout}/>
                     </div>
                 )}/>
 
 
                 <Route exact path="/signup" render={() => (
                     <div>
-                        <Signup gotoSignin={this.gotoSignin} registerUser={this.registerUser} dataOpen={this.state.dataOpen} gotoDashboard={this.gotoDashboard} logout={this.logout}/>
+                        <Signup gotoSignin={this.gotoSignin} registerUser={this.registerUser}
+                                dataOpen={this.state.dataOpen} gotoDashboard={this.gotoDashboard} logout={this.logout}/>
                     </div>
                 )}/>
 
 
                 <Route exact path="/signin" render={() => (
                     <div>
-                        <Signin signIn={this.signIn} gotoSignup={this.gotoSignup} dataOpen={this.state.dataOpen} gotoDashboard={this.gotoDashboard} logout={this.logout}/>
+                        <Signin signIn={this.signIn} gotoSignup={this.gotoSignup} dataOpen={this.state.dataOpen}
+                                gotoDashboard={this.gotoDashboard} logout={this.logout}/>
                     </div>
                 )}/>
 
                 <Route exact path="/confirmation" render={() => (
                     <div>
-                        <Confirmation verifyUser={this.verifyUser}  dataOpen={this.state.dataOpen} gotoDashboard={this.gotoDashboard} logout={this.logout}/>
+                        <Confirmation verifyUser={this.verifyUser} dataOpen={this.state.dataOpen}
+                                      gotoDashboard={this.gotoDashboard} logout={this.logout}/>
                     </div>
                 )}/>
 
                 <Route exact path="/createSurvey" render={() => (
-                  <div>
-                      <Form1 createSurvey={this.createSurvey} gotoDashboard={this.gotoDashboard} logout={this.logout}/>
-                  </div>
+                    <div>
+                        <Form1 createSurvey={this.createSurvey} gotoDashboard={this.gotoDashboard}
+                               logout={this.logout}/>
+                    </div>
                 )}/>
 
                 <Route exact path="/surveyee/takeSurvey/:surveyType/:randSurvey" render={() => (
                     <div>
-                        <Survey submitSurveys={this.submitSurveys} handleFailure={this.handleFailure}  email={this.state.surveyorEmail} submitResponses={this.submitResponses} gotoDashboard={this.gotoDashboard} logout={this.logout}/>
+                        <Survey submitSurveys={this.submitSurveys} handleFailure={this.handleFailure}
+                                email={this.state.surveyorEmail} submitResponses={this.submitResponses}
+                                gotoDashboard={this.gotoDashboard} logout={this.logout}/>
                     </div>
                 )}/>
 
                 <Route exact path="/surveyee/register/:surveyType/:randSurvey" render={() => (
                     <div>
-                        <OpenUniqueSurvey gotoSigninOpen={this.gotoSigninOpen} gotoDashboard={this.gotoDashboard} logout={this.logout} gotoSignupOpen={this.gotoSignupOpen} gotoEmailOpen={this.gotoEmailOpen}/>
+                        <OpenUniqueSurvey gotoSigninOpen={this.gotoSigninOpen} gotoDashboard={this.gotoDashboard}
+                                          logout={this.logout} gotoSignupOpen={this.gotoSignupOpen}
+                                          gotoEmailOpen={this.gotoEmailOpen}/>
                     </div>
                 )}/>
 
 
-              <Route exact path="/takeSurvey" render={() => (
+                <Route exact path="/takeSurvey" render={() => (
                     <div>
-                        <SurveysToTake surveyorEmail={this.state.surveyorEmail} gotoDashboard={this.gotoDashboard} logout={this.logout}/>
+                        <SurveysToTake surveyorEmail={this.state.surveyorEmail} gotoDashboard={this.gotoDashboard}
+                                       logout={this.logout}/>
                     </div>
                 )}/>
-
 
 
                 <Route exact path="/openUniqueSurveyEmail" render={() => (
@@ -745,7 +758,7 @@ class Routing extends Component {
                     </div>
                 )}/>
 
-              <Route exact path="/form" render={() => (
+                <Route exact path="/form" render={() => (
                     <div>
                         <Form1 createSurvey={this.createSurvey} logout={this.logout}/>
                     </div>
