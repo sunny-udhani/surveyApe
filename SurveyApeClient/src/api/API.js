@@ -324,7 +324,7 @@ export const getSurveyAndResp = (payload) =>
         return error;
     });
 
-                              
+
 
 export const addInvitees = (payload) =>
     fetch(`${api}/survey/addAttendees/` + payload.surveyId, {

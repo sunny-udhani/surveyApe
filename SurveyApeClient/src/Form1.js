@@ -36,7 +36,7 @@ class Form1 extends Component {
         else if (this.state.closedSurveyStr != "") {
             var temp = this.state.closedSurveyStr.split(",");
             this.setState({closedSurveyList: temp, closedSurveyStr: ""}, function () {
-                this.props.createSurvey(survey, this.state.closedSurveyList, this.state.inviteeList);
+                this.props.createSurvey(survey, temp, this.state.inviteeList);
             });
         }
         else {

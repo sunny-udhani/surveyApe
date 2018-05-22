@@ -47,17 +47,18 @@ class SurveysToTake extends Component{
 
       <div style={{textAlign:"center"}}>
         <h3>Surveys Assigned To You</h3>
-          <div style={{marginLeft:"30%"}}>
+          <div style={{marginLeft:"10%"}}>
 
             <br/><br/>
-            <table style={{border:"1px solid black"}}>
+            <table style={{border:"1px solid black", width: 1000}}>
               <tr>
-              <th style={{borderRight:"1px solid black"}}>Survey Title</th>
-              <th>Survey URL</th>
+              <th style={{borderRight:"1px solid black", textAlign: "center", fontSize: 20}}>Survey Title</th>
+              <th style={{textAlign: "center",  fontSize: 20}}>Survey URL</th>
               </tr>
               {this.state.surveys.map((item)=>{
-                 return <tr><td style={{borderRight:"1px solid black"}}>{item.surveyTitle}</td>
-                 <td><a href={item.surveyURI}>{item.surveyURI}</a></td>
+
+                 return <tr><td style={{borderRight:"1px solid black",fontSize: 20, fontWeight: 600}}>{item.surveyTitle}</td>
+                 <td style={{fontSize: 20, fontWeight: 700}}><a href={item.surveyURI} target="_blank">Take Survey</a></td>
                  </tr>;
               }
               //

@@ -60,20 +60,20 @@ class Routing extends Component {
         }
         console.log(survey.questions);
         var self = this;
-        var url = "http://13.56.150.136:3000/surveyee/takeSurvey/" + surveyType + "/" + Math.random() * 10000000;
+        var url = "http://localhost:3000/surveyee/takeSurvey/" + surveyType + "/" + Math.random() * 10000000;
         var qr = url + "?qr=true";
         if(surveyType=="2" || surveyType=="Open"){
-          url="http://13.56.150.136:3000/surveyee/register/" + surveyType + "/" + Math.random() * 10000000;
+          url="http://localhost:3000/surveyee/register/" + surveyType + "/" + Math.random() * 10000000;
           qr= url + "?qr=true";
         }
         console.log(url);
         var attendeesList = [];
-        if (closedSurveyList.length > 0 && surveyType === "3") {
+        if (closedSurveyList.length > 0) {
             for (var i = 0; i < closedSurveyList.length; i++) {
                 var obj = {};
                 obj.email = closedSurveyList[i];
                 var temp = (Math.random() * 100000);
-                obj.url = "http://13.56.150.136:3000/surveyee/takeSurvey/" + surveyType + "/" + temp;
+                obj.url = "http://localhost:3000/surveyee/takeSurvey/" + surveyType + "/" + temp;
                 attendeesList.push(obj);
             }
         }
@@ -93,13 +93,16 @@ class Routing extends Component {
             payload.attendeesList = attendeesList;
         }
         console.log("sdbhjfknasdnlkasd");
-        console.log(inviteeList);
+        console.log(attendeesList);
         if (inviteeList.length > 0) {
           var temp=[];
           for(var i=0;i<inviteeList.length;i++){
             temp.push({"email":inviteeList[i],"inviteeURI":url})
           }
           payload.inviteeList = temp;
+        }
+        if(attendeesList.length>0){
+          payload.attendeesList=attendeesList;
         }
 
         console.log("payload");
@@ -167,7 +170,7 @@ class Routing extends Component {
             survey.questions[i].optionList = survey.questions[i].optionList.join(',');
         }
         var self = this;
-        var url = "http://13.56.150.136:3000/surveyee/takeSurvey/" + surveyType + "/" + Math.random() * 10000000;
+        var url = "http://localhost:3000/surveyee/takeSurvey/" + surveyType + "/" + Math.random() * 10000000;
         var qr = url + "?qr=true";
         console.log(url);
         var attendeesList = [];
@@ -176,7 +179,7 @@ class Routing extends Component {
                 var obj = {};
                 obj.email = closedSurveyList[i];
                 var temp = (Math.random() * 100000);
-                obj.url = "http://13.56.150.136:3000/surveyee/takeSurvey/" + surveyType + "/" + temp;
+                obj.url = "http://localhost:3000/surveyee/takeSurvey/" + surveyType + "/" + temp;
                 attendeesList.push(obj);
             }
         }
@@ -393,7 +396,7 @@ class Routing extends Component {
                 if (res.status == 200) {
 
                   var temp = (Math.random() * 100000);
-                var  url1 = "http://13.56.150.136:3000/surveyee/takeSurvey/2/" + temp;
+                var  url1 = "http://localhost:3000/surveyee/takeSurvey/2/" + temp;
                   if(res.dataOpen){
                     var data = {
                       surveyId: res.dataOpen.surveyIdOpen,
