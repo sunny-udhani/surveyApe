@@ -22,19 +22,20 @@ const headers = {};
 
 class Routing extends Component {
 
-    constructor() {
-        super();
-        this.state = {
-            surveyorEmail: null,
-            surveyId: null
-        }
+    constructor(){
+      super();
+      this.state = {
+          surveyorEmail: null,
+          surveyId:null
+      }
 
-        console.log("URL in router");
-        console.log(URL);
+      console.log("URL in router");
+      console.log(URL);
     }
 
 
-    handleFailure = () => {
+
+    handleFailure =()=>{
         this.props.history.push('/dashboard');
     }
 
@@ -65,18 +66,18 @@ class Routing extends Component {
 
         }
 
-        console.log("SUrveytype debug:" + surveyType);
+        console.log("SUrveytype debug:"+surveyType);
 
         for (var i = 0; i < survey.questions.length; i++) {
             survey.questions[i].optionList = survey.questions[i].optionList.join(',');
         }
         console.log(survey.questions);
         var self = this;
-        var url = URL + ":3000/surveyee/takeSurvey/" + surveyType + "/" + Math.random() * 10000000;
+        var url = URL+":3000/surveyee/takeSurvey/" + surveyType + "/" + Math.random() * 10000000;
         var qr = url + "?qr=true";
-        if (surveyType == "2" || surveyType == "Open") {
-            url = URL + ":3000/surveyee/register/" + surveyType + "/" + Math.random() * 10000000;
-            qr = url + "?qr=true";
+        if(surveyType=="2" || surveyType=="Open"){
+          url=URL+":3000/surveyee/register/" + surveyType + "/" + Math.random() * 10000000;
+          qr= url + "?qr=true";
         }
         console.log(url);
         var attendeesList = [];
@@ -85,7 +86,7 @@ class Routing extends Component {
                 var obj = {};
                 obj.email = closedSurveyList[i];
                 var temp = (Math.random() * 100000);
-                obj.url = URL + ":3000/surveyee/takeSurvey/" + surveyType + "/" + temp;
+                obj.url = URL+":3000/surveyee/takeSurvey/" + surveyType + "/" + temp;
                 attendeesList.push(obj);
             }
         }
@@ -107,14 +108,14 @@ class Routing extends Component {
         console.log("sdbhjfknasdnlkasd");
         console.log(attendeesList);
         if (inviteeList.length > 0) {
-            var temp = [];
-            for (var i = 0; i < inviteeList.length; i++) {
-                temp.push({"email": inviteeList[i], "inviteeURI": url})
-            }
-            payload.inviteeList = temp;
+          var temp=[];
+          for(var i=0;i<inviteeList.length;i++){
+            temp.push({"email":inviteeList[i],"inviteeURI":url})
+          }
+          payload.inviteeList = temp;
         }
-        if (attendeesList.length > 0) {
-            payload.attendeesList = attendeesList;
+        if(attendeesList.length>0){
+          payload.attendeesList=attendeesList;
         }
 
         console.log("payload");
@@ -123,19 +124,19 @@ class Routing extends Component {
         API.createSurvey(payload)
             .then((res) => {
                 console.log(res);
-                if (res.surveyId) {
-                    this.setState({surveyId: res.surveyId});
-                    alert('Survey was created successfully');
-                    this.props.history.push("/dashboard");
+                if(res.surveyId){
+                  this.setState({surveyId:res.surveyId});
+                  alert('Survey was created successfully');
+                  this.props.history.push("/dashboard");
                 }
-                else {
-                    alert(res.message);
-                    this.props.history.push("/dashboard");
+                else{
+                  alert(res.message);
+                  this.props.history.push("/dashboard");
                 }
 
 
                 if (res.status == 200) {
-                    //  alert("Survey successfully created");
+                  //  alert("Survey successfully created");
                     console.log(res.json());
                     this.props.history.push("/signin");
                     this.props.history.push('/createSurvey');
@@ -182,7 +183,7 @@ class Routing extends Component {
             survey.questions[i].optionList = survey.questions[i].optionList.join(',');
         }
         var self = this;
-        var url = URL + ":3000/surveyee/takeSurvey/" + surveyType + "/" + Math.random() * 10000000;
+        var url = URL+":3000/surveyee/takeSurvey/" + surveyType + "/" + Math.random() * 10000000;
         var qr = url + "?qr=true";
         console.log(url);
         var attendeesList = [];
@@ -191,13 +192,13 @@ class Routing extends Component {
                 var obj = {};
                 obj.email = closedSurveyList[i];
                 var temp = (Math.random() * 100000);
-                obj.url = URL + ":3000/surveyee/takeSurvey/" + surveyType + "/" + temp;
+                obj.url = URL+":3000/surveyee/takeSurvey/" + surveyType + "/" + temp;
                 attendeesList.push(obj);
             }
         }
         //INVITEE GENERAL ATTENDEE CLOSED
         var payload = {
-            survey_id: this.state.surveyId,
+            survey_id:this.state.surveyId,
             surveyType: surveyType,
             surveyorEmail: this.state.surveyorEmail,
             surveyTitle: survey.name,
@@ -206,54 +207,54 @@ class Routing extends Component {
             qr: qr,
             publish: survey.publish
         };
-        var removed = [];
-        var added = [];
+        var removed=[];
+        var added=[];
         if (attendeesList.length > 0) {
-            for (var i = 0; i < survey.oldInvitees.length; i++) {
-                for (var j = 0; j < attendeesList.length; j++) {
-                    var cntr = 0;
-                    if (survey.oldInvitees[i] === attendeesList[j]) {
-                        cntr = 1;
-                    }
-                }
-                if (cntr === 0) {
-                    removed.push(survey.oldInvitees[i]);
-                }
+          for(var i=0;i<survey.oldInvitees.length;i++){
+            for(var j=0;j<attendeesList.length;j++){
+              var cntr=0;
+              if(survey.oldInvitees[i]===attendeesList[j]){
+                cntr=1;
+              }
+            }
+            if(cntr===0){
+              removed.push(survey.oldInvitees[i]);
+            }
+          }
+
+            for(var j=0;j<survey.oldInvitees.length;j++){
+              if(attendeesList.indexOf(survey.oldInvitees[j])>=0){
+                attendeesList.splice(attendeesList.indexOf(survey.oldInvitees[j]),1);
+              }
             }
 
-            for (var j = 0; j < survey.oldInvitees.length; j++) {
-                if (attendeesList.indexOf(survey.oldInvitees[j]) >= 0) {
-                    attendeesList.splice(attendeesList.indexOf(survey.oldInvitees[j]), 1);
-                }
-            }
-
-            payload.added = attendeesList;
-            payload.removed = removed;
+          payload.added = attendeesList;
+          payload.removed=removed;
         }
         else if (inviteeList.length > 0) {
 
-            for (var i = 0; i < survey.oldInvitees.length; i++) {
-                for (var j = 0; j < inviteeList.length; j++) {
-                    var cntr = 0;
-                    if (survey.oldInvitees[i] === inviteeList[j]) {
-                        cntr = 1;
-                    }
-                }
-                if (cntr === 0) {
-                    removed.push(survey.oldInvitees[i]);
-                }
-
+          for(var i=0;i<survey.oldInvitees.length;i++){
+            for(var j=0;j<inviteeList.length;j++){
+              var cntr=0;
+              if(survey.oldInvitees[i]===inviteeList[j]){
+                cntr=1;
+              }
+            }
+            if(cntr===0){
+              removed.push(survey.oldInvitees[i]);
             }
 
+          }
 
-            for (var j = 0; j < survey.oldInvitees.length; j++) {
-                if (inviteeList.indexOf(survey.oldInvitees[j]) >= 0) {
-                    inviteeList.splice(inviteeList.indexOf(survey.oldInvitees[j]), 1);
-                }
+
+            for(var j=0;j<survey.oldInvitees.length;j++){
+              if(inviteeList.indexOf(survey.oldInvitees[j])>=0){
+                inviteeList.splice(inviteeList.indexOf(survey.oldInvitees[j]),1);
+              }
             }
 
-            payload.added = inviteeList;
-            payload.removed = removed;
+          payload.added = inviteeList;
+          payload.removed=removed;
         }
 
         console.log("payload");
@@ -262,13 +263,13 @@ class Routing extends Component {
 
         API.editSurvey(payload,this.state.surveyId)
             .then((res) => {
-                if (res.surveyId) {
-                    alert('Survey successfully edited');
-                    this.props.history.push("/dashboard");
+                if(res.surveyId){
+                  alert('Survey successfully edited');
+                  this.props.history.push("/dashboard");
                 }
-                else {
-                    alert('Survey edit unsuccessful');
-                    this.props.history.push("/dashboard");
+                else{
+                  alert('Survey edit unsuccessful');
+                  this.props.history.push("/dashboard");
                 }
             });
 
@@ -281,11 +282,12 @@ class Routing extends Component {
         API.verifyUser(data)
             .then((res) => {
 
-                if (res.status === 200) {
+                    if(res.status===200)
+                    {
 
                     alert("User verified successfully! Please Login to get Started");
                     this.props.history.push("/signin");
-                }
+                  }
                 else if (res.status == 401) {
                     alert("User with this email id already exists. Please use another email id!");
                     this.props.history.push("/");
@@ -318,47 +320,47 @@ class Routing extends Component {
 
 
     gotoSigninOpen = (data) => {
-        console.log("Inside gotoSigninOpen");
-        console.log("Props received:");
-        console.log(this.props);
+      console.log("Inside gotoSigninOpen");
+      console.log("Props received:");
+      console.log(this.props);
 
-        console.log("Data received:");
-        console.log(data);
+      console.log("Data received:");
+      console.log(data);
 
-        this.setState({
-            dataOpen: data
-        });
+      this.setState({
+        dataOpen: data
+      });
 
-        this.props.history.push('/signin');
+      this.props.history.push('/signin');
     }
 
     gotoSignupOpen = (data) => {
-        console.log("Inside gotoSignupOpen");
-        console.log("Props received:");
-        console.log(this.props);
+      console.log("Inside gotoSignupOpen");
+      console.log("Props received:");
+      console.log(this.props);
 
-        console.log("Data received:");
-        console.log(data);
+      console.log("Data received:");
+      console.log(data);
 
-        this.setState({
-            dataOpen: data
-        });
+      this.setState({
+        dataOpen: data
+      });
 
-        this.props.history.push('/signup');
+      this.props.history.push('/signup');
     }
 
 
     registerUser = (payload) => {
-        console.log("Payload Received inside registerUser: ");
-        console.log(payload);
+      console.log("Payload Received inside registerUser: ");
+      console.log(payload);
         API.registerUser(payload)
             .then((res) => {
-                console.log("Data received for Open Survey Data in registerUser: ");
-                console.log(res);
+              console.log("Data received for Open Survey Data in registerUser: ");
+              console.log(res);
 
-                this.setState({
-                    dataOpen: res.dataOpen
-                });
+              this.setState({
+                dataOpen: res.dataOpen
+              });
 
                 if (res.status == 200) {
                     alert("User registration is successful!");
@@ -388,7 +390,7 @@ class Routing extends Component {
 
     signIn = (payload) => {
         console.log("ghjvsdhagjsghasd");
-        this.setState({surveyorEmail: payload.email})
+        this.setState({surveyorEmail:payload.email})
         API.signIn(payload)
             .then((res) => {
                 console.log("Data received for Open Survey Data: ");
@@ -396,40 +398,40 @@ class Routing extends Component {
                 console.log(res.msg);
                 if (res.status == 200) {
 
-                    var temp = (Math.random() * 100000);
-                    var url1 = URL + ":3000/surveyee/takeSurvey/2/" + temp;
-                    if (res.dataOpen) {
-                        var data = {
-                            surveyId: res.dataOpen.surveyIdOpen,
-                            email: payload.email,
-                            url: url1
-                        }
-                        API.sendEmailUrlSurveyId(data)
-                            .then(res => {
-                                console.log(res);
-                                alert("User Signed In Successfully");
-                                console.log(payload.email);
-                                this.setState({
-                                    surveyorEmail: payload.email
-                                })
-
-
-                                this.props.history.push("/dashboard");
-                            })
-                            .catch(err => {
-                                console.error(err);
-                            })
+                  var temp = (Math.random() * 100000);
+                var  url1 = URL+":3000/surveyee/takeSurvey/2/" + temp;
+                  if(res.dataOpen){
+                    var data = {
+                      surveyId: res.dataOpen.surveyIdOpen,
+                      email: payload.email,
+                      url: url1
                     }
-                    else {
+                    API.sendEmailUrlSurveyId(data)
+                    .then(res =>{
+                        console.log(res);
                         alert("User Signed In Successfully");
                         console.log(payload.email);
                         this.setState({
-                            surveyorEmail: payload.email
+                          surveyorEmail: payload.email
                         })
 
 
                         this.props.history.push("/dashboard");
-                    }
+                    })
+                    .catch(err => {
+                      console.error(err);
+                    })
+                  }
+                  else{
+                    alert("User Signed In Successfully");
+                    console.log(payload.email);
+                    this.setState({
+                      surveyorEmail: payload.email
+                    })
+
+
+                    this.props.history.push("/dashboard");
+                  }
 
 
                 }
@@ -456,49 +458,45 @@ class Routing extends Component {
     }
 
     submitResponses = () => {
-        if (this.state.surveyorEmail) {
-            this.props.history.push('/dashboard');
+        if(this.state.surveyorEmail){
+          this.props.history.push('/dashboard');
 
         }
-        else {
-            this.props.history.push('/signin');
+        else{
+          this.props.history.push('/signin');
         }
 
     }
 
     gotoEmailOpen = (data) => {
-        console.log("Inside gotoEmailOpen");
-        console.log("Props received:");
-        console.log(this.props);
+     console.log("Inside gotoEmailOpen");
+     console.log("Props received:");
+     console.log(this.props);
 
-        console.log("Data received:");
-        console.log(data);
+     console.log("Data received:");
+     console.log(data);
 
-        var temp = (Math.random() * 100000);
-        var url1 = "http://localhost:3000/surveyee/takeSurvey/2/" + temp;
+     var data1 = {
+       surveyId: data.surveyIdOpen,
+       email: data.email,
+       url: data.openUrl
+     }
 
-
-        var data1 = {
-            surveyId: data.surveyIdOpen,
-            email: data.email,
-            url: url1
-        }
-
-        API.sendEmailUrlSurveyId(data1)
-            .then(res => {
-                alert('Email sent successfully');
-                console.log(res);
-            })
-            .catch(err => {
-                alert('Issue with sending the email');
-                console.error(err);
-            })
+     API.sendEmailUrlSurveyId(data1)
+     .then(res =>{
+        alert('Email sent successfully');
+         console.log(res);
+     })
+     .catch(err => {
+       alert('Issue with sending the email');
+       console.error(err);
+     })
 
 
-    }
+   }
 
-    gotoMySurveys = () => {
-        this.props.history.push('/mySurveys');
+    gotoMySurveys = () =>{
+      this.props.history.push('/mySurveys');
     }
 
     gotoCreateSurvey = () => {
