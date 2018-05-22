@@ -884,6 +884,9 @@ public class SurveyController {
             return null;
         }
 
+        if(survey.getSurveyType() == SurveyTypeEnum.OPEN.getEnumCode()){
+            return new SurveyResponse();
+        }
 
         SurveyResponse attendeeResponseEntity = new SurveyResponse();
         attendeeResponseEntity.setSurveyId(survey);
