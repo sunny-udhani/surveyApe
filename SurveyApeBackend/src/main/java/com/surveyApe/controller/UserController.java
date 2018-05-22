@@ -294,6 +294,11 @@ public class UserController {
             }
         }
 
+        if (surveyResponse.isCompleteInd()) {
+            response.put("message", "You already submitted the survey once!");
+            return new ResponseEntity<Object>(response.toString(), HttpStatus.SERVICE_UNAVAILABLE);
+        }
+
         surveyResponse.setSurveyURIValidInd(false);
         surveyResponse.setCompleteInd(true);
         surveyResponseService.saveResponseEntity(surveyResponse);

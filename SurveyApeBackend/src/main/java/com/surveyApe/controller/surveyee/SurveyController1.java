@@ -43,7 +43,6 @@ public class SurveyController1 {
         JSONObject response = new JSONObject();
 
 
-
         int surveyType = Integer.parseInt(reqObj.getString("surveyType"));
         String url = reqObj.getString("url");
 
@@ -75,6 +74,19 @@ public class SurveyController1 {
                         SurveyResponse surveyResponse = surveyResponseService.findBySurveyIdAndEmail(survey, user_email);
 
                         if (surveyResponse != null) {
+
+//                            int checkValidations = surveyResponseValidations(surveyResponse);
+//                            if (checkValidations == 1) {
+//                                response.put("message", "No such survey");
+//                                return new ResponseEntity<Object>(response.toString(), HttpStatus.BAD_REQUEST);
+//                            } else if (checkValidations == 2) {
+//                                response.put("message", "URI Invalid");
+//                                return new ResponseEntity<Object>(response.toString(), HttpStatus.NOT_ACCEPTABLE);
+//                            } else if (checkValidations == 3) {
+//                                response.put("message", "You have submitted the survey");
+//                                return new ResponseEntity<Object>(response.toString(), HttpStatus.SERVICE_UNAVAILABLE);
+//                            }
+
                             response.put("surveyResponse_id", surveyResponse.getSurveyResponseId());
                             response.put("email", surveyResponse.getUserEmail());
                         } else {
@@ -206,7 +218,7 @@ public class SurveyController1 {
 
                         JSONObject responses = new JSONObject();
                         JSONArray resp = new JSONArray();
-                        surveyResponse.getQuestionResponseList().stream().forEach( sr -> {
+                        surveyResponse.getQuestionResponseList().stream().forEach(sr -> {
                             JSONObject ne = new JSONObject();
                             ne.put("questionId", sr.getQuestionId().getSurveyQuestionId());
                             ne.put("response", sr.getResponse());
@@ -220,7 +232,7 @@ public class SurveyController1 {
                     SurveyResponse surveyResponse = surveyResponseService.findBySurveyIdAndEmail(survey, userEmail);
                     if (surveyResponse != null) {
                         JSONArray resp = new JSONArray();
-                        surveyResponse.getQuestionResponseList().stream().forEach( sr -> {
+                        surveyResponse.getQuestionResponseList().stream().forEach(sr -> {
                             JSONObject ne = new JSONObject();
                             ne.put("questionId", sr.getQuestionId().getSurveyQuestionId());
                             ne.put("response", sr.getResponse());
@@ -371,7 +383,7 @@ public class SurveyController1 {
             } else {
 
                 SurveyResponse surveyResponse = surveyResponseService.findBySurveyIdAndEmail(survey, email);
-                if(surveyResponse != null){
+                if (surveyResponse != null) {
                     response.put("message", "Attendee already added");
                     return new ResponseEntity<Object>(response.toString(), HttpStatus.BAD_REQUEST);
                 }
@@ -453,6 +465,23 @@ public class SurveyController1 {
         return 0;
     }
 
-    //endregion
+    public int surveyResponseValidations(SurveyResponse surveyResponse) {
+
+        if (surveyResponse == null) {
+            return 1;
+        }
+
+        if (!surveyResponse.isSurveyURIValidInd()) {
+            return 2;
+        }
+
+        if (surveyResponse.isCompleteInd()) {
+            return 3;
+        }
+
+        return 0;
+    }
+
+//endregion
 
 }
