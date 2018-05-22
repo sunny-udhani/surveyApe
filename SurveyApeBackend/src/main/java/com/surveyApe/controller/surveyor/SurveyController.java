@@ -411,6 +411,17 @@ public class SurveyController {
             return new ResponseEntity<Object>(response.toString(), HttpStatus.BAD_REQUEST);
         }
 
+        int checkForValidations = surveyValidations(survey);
+        if (checkForValidations == 1) {
+            response.put("message", "No such survey");
+            return new ResponseEntity<Object>(response.toString(), HttpStatus.BAD_REQUEST);
+        }  else if (checkForValidations == 3) {
+            response.put("message", "Survey has ended!");
+            return new ResponseEntity<Object>(response.toString(), HttpStatus.SERVICE_UNAVAILABLE);
+        } else if (checkForValidations == 4) {
+            response.put("message", "The survey has been marked complete");
+            return new ResponseEntity<Object>(response.toString(), HttpStatus.SERVICE_UNAVAILABLE);
+        }
 
         if (reqObj.has("addAttendeesList")) {
 //            survey.getResponseList().clear();
@@ -446,6 +457,7 @@ public class SurveyController {
 
             }
         }
+
         if (reqObj.has("addInviteeList")) {
             JSONArray invitedEmailsArray = reqObj.getJSONArray("addInviteeList");
 
@@ -885,6 +897,7 @@ public class SurveyController {
         }
 
         if(survey.getSurveyType() == SurveyTypeEnum.OPEN.getEnumCode()){
+            mailServices.sendEmail(attendeeEmail, "You are invited to take this survey: " + attendeeURI, "survayape.noreply@gmail.com", "Survey Filling request", attendeeURI, true);
             return new SurveyResponse();
         }
 
