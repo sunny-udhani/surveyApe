@@ -494,7 +494,13 @@ public class SurveyController {
             survey.setSurveyCompletedInd(endSurvey);
             survey.setEndDate(new Date());
             surveyService.saveSurvey(survey);
+        }else{
+            response.put("message", "No end survey indicator");
+            return new ResponseEntity<Object>(survey, HttpStatus.BAD_REQUEST);
+
         }
+
+
 
 //        sendEmailtoAttendees(survey);
 

@@ -82,7 +82,7 @@ export const endSurvey = (data) =>
             'Content-Type': 'application/json'
         },
         credentials: 'include',
-        body: JSON.stringify({surveyId: data, publish: false})
+        body: JSON.stringify({surveyId: data, endSurvey: true})
     }).then(res => {
         console.log(res.body);
         return res.json();
