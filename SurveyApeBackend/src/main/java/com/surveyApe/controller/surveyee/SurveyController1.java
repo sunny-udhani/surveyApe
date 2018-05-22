@@ -370,8 +370,13 @@ public class SurveyController1 {
                 return new ResponseEntity<Object>(response.toString(), HttpStatus.SERVICE_UNAVAILABLE);
             } else {
 
+                SurveyResponse surveyResponse = surveyResponseService.findBySurveyIdAndEmail(survey, email);
+                if(surveyResponse != null){
+                    response.put("message", "Attendee already added");
+                    return new ResponseEntity<Object>(response.toString(), HttpStatus.BAD_REQUEST);
+                }
+
                 createNewEmailResponseEntity(survey, email, newUniqueUrlForEmail);
-                response.put("surveyResponse_id", survey.getSurveyId());
                 mailServices.sendEmail(email, "You must fill this survey: " + newUniqueUrlForEmail, "survayape.noreply@gmail.com", "Survey Filling request", newUniqueUrlForEmail, true);
 
 //                mailServices.sendEmail(email, );
