@@ -80,7 +80,7 @@ public class SurveyController1 {
                         } else {
                             //generate new response id for email to coorelate responses
                             response.put("surveyResponse_id", createNewEmailResponseEntity(survey, user_email, ""));
-                            response.put("email", surveyResponse.getUserEmail());
+                            response.put("email", user_email);
                         }
                     } else
                         //generate new response id to coorelate responses
