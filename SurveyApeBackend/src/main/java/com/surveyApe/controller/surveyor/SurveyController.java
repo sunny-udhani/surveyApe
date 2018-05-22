@@ -155,6 +155,12 @@ public class SurveyController {
                 String surveyeeEmail = attendeesObj.getString("email");
                 String surveyeeURI = attendeesObj.getString("url");
 
+                SurveyResponse surveyResponse = surveyResponseService.findAttendee(surveyVO, surveyeeEmail);
+                if (surveyResponse != null) {
+                    System.out.println("Attendee already exists!!!");
+                    continue;
+                }
+
                 SurveyResponse newSurveyeeResponseEntry = createNewSurveyeeResponseEntry(surveyVO.getSurveyId(), surveyeeEmail, surveyeeURI);
                 if (newSurveyeeResponseEntry == null) {
                     response.put("message", "response entity not created");
@@ -172,6 +178,12 @@ public class SurveyController {
                 JSONObject attendeesObj = invitedEmailsArray.getJSONObject(i);
 
                 String surveyeeEmail = attendeesObj.getString("email");
+
+                SurveyResponse surveyResponse = surveyResponseService.findAttendee(surveyVO, surveyeeEmail);
+                if (surveyResponse != null) {
+                    System.out.println("Attendee already exists!!!");
+                    continue;
+                }
 
                 SurveyResponse newSurveyeeResponseEntry = createNewSurveyeeResponseEntry(surveyVO.getSurveyId(), surveyeeEmail, surveyVO.getSurveyURI());
 
@@ -287,6 +299,12 @@ public class SurveyController {
                 String surveyeeEmail = attendeesObj.getString("email");
                 String surveyeeURI = attendeesObj.getString("URI");
 
+                SurveyResponse surveyResponse = surveyResponseService.findAttendee(survey, surveyeeEmail);
+                if (surveyResponse != null) {
+                    System.out.println("Attendee already exists!!!");
+                    continue;
+                }
+
                 SurveyResponse newSurveyeeResponseEntry = createNewSurveyeeResponseEntry(survey.getSurveyId(), surveyeeEmail, surveyeeURI);
 
                 if (newSurveyeeResponseEntry == null) {
@@ -324,6 +342,12 @@ public class SurveyController {
                 JSONObject attendeesObj = invitedEmailsArray.getJSONObject(i);
 
                 String surveyeeEmail = attendeesObj.getString("email");
+
+                SurveyResponse surveyResponse = surveyResponseService.findAttendee(survey, surveyeeEmail);
+                if (surveyResponse != null) {
+                    System.out.println("Attendee already exists!!!");
+                    continue;
+                }
 
                 SurveyResponse newSurveyeeResponseEntry = createNewSurveyeeResponseEntry(survey.getSurveyId(), surveyeeEmail, survey.getSurveyURI());
 
@@ -404,6 +428,12 @@ public class SurveyController {
                     return new ResponseEntity<Object>(response.toString(), HttpStatus.BAD_REQUEST);
                 }
 
+                SurveyResponse surveyResponse = surveyResponseService.findAttendee(survey, surveyeeEmail);
+                if (surveyResponse != null) {
+                    System.out.println("Attendee already exists!!!");
+                    continue;
+                }
+
                 SurveyResponse newSurveyeeResponseEntry = createNewSurveyeeResponseEntry(survey.getSurveyId(), surveyeeEmail, surveyeeURI);
 
                 if (newSurveyeeResponseEntry == null) {
@@ -423,6 +453,12 @@ public class SurveyController {
                 JSONObject attendeesObj = invitedEmailsArray.getJSONObject(i);
 
                 String surveyeeEmail = attendeesObj.getString("email");
+
+                SurveyResponse surveyResponse = surveyResponseService.findAttendee(survey, surveyeeEmail);
+                if (surveyResponse != null) {
+                    System.out.println("Attendee already exists!!!");
+                    continue;
+                }
 
                 SurveyResponse newSurveyeeResponseEntry = createNewSurveyeeResponseEntry(survey.getSurveyId(), surveyeeEmail, survey.getSurveyURI());
 
@@ -461,6 +497,19 @@ public class SurveyController {
             return new ResponseEntity<Object>(response.toString(), HttpStatus.BAD_REQUEST);
         }
 
+        int checkForValidations = surveyValidations(survey);
+        if (checkForValidations == 1) {
+            response.put("message", "No such survey");
+            return new ResponseEntity<Object>(response.toString(), HttpStatus.BAD_REQUEST);
+        }  else if (checkForValidations == 3) {
+            response.put("message", "Survey has ended!");
+            return new ResponseEntity<Object>(response.toString(), HttpStatus.SERVICE_UNAVAILABLE);
+        } else if (checkForValidations == 4) {
+            response.put("message", "The survey has been marked complete");
+            return new ResponseEntity<Object>(response.toString(), HttpStatus.SERVICE_UNAVAILABLE);
+        }
+
+
         if (reqObj.has("publish")) {
             boolean publishInd = reqObj.getBoolean("publish");
 
@@ -497,6 +546,11 @@ public class SurveyController {
             return new ResponseEntity<Object>(response.toString(), HttpStatus.BAD_REQUEST);
         }
 
+        if(!survey.isPublishedInd()){
+            response.put("message", "Survey not yet published");
+            return new ResponseEntity<Object>(survey, HttpStatus.BAD_REQUEST);
+        }
+
         if (reqObj.has("endSurvey")) {
             boolean endSurvey = reqObj.getBoolean("endSurvey");
             survey.setSurveyCompletedInd(endSurvey);
@@ -507,7 +561,6 @@ public class SurveyController {
             return new ResponseEntity<Object>(survey, HttpStatus.BAD_REQUEST);
 
         }
-
 
 //        sendEmailtoAttendees(survey);
 
@@ -546,16 +599,19 @@ public class SurveyController {
 
         int count = surveyResponseService.countCompletedSurveyResponses(survey);
         if (count > 0) {
+
             response.put("message", "Cannot unpublish, survey has been completed by " + count + " attendees");
             return new ResponseEntity<Object>(response.toString(), HttpStatus.BAD_REQUEST);
+
         } else if (count == 0) {
+
             survey.setPublishedInd(false);
             survey.setStartDate(null);
             surveyService.saveSurvey(survey);
 
             List<String> userEmails = surveyResponseService.findSurveyResponseEmails(survey);
             userEmails.stream().forEach(emailId -> {
-                if (!emailId.isEmpty()) {
+                if (!emailId.isEmpty() && !emailId.equals("anonymous")) {
                     mailServices.sendEmail(emailId, "The survey: " + survey.getSurveyTitle() + " has been unpublished", "survayape.noreply@gmail.com", "Survey Unpublish notification", "", false);
                 }
             });
@@ -778,6 +834,27 @@ public class SurveyController {
 
     }
 
+
+    @GetMapping(path = "surveyor/delete/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public @ResponseBody
+    ResponseEntity<?> deleteSurvey(@PathVariable String id, @RequestParam Map<String, String> params, HttpSession session) {
+        try {
+            JSONObject response = new JSONObject();
+            ObjectMapper responseJSON = new ObjectMapper();
+
+            JSONObject resp = new JSONObject();
+
+            if (surveyService.deleteSurvey(id))
+                resp.put("message", "done");
+            else resp.put("message", "not done");
+
+            return new ResponseEntity<Object>(resp.toString(), HttpStatus.OK);
+        } catch (Exception ex) {
+            return new ResponseEntity<Object>(ex.toString(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+    }
+
     //region utilities
     public SurveyQuestion createNewQuestionWithOptions(String surveyId, String questionText, int questionType, String optionList) {
         Survey survey = surveyService.findBySurveyId(surveyId);
@@ -916,7 +993,8 @@ public class SurveyController {
                         String attendeeEmail = response.getUserEmail();
                         String attendeeURL = response.getSurveyURI();
 
-                        mailServices.sendEmail(attendeeEmail, "You must fill this survey: " + attendeeURL, "survayape.noreply@gmail.com", "Survey Filling request", attendeeURL, true);
+                        if (!attendeeEmail.isEmpty() && !attendeeEmail.equals("anonymous"))
+                            mailServices.sendEmail(attendeeEmail, "You must fill this survey: " + attendeeURL, "survayape.noreply@gmail.com", "Survey Filling request", attendeeURL, true);
 
 //                        return 0;
                     }
@@ -927,7 +1005,8 @@ public class SurveyController {
                     for (SurveyResponse response : surveyResponseList) {
 
                         String attendeeEmail = response.getUserEmail();
-                        mailServices.sendEmail(attendeeEmail, "You are invited to take this survey: " + surveyURL, "survayape.noreply@gmail.com", "Survey Filling request", surveyURL, true);
+                        if (!attendeeEmail.isEmpty() && !attendeeEmail.equals("anonymous"))
+                            mailServices.sendEmail(attendeeEmail, "You are invited to take this survey: " + surveyURL, "survayape.noreply@gmail.com", "Survey Filling request", surveyURL, true);
 
 //                        return 0;
                     }
@@ -947,6 +1026,43 @@ public class SurveyController {
         }
         return -1;
     }
+
+    public Survey closeSurveyBasedonEndDate(Survey survey) {
+
+        survey.setSurveyCompletedInd(true);
+        surveyService.saveSurvey(survey);
+        return survey;
+    }
+
+    public int surveyValidations(Survey survey) {
+
+        if (survey == null) {
+            return 1;
+        }
+
+        if (!survey.isPublishedInd()) {
+            return 2;
+        }
+
+        if (survey.getEndDate() != null) {
+
+            Date now = new Date();
+            if (now.after(survey.getEndDate())) {
+
+                closeSurveyBasedonEndDate(survey);
+
+                return 3;
+
+            }
+        }
+
+        if (survey.isSurveyCompletedInd()) {
+            return 4;
+        }
+
+        return 0;
+    }
+
     //endregion
 
     //region add/delete questions

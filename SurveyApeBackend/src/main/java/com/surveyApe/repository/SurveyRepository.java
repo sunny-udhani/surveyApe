@@ -16,4 +16,6 @@ public interface SurveyRepository extends CrudRepository<Survey, String> {
     List<Survey> findAllBySurveyorEmailEquals(User surveyor);
 
     Optional<Survey> findSurveyBySurveyURIEquals(String url);
+
+    int countBySurveyIdEquals(String id);
 }
