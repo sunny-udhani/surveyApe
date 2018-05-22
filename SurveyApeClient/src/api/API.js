@@ -1,6 +1,6 @@
 import axios from 'axios';
-const api = 'http://localhost:8080';
-
+import URL from '../getPath.js';
+const api = URL+':8080';
 
 const headers = {
     'Accept': 'application/json'
@@ -332,6 +332,9 @@ export const getSurveyId = (payload) =>
         credentials: 'include',
         body: JSON.stringify(payload)
     }).then(res => {
+        if(res.status!==200){
+          return "failure";
+        }
         console.log(res.body);
         return res.json();
     }).catch(error => {
@@ -350,6 +353,9 @@ export const getSurveyAndResp = (payload) =>
         credentials: 'include',
         body: JSON.stringify(payload)
     }).then(res => {
+      if(res.status!==200){
+        return "failure";
+      }
         return res.json();
     }).catch(error => {
         console.log("This is error");

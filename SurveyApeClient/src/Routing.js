@@ -15,6 +15,7 @@ import MySurveys from './MySurveys';
 import Form1 from './Form1';
 import SurveysToTake from './SurveysToTake';
 import * as API from './api/API';
+import URL from './getPath';
 
 var QRCode = require('qrcode.react');
 const headers = {};
@@ -27,6 +28,9 @@ class Routing extends Component {
           surveyorEmail: null,
           surveyId:null
       }
+
+      console.log("URL in router");
+      console.log(URL);
     }
 
 
@@ -69,10 +73,10 @@ class Routing extends Component {
         }
         console.log(survey.questions);
         var self = this;
-        var url = "http://localhost:3000/surveyee/takeSurvey/" + surveyType + "/" + Math.random() * 10000000;
+        var url = URL+":3000/surveyee/takeSurvey/" + surveyType + "/" + Math.random() * 10000000;
         var qr = url + "?qr=true";
         if(surveyType=="2" || surveyType=="Open"){
-          url="http://localhost:3000/surveyee/register/" + surveyType + "/" + Math.random() * 10000000;
+          url=URL+":3000/surveyee/register/" + surveyType + "/" + Math.random() * 10000000;
           qr= url + "?qr=true";
         }
         console.log(url);
@@ -82,7 +86,7 @@ class Routing extends Component {
                 var obj = {};
                 obj.email = closedSurveyList[i];
                 var temp = (Math.random() * 100000);
-                obj.url = "http://localhost:3000/surveyee/takeSurvey/" + surveyType + "/" + temp;
+                obj.url = URL+":3000/surveyee/takeSurvey/" + surveyType + "/" + temp;
                 attendeesList.push(obj);
             }
         }
@@ -179,7 +183,7 @@ class Routing extends Component {
             survey.questions[i].optionList = survey.questions[i].optionList.join(',');
         }
         var self = this;
-        var url = "http://localhost:3000/surveyee/takeSurvey/" + surveyType + "/" + Math.random() * 10000000;
+        var url = URL+":3000/surveyee/takeSurvey/" + surveyType + "/" + Math.random() * 10000000;
         var qr = url + "?qr=true";
         console.log(url);
         var attendeesList = [];
@@ -188,7 +192,7 @@ class Routing extends Component {
                 var obj = {};
                 obj.email = closedSurveyList[i];
                 var temp = (Math.random() * 100000);
-                obj.url = "http://localhost:3000/surveyee/takeSurvey/" + surveyType + "/" + temp;
+                obj.url = URL+":3000/surveyee/takeSurvey/" + surveyType + "/" + temp;
                 attendeesList.push(obj);
             }
         }
@@ -412,7 +416,7 @@ class Routing extends Component {
                 if (res.status == 200) {
 
                   var temp = (Math.random() * 100000);
-                var  url1 = "http://localhost:3000/surveyee/takeSurvey/2/" + temp;
+                var  url1 = URL+":3000/surveyee/takeSurvey/2/" + temp;
                   if(res.dataOpen){
                     var data = {
                       surveyId: res.dataOpen.surveyIdOpen,
@@ -611,7 +615,7 @@ class Routing extends Component {
             var obj = {};
             obj.email = arr[i].email;
             var temp = (Math.random() * 100000);
-            obj.URI = "http://localhost:3000/surveyee/takeSurvey/" + type + "/" + temp;
+            obj.URI = URL+":3000/surveyee/takeSurvey/" + type + "/" + temp;
             addAttendeesList.push(obj);
         }
         var payload={surveyId:id,addAttendeesList:addAttendeesList};
@@ -730,7 +734,7 @@ class Routing extends Component {
 
                 <Route exact path="/surveyee/takeSurvey/:surveyType/:randSurvey" render={() => (
                     <div>
-                        <Survey submitSurveys={this.submitSurveys}  email={this.state.surveyorEmail} submitResponses={this.submitResponses} gotoDashboard={this.gotoDashboard} logout={this.logout}/>
+                        <Survey submitSurveys={this.submitSurveys} handleFailure={this.handleFailure}  email={this.state.surveyorEmail} submitResponses={this.submitResponses} gotoDashboard={this.gotoDashboard} logout={this.logout}/>
                     </div>
                 )}/>
 

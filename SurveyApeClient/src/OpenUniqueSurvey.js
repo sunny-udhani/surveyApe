@@ -4,6 +4,7 @@ import './OpenUniqueSurvey.css';
 import OpenUniqueSurveyEmail from './OpenUniqueSurveyEmail';
 import * as API from './api/API';
 import Logo from './logo.png';
+import URL from './getPath';
 
 class OpenUniqueSurvey extends Component {
 
@@ -22,12 +23,12 @@ componentWillMount() {
   console.log(this.props.match.params.randSurvey);
 
   var data = {
-      "url": "http://localhost:3000" + this.props.match.url,
+      "url": URL+":3000" + this.props.match.url,
       "surveyType": this.props.match.params.surveyType,
       "randSurvey": this.props.match.params.randSurvey
   }
   var data1 = {
-    "url": "http://localhost:3000" + this.props.match.url,
+    "url": URL+":3000" + this.props.match.url,
     "surveyType": this.props.match.params.surveyType
   }
 
@@ -47,7 +48,7 @@ componentWillMount() {
             //  alert("Survey successfully created");
             this.setState({
               surveyIdOpen: res.survey_id,
-              url: "http://localhost:3000" + this.props.match.url
+              url: URL+":3000" + this.props.match.url
             });
 
       });
