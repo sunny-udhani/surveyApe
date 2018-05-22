@@ -78,6 +78,11 @@ public class ResponseController {
             return new ResponseEntity<Object>(response.toString(), HttpStatus.BAD_REQUEST);
         }
 
+        if (userResponseEntity.isCompleteInd()) {
+            response.put("message", "You already submitted the survey once!");
+            return new ResponseEntity<Object>(response.toString(), HttpStatus.SERVICE_UNAVAILABLE);
+        }
+
         SurveyQuestion questionEntity = survey.getQuestionList().stream()
                 .filter(r -> r.getSurveyQuestionId().equals(questionId))
                 .findAny()

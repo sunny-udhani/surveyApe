@@ -56,4 +56,14 @@ public class SurveyService {
 
     }
 
+    public boolean deleteSurvey(String id) {
+
+        if (surveyRepository.countBySurveyIdEquals(id) > 0) {
+            surveyRepository.deleteById(id);
+            return true;
+        } else {
+            return false;
+        }
+    }
+
 }
