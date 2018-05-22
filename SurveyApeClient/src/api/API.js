@@ -1,5 +1,5 @@
 import axios from 'axios';
-const api = 'http://localhost:8080';
+const api = 'http://13.56.150.136:8080';
 
 
 const headers = {

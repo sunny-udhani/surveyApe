@@ -26,7 +26,8 @@ class MySurveys extends Component {
                   }
                   respArr.push(count);
                 }
-
+                console.log("respArr");
+                console.log(respArr);
                 this.setState({surveysArr: res.surveys,respArr:respArr});
                 console.log(this.state.surveysArr);
             });
@@ -147,9 +148,18 @@ class MySurveys extends Component {
                                         <div className="col-lg-4">{item.publishedInd == 0 ? (
                                             <div><input type="button" className="butt2" value="Publish"
                                                         onClick={() => this.props.PublishSurvey(item.surveyId)}/>
-                                            </div>) : (<div>
-                                           Already Published
-                                            </div>)}</div>
+                                                    </div>) : (<div>
+
+                                                      {this.state.respArr[index]<1 && item.publishedInd==1?(<div>
+                                                        <input type="button" className="butt2" value="Unpublish"
+                                                                    onClick={() => this.props.UnpublishSurvey(item.surveyId)}/>
+                                                      </div>):(<div>
+                                                      </div>)}</div>)}</div>
+
+
+
+
+
 
 
                                         <div className="col-lg-4">{item.surveyCompletedInd == 0 ? (
