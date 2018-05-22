@@ -22,6 +22,7 @@ class Confirmation extends Component {
     console.log("Checking for Props: ");
     console.log(this.props);
   }
+  
     render() {
         return (
             <div className="container conf">
