@@ -172,7 +172,7 @@ class SurveyDetails extends Component{
 
         </div>
       );
-    } else if((this.props.response.survey.surveyType === 2) && (this.props.response.competedResponses > 2)) {
+    } else if((this.props.response.survey.surveyType === 2)) {
 
       return (
         <div>
@@ -194,25 +194,25 @@ class SurveyDetails extends Component{
 
         </div>
 
-        <h3>Survey Name: {this.state.name}</h3>
-        <h3>Start Time: {this.state.startTime}</h3>
-        <h3>End Time: {this.state.endTime}</h3>
-        <h5>Complete Percentage: {100*(this.state.totalSubmissions/this.state.totalInvited)}</h5>
+        <h3>Survey Name: {this.props.response.survey.surveyTitle}</h3>
+        <h3>Start Date: {this.props.response.survey.startDate}</h3>
+        <h3>End Date: {this.props.response.survey.endDate}</h3>
+
 
           <div className="row" >
 
             <div className="col-lg-5">
-                <h5>Total Participants: {this.state.totalInvited}</h5>
-                <h5>Total Number of Submissions: {this.state.totalSubmissions}</h5>
-                <h5>Complete Percentage: {100*(this.state.totalSubmissions/this.state.totalInvited)}</h5>
+            <h3>No of Participants: {this.props.response.survey.responseList.length}</h3>
+            <h3>No of Submissions: {this.props.competedResponses}</h3>
+            <h3>Complete Percentage: {100*(this.props.competedResponses/this.props.response.survey.responseList.length)}</h3>
             </div>
 
               <div className="col-lg-7">
 
               <BarChart width={600} height={400}data={[
-                { name: 'Total Participants', value: this.state.totalInvited },
-                 { name: 'Total Submissions', value: this.state.totalSubmissions },
-                  { name: 'Complete %', value: 100*(this.state.totalSubmissions/this.state.totalInvited) }
+                { name: 'Total Participants', value: this.props.response.survey.responseList.length },
+                 { name: 'Total Submissions', value: this.props.competedResponses },
+                  { name: 'Complete %', value: 100*(this.props.competedResponses/this.props.response.survey.responseList.length) }
               ]}>
                   <CartesianGrid strokeDasharray="3 3" />
                   <XAxis dataKey="name" fill="white" />
@@ -236,7 +236,7 @@ class SurveyDetails extends Component{
                       <div className="row" >
                           <div className="col-lg-12">
                             <div className="row" style={{paddingLeft: 20}}>
-                              <h5>Question:  <span style={{color: "green"}}>{question.questionText}</span> </h5>
+                              <h5 style={{marginLeft: 10}}>Question:  <span style={{color: "green"}}>{question.questionText}</span> </h5>
                             </div>
                           </div>
 
@@ -254,7 +254,6 @@ class SurveyDetails extends Component{
                               <h5> <span style={{fontWeight: 600}}>Response Count: </span>{optionsAndCount.responses.responseCount}</h5>
                               <br/>
                               </div>): (<span></span>)}
-
                           </div>
 
 
@@ -269,31 +268,6 @@ class SurveyDetails extends Component{
             </div>
 
           </div>
-
-          <div className="row" >
-
-            <div className="col-lg-7">
-                <h5>Total Questions in the Survey: {this.props.response.survey.questionList.length}</h5>
-
-                {this.props.response.survey.questionList.map(question => (
-                      <div className="row" >
-
-                        <h5> {question.questionText} </h5>
-
-
-                      </div>
-            ))}
-
-            </div>
-
-              <div className="col-lg-5">
-
-
-
-            </div>
-
-          </div>
-
 
         </div>
       );

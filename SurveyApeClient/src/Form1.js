@@ -251,7 +251,6 @@ class Form1 extends Component {
                                                 }}>
                                                     <option disabled selected value> -- select a choice--</option>
                                                     <option value="TEXT">Text</option>
-                                                    <option value="IMAGE">Image</option>
                                                 </select>
 
                                             </div>
@@ -554,6 +553,7 @@ class Form1 extends Component {
                                 })}
                             </ul>
                         </div>
+                        <br/>
                         <div>
                             <input type="button" className="btn btn-primary" value="Save and Publish"
                                    style={{margin: "100px 200px 100px 500px"}} onClick={() => {
