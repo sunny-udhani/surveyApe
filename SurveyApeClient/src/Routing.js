@@ -260,8 +260,7 @@ class Routing extends Component {
         console.log("payload");
         console.log(payload);
         //API FOR others
-        var temp=this.state.surveyId;
-        console.log(temp);
+
         API.editSurvey(payload,this.state.surveyId)
             .then((res) => {
                 if(res.surveyId){
