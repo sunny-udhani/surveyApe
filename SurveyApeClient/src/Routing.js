@@ -68,7 +68,7 @@ class Routing extends Component {
         }
         console.log(url);
         var attendeesList = [];
-        if (closedSurveyList.length > 0 && surveyType === "3") {
+        if (closedSurveyList.length > 0) {
             for (var i = 0; i < closedSurveyList.length; i++) {
                 var obj = {};
                 obj.email = closedSurveyList[i];
@@ -93,13 +93,16 @@ class Routing extends Component {
             payload.attendeesList = attendeesList;
         }
         console.log("sdbhjfknasdnlkasd");
-        console.log(inviteeList);
+        console.log(attendeesList);
         if (inviteeList.length > 0) {
           var temp=[];
           for(var i=0;i<inviteeList.length;i++){
             temp.push({"email":inviteeList[i],"inviteeURI":url})
           }
           payload.inviteeList = temp;
+        }
+        if(attendeesList.length>0){
+          payload.attendeesList=attendeesList;
         }
 
         console.log("payload");

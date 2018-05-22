@@ -15,7 +15,19 @@ class MySurveys extends Component {
             .then((res) => {
                 console.log('AAAAAAA');
                 console.log(res);
-                this.setState({surveysArr: res.surveys});
+                var temp=res.surveys;
+                var respArr=[];
+                for(var i=0;i<temp.length;i++){
+                  var count=0;
+                  for(var j=0;j<temp[i].responseList.length;j++){
+                    if(temp[i].responseList[j].completeInd){
+                      count++;
+                    }
+                  }
+                  respArr.push(count);
+                }
+
+                this.setState({surveysArr: res.surveys,respArr:respArr});
                 console.log(this.state.surveysArr);
             });
     }
@@ -105,7 +117,7 @@ class MySurveys extends Component {
                 {this.state.surveysArr ? (<div>
                     <div>
 
-                        {this.state.surveysArr.map((item) => {
+                        {this.state.surveysArr.map((item,index) => {
                             return (
                                 <div style={{
                                     width: "100%",
@@ -125,9 +137,11 @@ class MySurveys extends Component {
                                     </div>
 
                                     <div className="row" style={{marginTop: 10, fontSize: 18, fontWeight: 500}}>
-                                        <div className="col-lg-4"><input type="button" className="butt2"
+                                        <div className="col-lg-4">{item.publishedInd==0 && this.state.respArr[index]<2?(<div><input type="button" className="butt2"
                                                                          value="Edit Survey"
-                                                                         onClick={() => this.props.EditSurvey(item.surveyId)}/>
+                                                                         onClick={() => this.props.EditSurvey(item.surveyId)}/></div>):(<div>
+                                                                           <h3>Cannot be edited</h3>
+                                                                         </div>)}
                                         </div>
 
                                         <div className="col-lg-4">{item.publishedInd == 0 ? (
