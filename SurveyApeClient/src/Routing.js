@@ -553,14 +553,21 @@ class Routing extends Component {
     }
 
 
-    AddInvitees=(id,invitees)=>{
+    AddInvitees=(id,invitees,type)=>{
       //API call for add invitees
       var arr=invitees.split(',');
       for(var i=0;i<arr.length;i++){
         arr[i]={email:arr[i]};
       }
       //API
-      var payload={surveyId:id,addInviteeList:arr};
+      if(type=="3"){
+        var payload={surveyId:id,addAttendeesList:arr};
+      }
+      else{
+        var payload={surveyId:id,addInviteeList:arr};
+      }
+      //addAttendeesList
+
       API.addInvitees(payload).
       then((res)=>{
         alert('Invitees Successfully Added');

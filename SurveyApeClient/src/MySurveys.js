@@ -171,7 +171,7 @@ class MySurveys extends Component {
                                         }} onChange={(event) => this.setState({inviteMore: event.target.value})}/>
                                             <input type="button" className="butt2" value="Send Invite"
                                                    style={{marginLeft: 10}} onClick={() => {
-                                                this.props.AddInvitees(item.surveyId, this.state.inviteMore);
+                                                this.props.AddInvitees(item.surveyId, this.state.inviteMore,item.surveyType);
                                                 this.setState({inviteMore: ""});
                                             }}/>
                                         </div>
