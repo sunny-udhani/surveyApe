@@ -218,7 +218,7 @@ class SurveyDetails extends Component{
               <BarChart width={600} height={400}data={[
                 { name: 'Total Participants', value: this.props.response.survey.responseList.length },
                  { name: 'Total Submissions', value: this.props.competedResponses },
-                  { name: 'Complete %', value: 100*(100*(this.props.response.competedResponses/this.props.response.survey.responseList.length) }
+                  { name: 'Complete %', value: 100*(100*(this.props.response.competedResponses/this.props.response.survey.responseList.length)) }
               ]}>
                   <CartesianGrid strokeDasharray="3 3" />
                   <XAxis dataKey="name" fill="white" />
