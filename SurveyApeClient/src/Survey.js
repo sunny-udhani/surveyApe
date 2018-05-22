@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import {withRouter} from 'react-router';
 import StarRatingComponent from 'react-star-rating-component';
 import Logo from './logo.png';
+import URL from './getPath';
 
 import './Survey.css';
 import * as API from './api/API';
@@ -26,7 +27,7 @@ class Survey extends Component {
 
     componentWillMount() {
 
-        console.log("http://localhost:3000" + this.props.match.url);
+        console.log(URL+":3000" + this.props.match.url);
         console.log("surveyType: ", this.props.match.params.surveyType);
         console.log("SurveyRandomNumber: ", this.props.match.params.randSurvey);
 
@@ -34,7 +35,7 @@ class Survey extends Component {
         }
 
         var data = {
-            "url": "http://localhost:3000" + this.props.match.url,
+            "url": URL+":3000" + this.props.match.url,
             "surveyType": this.props.match.params.surveyType
         }
 
@@ -44,6 +45,14 @@ class Survey extends Component {
         if (this.props.match.params.surveyType == 1) {
             API.getSurveyId(data)
                 .then((res) => {
+                  if(res==="failure"){
+                    alert("This link is no longer valid");
+                    this.props.handleFailure();
+                  }
+                  else{
+
+                  }
+
                     console.log(res);
                     console.log("surveyId Fetched: ");
                     console.log(res.survey_id);
@@ -53,10 +62,15 @@ class Survey extends Component {
                     if(this.props.email){
                       payload.email=this.props.email;
                     }
-
+                    else{
                     API.getSurveyAndResp(payload)
                         .then((res) => {
                             console.log(res.responses);
+                            if(res==="failure"){
+                              alert("This link is no longer valid");
+                              this.props.handleFailure();
+                            }
+                            else{
                             this.setState({
                                 surveyId: res.survey.surveyId,
                                 surveyTitle: res.survey.surveyTitle,
@@ -92,14 +106,25 @@ class Survey extends Component {
                               console.log(this.state);
                               this.setState({...this.state, respObj:temp,"bool":true});
                             })
+                          }
                         });
+
+                      }
                 });
+
         }
         else {
             API.getSurveyId(data)
                 .then((res) => {
                     console.log("printig aaj");
                     console.log(res);
+                    if(res==="failure"){
+                      alert("This link is no longer valid");
+                      this.props.handleFailure();
+                    }
+                    else{
+
+
 
                     this.setState({surveyId: res.survey_id, surveyResponse_id: res.surveyResponse_id});
                     var payload={surveyId:res.survey_id,surveyResponse_id:res.surveyResponse_id};
@@ -117,6 +142,14 @@ class Survey extends Component {
                             console.log(payload);
                             API.getSurveyAndResp(payload)
                                 .then((res) => {
+                                  if(res==="failure"){
+                                    alert("This link is no longer valid");
+                                    this.props.handleFailure();
+                                  }
+
+
+
+
                                     console.log("getting response in getSurveyAndResp:");
                                     console.log(res);
                                     this.setState({
@@ -149,13 +182,14 @@ class Survey extends Component {
                                       this.setState({...this.state,"bool":true});
 
                                     })
-                                });
+                                })
 
                             console.log(this.state.responseList);
                             for(var i=0;i<this.state.questionList.length;i++){
                               console.log(this.state.questionList[i]);
                             }
 
+                          }
 
                         })
                             .catch(err => {

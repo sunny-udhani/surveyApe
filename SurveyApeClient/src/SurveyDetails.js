@@ -209,7 +209,7 @@ class SurveyDetails extends Component{
 
             <div className="col-lg-5">
             <h3>No of Participants: {this.props.response.survey.responseList.length}</h3>
-            <h3>No of Submissions: {this.props.competedResponses}</h3>
+            <h3>No of Submissions: {this.props.response.competedResponses}</h3>
             <h3>Complete Percentage: {100*(this.props.response.competedResponses/this.props.response.survey.responseList.length)}</h3>
             </div>
 
