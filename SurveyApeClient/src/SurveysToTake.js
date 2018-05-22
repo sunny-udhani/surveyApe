@@ -56,6 +56,7 @@ class SurveysToTake extends Component{
               <th style={{textAlign: "center",  fontSize: 20}}>Survey URL</th>
               </tr>
               {this.state.surveys.map((item)=>{
+
                  return <tr><td style={{borderRight:"1px solid black",fontSize: 20, fontWeight: 600}}>{item.surveyTitle}</td>
                  <td style={{fontSize: 20, fontWeight: 700}}><a href={item.surveyURI} target="_blank">Take Survey</a></td>
                  </tr>;

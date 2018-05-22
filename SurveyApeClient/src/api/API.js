@@ -82,7 +82,7 @@ export const endSurvey = (data) =>
             'Content-Type': 'application/json'
         },
         credentials: 'include',
-        body: JSON.stringify({surveyId: data, publish: false})
+        body: JSON.stringify({surveyId: data, endSurvey: true})
     }).then(res => {
         console.log(res.body);
         return res.json();
@@ -324,7 +324,7 @@ export const getSurveyAndResp = (payload) =>
         return error;
     });
 
-                              
+
 
 export const addInvitees = (payload) =>
     fetch(`${api}/survey/addAttendees/` + payload.surveyId, {
