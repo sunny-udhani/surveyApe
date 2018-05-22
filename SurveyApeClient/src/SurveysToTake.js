@@ -57,7 +57,7 @@ class SurveysToTake extends Component{
               </tr>
               {this.state.surveys.map((item)=>{
                  return <tr><td style={{borderRight:"1px solid black"}}>{item.surveyTitle}</td>
-                 <td><a href={item.surveyURI}>{item.surveyURI}</a></td>
+                 <td><a href={item.surveyURI}>Take survey</a></td>
                  </tr>;
               }
               //
