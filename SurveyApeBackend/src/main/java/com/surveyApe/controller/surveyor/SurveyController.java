@@ -114,6 +114,7 @@ public class SurveyController {
         if (reqObj.has("publish")) {
             boolean publishInd = reqObj.getBoolean("publish");
             surveyVO.setPublishedInd(publishInd);
+            surveyVO.setStartDate(new Date());
         }
 
         surveyService.createSurvey(surveyVO);
@@ -355,6 +356,7 @@ public class SurveyController {
         if (reqObj.has("publish")) {
             boolean publishInd = reqObj.getBoolean("publish");
             survey.setPublishedInd(publishInd);
+            survey.setStartDate(new Date());
         }
 
         surveyService.saveSurvey(survey);
@@ -394,8 +396,13 @@ public class SurveyController {
             for (int i = 0; i < attendeesArray.length(); i++) {
                 JSONObject attendeesObj = attendeesArray.getJSONObject(i);
 
-                String surveyeeEmail = attendeesObj.getString("email");
-                String surveyeeURI = attendeesObj.getString("URI");
+                String surveyeeEmail = attendeesObj.has("email") ? attendeesObj.getString("email") : "";
+                String surveyeeURI = attendeesObj.has("URI") ? attendeesObj.getString("URI") : "";
+
+                if (surveyeeEmail.isEmpty() || surveyeeURI.isEmpty()) {
+                    response.put("message", "Proper data needed");
+                    return new ResponseEntity<Object>(response.toString(), HttpStatus.BAD_REQUEST);
+                }
 
                 SurveyResponse newSurveyeeResponseEntry = createNewSurveyeeResponseEntry(survey.getSurveyId(), surveyeeEmail, surveyeeURI);
 
@@ -458,6 +465,7 @@ public class SurveyController {
             boolean publishInd = reqObj.getBoolean("publish");
 
             survey.setPublishedInd(publishInd);
+            survey.setStartDate(new Date());
             surveyService.saveSurvey(survey);
         }
 
@@ -494,12 +502,11 @@ public class SurveyController {
             survey.setSurveyCompletedInd(endSurvey);
             survey.setEndDate(new Date());
             surveyService.saveSurvey(survey);
-        }else{
+        } else {
             response.put("message", "No end survey indicator");
             return new ResponseEntity<Object>(survey, HttpStatus.BAD_REQUEST);
 
         }
-
 
 
 //        sendEmailtoAttendees(survey);
@@ -543,6 +550,7 @@ public class SurveyController {
             return new ResponseEntity<Object>(response.toString(), HttpStatus.BAD_REQUEST);
         } else if (count == 0) {
             survey.setPublishedInd(false);
+            survey.setStartDate(null);
             surveyService.saveSurvey(survey);
 
             List<String> userEmails = surveyResponseService.findSurveyResponseEmails(survey);
