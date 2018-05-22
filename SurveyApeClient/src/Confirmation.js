@@ -22,28 +22,33 @@ class Confirmation extends Component {
     console.log("Checking for Props: ");
     console.log(this.props);
   }
-  
+
     render() {
         return (
+
+          <div>
+
+          <div className="row bar">
+              <div className="col-lg-1 logo">
+                  <img src={Logo} />
+              </div>
+              <div className="col-lg-2 textLogo">
+                Survey Ape
+              </div>
+              <div className="col-lg-2" style={{paddingTop: 38}}>
+                <h5  style={{color: "#268D5D", fontWeight: 700}} onClick={()=>{this.props.gotoDashboard()}}>Dashboard</h5>
+              </div>
+
+              <div className="col-lg-2" style={{paddingTop: 38}}>
+                <h5  style={{color: "#268D5D", fontWeight: 700}} onClick={()=>{this.props.logout()}}>Logout</h5>
+              </div>
+
+          </div>
+
             <div className="container conf">
 
 
-            <div className="row bar">
-                <div className="col-lg-1 logo">
-                    <img src={Logo} />
-                </div>
-                <div className="col-lg-2 textLogo">
-                  Survey Ape
-                </div>
-                <div className="col-lg-2" style={{paddingTop: 38}}>
-                  <h5  style={{color: "#268D5D", fontWeight: 700}} onClick={()=>{this.props.gotoDashboard()}}>Dashboard</h5>
-                </div>
 
-                <div className="col-lg-2" style={{paddingTop: 38}}>
-                  <h5  style={{color: "#268D5D", fontWeight: 700}} onClick={()=>{this.props.logout()}}>Logout</h5>
-                </div>
-
-            </div>
 
             <div className="row">
               <div className="col-lg-4">
@@ -123,6 +128,7 @@ class Confirmation extends Component {
 
             </div>
 
+            </div>
             </div>
         );
     }
