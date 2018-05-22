@@ -172,7 +172,7 @@ class SurveyDetails extends Component{
 
         </div>
       );
-    } else if((this.props.response.survey.surveyType === 2)) {
+    } else if((this.props.response.survey.surveyType === 2) && (this.props.response.survey.surveyType === 3)  && (this.props.response.competedResponses > 2)) {
 
       return (
         <div>
