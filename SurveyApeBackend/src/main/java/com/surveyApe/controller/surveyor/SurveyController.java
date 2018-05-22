@@ -1,4 +1,5 @@
 package com.surveyApe.controller.surveyor;
+
 import com.surveyApe.repository.SurveyQuestionRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.surveyApe.config.QuestionTypeEnum;
@@ -22,6 +23,8 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 
@@ -88,17 +91,24 @@ public class SurveyController {
                 surveyVO.setSurveyQRNumber(qr);
             }
         }
-        if (reqObj.has("endTime")) {
-            String endTime = reqObj.getString("endTime");
-            if (!endTime.equals("")) {
-                Date endDate = new Date(Long.getLong(endTime));
-                if (endDate.after(new Date())) {
-                    surveyVO.setEndDate(endDate);
+
+        try {
+            if (reqObj.has("endTime")) {
+                String endTime = reqObj.getString("endTime");
+                if (!endTime.equals("")) {
+                    Date endDate = new SimpleDateFormat("yyyy-MM-dd").parse(endTime);
+                    Date date = new Date();
+                    if (endDate.getTime() > date.getTime()) {
+                        surveyVO.setEndDate(endDate);
 //                    surveyVO.setSurveyCompletedInd(true);
-                } else
-                    response.put("message", "Invalid End Date");
-                return new ResponseEntity<Object>(response.toString(), HttpStatus.BAD_REQUEST);
+                    } else {
+                        response.put("message", "Invalid End Date");
+                        return new ResponseEntity<Object>(response.toString(), HttpStatus.BAD_REQUEST);
+                    }
+                }
             }
+        } catch (ParseException ex) {
+            System.out.println(ex.toString());
         }
 
         if (reqObj.has("publish")) {
@@ -235,7 +245,7 @@ public class SurveyController {
 
         System.out.println(survey.getQuestionList());
 
-        survey.getQuestionList().stream().forEach(q->{
+        survey.getQuestionList().stream().forEach(q -> {
             surveyQuestionRepository.delete(q);
         });
         survey.getQuestionList().clear();
@@ -395,7 +405,7 @@ public class SurveyController {
                 }
 
                 if (survey.isPublishedInd())
-                    mailServices.sendEmail(surveyeeEmail, "You are invited to take this survey: " + survey.getSurveyTitle() + " at " + surveyeeURI, "aviralkum@gmail.com", "Survey filling request", surveyeeURI, true);
+                    mailServices.sendEmail(surveyeeEmail, "You are invited to take this survey: " + survey.getSurveyTitle() + " at " + surveyeeURI, "survayape.noreply@gmail.comalkum@gmail.com", "Survey filling request", surveyeeURI, true);
 
             }
         }
@@ -415,7 +425,7 @@ public class SurveyController {
                 }
 
                 if (survey.isPublishedInd())
-                    mailServices.sendEmail(surveyeeEmail, "You are invited to take this survey: " + survey.getSurveyTitle() + " at " + survey.getSurveyURI(), "aviralkum@gmail.com", "Survey filling request", survey.getSurveyURI(), true);
+                    mailServices.sendEmail(surveyeeEmail, "You are invited to take this survey: " + survey.getSurveyTitle() + " at " + survey.getSurveyURI(), "survayape.noreply@gmail.comalkum@gmail.com", "Survey filling request", survey.getSurveyURI(), true);
 
             }
         }

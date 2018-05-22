@@ -561,7 +561,8 @@ class Form1 extends Component {
                                     type: this.state.formType,
                                     questions: this.state.questions,
                                     name: this.state.surveyName,
-                                    publish: true
+                                    publish: true,
+                                    endTime: this.state.endTime
                                 });
                                 this.setState({
                                     questions: [],

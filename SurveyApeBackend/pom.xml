@@ -122,7 +122,7 @@
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <configuration>
                     <fork>true</fork>
-                    <mainClass>com.surveyApe.SurveyApe1Application</mainClass>
+                    <mainClass>com.surveyApe.SurveyApeApplication</mainClass>
                 </configuration>
                 <executions>
                     <execution>
