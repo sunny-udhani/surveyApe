@@ -351,8 +351,6 @@ class Routing extends Component {
     }
 
 
-
-
     registerUser = (payload) => {
       console.log("Payload Received inside registerUser: ");
       console.log(payload);
@@ -478,8 +476,6 @@ class Routing extends Component {
 
      console.log("Data received:");
      console.log(data);
-
-
 
      var data1 = {
        surveyId: data.surveyIdOpen,
