@@ -396,7 +396,6 @@ public class SurveyController {
 
                 String surveyeeEmail = attendeesObj.getString("email");
                 String surveyeeURI = attendeesObj.getString("URI");
-
                 SurveyResponse newSurveyeeResponseEntry = createNewSurveyeeResponseEntry(survey.getSurveyId(), surveyeeEmail, surveyeeURI);
 
                 if (newSurveyeeResponseEntry == null) {
