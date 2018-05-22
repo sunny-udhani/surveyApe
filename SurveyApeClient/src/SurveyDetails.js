@@ -96,8 +96,8 @@ class SurveyDetails extends Component{
         </div>
 
           <h3>Survey Name: {this.props.response.survey.surveyTitle}</h3>
-          <h3>Start Date: {new Date(this.props.response.survey.startDate).toUTCString()}</h3>
-          <h3>End Date {new Date(this.props.response.survey.endDate).toUTCString()}</h3>
+          <h3>Start Date: {new Date(this.props.response.survey.startDate).toUTCString().split(' ').slice(0,-2).join(' ')}</h3>
+          <h3>End Date {new Date(this.props.response.survey.endDate).toUTCString().split(' ').slice(0,-2).join(' ')}</h3>
 
           <div className="row" >
 
@@ -201,8 +201,8 @@ class SurveyDetails extends Component{
         </div>
 
         <h3>Survey Name: {this.props.response.survey.surveyTitle}</h3>
-          <h3>Start Date: {new Date(this.props.response.survey.startDate).toUTCString()}</h3>
-          <h3>End Date {new Date(this.props.response.survey.endDate).toUTCString()}</h3>
+          <h3>Start Date: {new Date(this.props.response.survey.startDate).toUTCString().split(' ').slice(0,-2).join(' ')}</h3>
+          <h3>End Date {new Date(this.props.response.survey.endDate).toUTCString().split(' ').slice(0,-2).join(' ')}</h3>
 
 
 

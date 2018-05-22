@@ -121,7 +121,7 @@ class EditSurvey extends Component{
           }
 
           //this.setState({closedSurveyStr:temp2.join(",")});
-          this.setState({closedSurveyStr:""});
+          this.setState({closedSurveyStr:temp2.join(",")});
           this.setState({oldInvitees:temp2});
         }
       }
