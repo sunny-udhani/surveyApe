@@ -140,14 +140,16 @@ class MySurveys extends Component {
                                         <div className="col-lg-4">{item.publishedInd==0 && this.state.respArr[index]<2?(<div><input type="button" className="butt2"
                                                                          value="Edit Survey"
                                                                          onClick={() => this.props.EditSurvey(item.surveyId)}/></div>):(<div>
-                                                                           <h3>Cannot be edited</h3>
+
                                                                          </div>)}
                                         </div>
 
                                         <div className="col-lg-4">{item.publishedInd == 0 ? (
                                             <div><input type="button" className="butt2" value="Publish"
                                                         onClick={() => this.props.PublishSurvey(item.surveyId)}/>
-                                            </div>) : (<div>Already Published</div>)}</div>
+                                            </div>) : (<div>
+                                           Already Published
+                                            </div>)}</div>
 
 
                                         <div className="col-lg-4">{item.surveyCompletedInd == 0 ? (
@@ -156,6 +158,7 @@ class MySurveys extends Component {
                                                                                    onClick={() => this.props.EndSurvey(item.surveyId)}/>
                                             </div>) : (<div>Survey Complete</div>)}</div>
                                     </div>
+
 
                                     <div className="row"
                                          style={{marginTop: 10, marginBottom: 20, fontSize: 18, fontWeight: 500}}>
@@ -171,7 +174,7 @@ class MySurveys extends Component {
                                         }} onChange={(event) => this.setState({inviteMore: event.target.value})}/>
                                             <input type="button" className="butt2" value="Send Invite"
                                                    style={{marginLeft: 10}} onClick={() => {
-                                                this.props.AddInvitees(item.surveyId, this.state.inviteMore);
+                                                this.props.AddInvitees(item.surveyId, this.state.inviteMore,item.surveyType);
                                                 this.setState({inviteMore: ""});
                                             }}/>
                                         </div>
